@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/generated/rpc/v1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service Teams {
+  rpc AddTeam (AddTeamRequest) returns (AddTeamReply) {} // Добавить новую команду
+  rpc UpdateTeam (UpdateTeamRequest) returns (google.protobuf.Empty) {} // Изменить данные команды
+  rpc RemoveTeam (RemoveTeamRequest) returns (google.protobuf.Empty) {} // Удалить команду
+  rpc GetTeams (GetTeamsRequest) returns (GetTeamsReply) {} // Получить список команд
+}
+
+message AddTeamRequest {
+  string name = 2; // Уникальное имя команды
+  string description = 3; // Описание деятельности команды
+  string slack = 4; // Идентификатор в Slack
+}
+
+message AddTeamReply {
+  int64 id = 1; // Уникальный идентификатор созданной команды
+}
+
+message UpdateTeamRequest {
+  Team team = 1; // Команда
+}
+
+message RemoveTeamRequest {
+  int64 id = 1;  // Уникальный идентификатор команды
+}
+
+message GetTeamsRequest {
+  TeamFilter filter = 1; // Фильтр команд
+  int64 limit = 3; // Пагинация, получаемые записи
+  int64 offset = 4; // Пагинация, пропускаемые записи
+  string order = 5; // Поле для сортировки id|name
+  string sort = 6; // Тип сортировки asc|desc
+}
+
+message TeamFilter {
+  repeated int64 ids = 1; // Список уникальных идентификаторов команд
+  google.protobuf.Timestamp DateFrom = 2; // Создана после
+  google.protobuf.Timestamp DateTo = 3; // Создана до
+}
+
+message GetTeamsReply {
+  repeated Team teams = 1; // Список команд
+}
+
+message Team {
+  int64 id = 1; // Уникальный идентификатор команды
+  string name = 2; // Название команды
+  string description = 3; // Описание деятельности команды
+  string slack = 4; // Идентификатор в Slack
+  google.protobuf.Timestamp created = 12; // Время создания
+  google.protobuf.Timestamp updated = 13; // Время изменения
+}

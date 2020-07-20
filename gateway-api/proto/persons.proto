@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/generated/clients/people/v1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+service Persons {
+  rpc AddPerson (AddPersonRequest) returns (AddPersonReply) {}  // Добавить нового сотрудника
+  rpc UpdatePerson (UpdatePersonRequest) returns (google.protobuf.Empty) {} // Изменить данные сотрудника
+  rpc RemovePerson (RemovePersonRequest) returns (google.protobuf.Empty) {} // Удалить сотрудника
+  rpc GetPersons (GetPersonsRequest) returns (GetPersonsReply) {} // Получить список сотрудников
+}
+
+enum Role {
+  NONE = 0;
+  BACK_END = 1;
+  FRONT_END = 2;
+  MOBILE = 3;
+  QA = 4;
+}
+
+message AddPersonRequest {
+  string first_name = 2; // Имя
+  google.protobuf.StringValue middle_name = 3; // Отчество
+  string last_name = 4; // Фамилия
+  google.protobuf.Timestamp birthday = 5; // Дата рождения
+  google.protobuf.StringValue email = 6; // Email
+  google.protobuf.StringValue phone = 7; // Телефон
+  string slack = 8; // Идентификатор в Slack
+  Role role = 9; // Тип разработчика
+  google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
+  bool isActive = 11; // Активен в системе
+}
+
+message AddPersonReply {
+  int64 id = 1; // Уникальный идентификатор сотрудника
+}
+
+message UpdatePersonRequest {
+  Person person = 1; // Сотрудник
+}
+
+message RemovePersonRequest {
+  int64 id = 1;  // Уникальный идентификатор сотрудника
+}
+
+message GetPersonsRequest {
+  PersonFilter filter = 1; // Фильтр сотрудников
+  int64 limit = 3; // Пагинация, получаемые записи
+  int64 offset = 4; // Пагинация, пропускаемые записи
+  string order = 5; // Поле для сортировки
+}
+
+message PersonFilter {
+  repeated int64 person_ids = 1; // Список уникальных идентификаторов сотрудников
+  repeated int64 team_ids = 2; // Список уникальных идентификаторов групп
+}
+
+message GetPersonsReply {
+  repeated Person persons = 1; // Список сотрудников
+}
+
+message Person {
+  int64 id = 1; // Уникальный идентификатор сотрудника
+  string first_name = 2; // Имя
+  google.protobuf.StringValue middle_name = 3; // Отчество
+  string last_name = 4; // Фамилия
+  google.protobuf.Timestamp birthday = 5; // Дата рождения
+  google.protobuf.StringValue email = 6; // Email
+  google.protobuf.StringValue phone = 7; // Телефон
+  string slack = 8; // Идентификатор в Slack
+  Role role = 9; // Тип разработчика
+  google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
+  bool isActive = 11; // Активен в системе
+  google.protobuf.Timestamp created = 12; // Время создания
+  google.protobuf.Timestamp updated = 13; // Время изменения
+}

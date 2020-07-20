@@ -1,0 +1,47 @@
+version: "3.5"
+
+volumes:
+  database_data:
+    driver: local
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+  cache:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  service-people:
+    image: service-people
+    build: ./service-people
+    ports:
+      - "50051:50051"
+    environment:
+      - PORT=50051
+      - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_people sslmode=disable
+    depends_on:
+      - db
+      - cache
+    restart: on-failure:10
+
+  gateway-api:
+    image: gateway-api
+    build: ./gateway-api
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - SECRET=mySecretSigningString
+      - PEOPLE_CLIENT=people:50051
+    depends_on:
+      - service-people
+    restart: on-failure:10
+    links:
+      - "service-people:people"
+
