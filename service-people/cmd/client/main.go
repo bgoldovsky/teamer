@@ -4,13 +4,12 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
-	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc"
 )
 
+// Test gRPC client
 func main() {
 	conn, err := grpc.Dial(":50051", grpc.WithInsecure())
 	if err != nil {
@@ -18,18 +17,10 @@ func main() {
 	}
 	client := v1.NewTeamsClient(conn)
 
-	Get(client)
+	GetTeam(client)
 }
 
-func Get(client v1.TeamsClient) {
-	to, _ := ptypes.TimestampProto(time.Now())
-	filter := &v1.TeamFilter{
-		Ids:    []int64{101},
-		DateTo: to,
-		//DateFrom: from,
-	}
-	fmt.Println(filter)
-
+func GetTeam(client v1.TeamsClient) {
 	teams, err := client.GetTeams(context.Background(), &v1.GetTeamsRequest{
 		Filter: nil,
 		Limit:  100,
@@ -47,31 +38,40 @@ func Get(client v1.TeamsClient) {
 	}
 }
 
-func Update(client v1.TeamsClient) {
+func UpdateTeam(client v1.TeamsClient) {
 	_, err := client.UpdateTeam(context.Background(), &v1.UpdateTeamRequest{
 		Team: &v1.Team{
 			Id:          168,
-			Name:        "Avito 123",
-			Description: "Mem team",
-			Slack:       "POP!!!",
+			Name:        "Dream 123",
+			Description: "Dream team v.123",
+			Slack:       "QWERTY",
 		},
 	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func Remove(client v1.TeamsClient) {
+func RemoveTeam(client v1.TeamsClient) {
 	_, err := client.RemoveTeam(context.Background(), &v1.RemoveTeamRequest{
 		Id: 168,
 	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func Add(client v1.TeamsClient) {
-	res, err := client.AddTeam(context.Background(), &v1.AddTeamRequest{Name: "Super Team!", Description: "Best team ever", Slack: "XYZ"})
+func AddTeam(client v1.TeamsClient) {
+	res, err := client.AddTeam(
+		context.Background(),
+		&v1.AddTeamRequest{
+			Name:        "Super Team!",
+			Description: "Best team ever",
+			Slack:       "XYZ"},
+	)
+
 	if err != nil {
 		log.Fatal(err)
 	}
