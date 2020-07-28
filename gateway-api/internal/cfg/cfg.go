@@ -6,7 +6,7 @@ func GetPeopleHost() string {
 	h := os.Getenv("PEOPLE_CLIENT")
 	if h == "" {
 		h = ":50051"
-		//panic("client people service address not specified")
+		//panic("client teams service address not specified")
 	}
 
 	return h

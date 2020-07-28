@@ -5,10 +5,10 @@ Teamer bot microservices
 
 ### service-people
 
-0. Функциональные тесты main
 0. Реализовать репозиторий persons
 0. Сделать моки persons репозитория
 0. Реализовать сервис persons
+0. Реализоватоь получение всех участников команды по ее ID
 
 ### gateway-api
 

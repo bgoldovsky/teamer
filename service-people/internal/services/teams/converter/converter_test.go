@@ -43,7 +43,7 @@ func TestToDTO(t *testing.T) {
 }
 
 func TestToModel(t *testing.T) {
-	dto := &v1.Team{
+	dto := &v1.UpdateTeamRequest{
 		Id:          123,
 		Name:        "Dream Team",
 		Description: "Best for everything",

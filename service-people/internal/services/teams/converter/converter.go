@@ -9,7 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 )
 
-func ToModel(dto *v1.Team) *models.Team {
+func ToModel(dto *v1.UpdateTeamRequest) *models.Team {
 	if dto == nil {
 		return nil
 	}

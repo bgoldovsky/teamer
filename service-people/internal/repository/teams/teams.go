@@ -39,17 +39,17 @@ type Queryer interface {
 	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
 }
 
-type RepositoryDB struct {
+type repository struct {
 	database Queryer
 }
 
-func NewRepository(database Queryer) Repository {
-	return &RepositoryDB{
+func NewRepository(database Queryer) *repository {
+	return &repository{
 		database: database,
 	}
 }
 
-func (r *RepositoryDB) Save(ctx context.Context, team *models.Team) (*models.Team, error) {
+func (r *repository) Save(ctx context.Context, team *models.Team) (*models.Team, error) {
 	attributes := make(map[string]interface{})
 	attributes["name"] = team.Name
 	attributes["description"] = team.Description
@@ -63,7 +63,7 @@ func (r *RepositoryDB) Save(ctx context.Context, team *models.Team) (*models.Tea
 	return t, nil
 }
 
-func (r *RepositoryDB) Update(ctx context.Context, t *models.Team) (*models.Team, error) {
+func (r *repository) Update(ctx context.Context, t *models.Team) (*models.Team, error) {
 	var (
 		i           uint8
 		values      []interface{}
@@ -113,7 +113,7 @@ func (r *RepositoryDB) Update(ctx context.Context, t *models.Team) (*models.Team
 	return data.convert(), err
 }
 
-func (r *RepositoryDB) Remove(ctx context.Context, teamID int64) (int64, error) {
+func (r *repository) Remove(ctx context.Context, teamID int64) (int64, error) {
 	var query bytes.Buffer
 	query.WriteString("delete from teams where id = $1;")
 	_, err := r.database.Query(ctx, query.String(), teamID)
@@ -121,7 +121,7 @@ func (r *RepositoryDB) Remove(ctx context.Context, teamID int64) (int64, error) 
 	return teamID, err
 }
 
-func (r *RepositoryDB) Get(
+func (r *repository) Get(
 	ctx context.Context,
 	filter *v1.TeamFilter,
 	limit, offset uint,
@@ -148,7 +148,7 @@ func (r *RepositoryDB) Get(
 	return r.query(ctx, ccc, query.String(), args...)
 }
 
-func (r *RepositoryDB) put(ctx context.Context, attributes map[string]interface{}) (*models.Team, error) {
+func (r *repository) put(ctx context.Context, attributes map[string]interface{}) (*models.Team, error) {
 	var (
 		i           uint8
 		err         error
@@ -183,7 +183,7 @@ func (r *RepositoryDB) put(ctx context.Context, attributes map[string]interface{
 	return &oo[0], nil
 }
 
-func (r *RepositoryDB) query(ctx context.Context, columns []string, query string, args ...interface{}) ([]models.Team, error) {
+func (r *repository) query(ctx context.Context, columns []string, query string, args ...interface{}) ([]models.Team, error) {
 	rows, err := r.database.Query(ctx, query, args...)
 
 	if err == pgx.ErrNoRows {
@@ -231,7 +231,7 @@ func (r *RepositoryDB) query(ctx context.Context, columns []string, query string
 	return teams, nil
 }
 
-func (r *RepositoryDB) where(f *v1.TeamFilter) (string, []interface{}) {
+func (r *repository) where(f *v1.TeamFilter) (string, []interface{}) {
 	var (
 		i           uint8
 		where       []string

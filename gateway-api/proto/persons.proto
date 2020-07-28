@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "internal/generated/clients/people/v1";
+option go_package = "internal/generated/clients/teams/v1";
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
@@ -41,7 +41,17 @@ message AddPersonReply {
 }
 
 message UpdatePersonRequest {
-  Person person = 1; // Сотрудник
+  int64 id = 1; // Уникальный идентификатор сотрудника
+  string first_name = 2; // Имя
+  google.protobuf.StringValue middle_name = 3; // Отчество
+  string last_name = 4; // Фамилия
+  google.protobuf.Timestamp birthday = 5; // Дата рождения
+  google.protobuf.StringValue email = 6; // Email
+  google.protobuf.StringValue phone = 7; // Телефон
+  string slack = 8; // Идентификатор в Slack
+  Role role = 9; // Тип разработчика
+  google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
+  bool isActive = 11; // Активен в системе
 }
 
 message RemovePersonRequest {

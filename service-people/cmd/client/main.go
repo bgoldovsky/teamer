@@ -40,12 +40,10 @@ func GetTeam(client v1.TeamsClient) {
 
 func UpdateTeam(client v1.TeamsClient) {
 	_, err := client.UpdateTeam(context.Background(), &v1.UpdateTeamRequest{
-		Team: &v1.Team{
-			Id:          168,
-			Name:        "Dream 123",
-			Description: "Dream team v.123",
-			Slack:       "QWERTY",
-		},
+		Id:          168,
+		Name:        "Dream 123",
+		Description: "Dream team v.123",
+		Slack:       "QWERTY",
 	})
 
 	if err != nil {

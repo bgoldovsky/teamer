@@ -37,7 +37,7 @@ func (s *Service) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 }
 
 func (s *Service) UpdateTeam(ctx context.Context, req *v1.UpdateTeamRequest) (*empty.Empty, error) {
-	team := converter.ToModel(req.Team)
+	team := converter.ToModel(req)
 
 	_, err := s.repo.Update(ctx, team)
 	if err != nil {

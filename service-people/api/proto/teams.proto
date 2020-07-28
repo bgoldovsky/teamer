@@ -25,7 +25,10 @@ message AddTeamReply {
 }
 
 message UpdateTeamRequest {
-  Team team = 1; // Команда
+  int64 id = 1; // Уникальный идентификатор команды
+  string name = 2; // Название команды
+  string description = 3; // Описание деятельности команды
+  string slack = 4; // Идентификатор в Slack
 }
 
 message RemoveTeamRequest {

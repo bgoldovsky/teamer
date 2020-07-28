@@ -44,12 +44,10 @@ func TestService_UpdateTeam(t *testing.T) {
 	service := New(repo)
 
 	request := &v1.UpdateTeamRequest{
-		Team: &v1.Team{
-			Id:          team.ID,
-			Name:        team.Name,
-			Description: team.Description,
-			Slack:       team.Slack,
-		},
+		Id:          team.ID,
+		Name:        team.Name,
+		Description: team.Description,
+		Slack:       team.Slack,
 	}
 
 	act, err := service.UpdateTeam(context.Background(), request)
