@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/services/teams/mapper"
+	"github.com/bgoldovsky/teamer-bot/service-people/internal/services/teams/converter"
 
 	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/teamer-bot/service-people/internal/models"
@@ -37,7 +37,7 @@ func (s *Service) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 }
 
 func (s *Service) UpdateTeam(ctx context.Context, req *v1.UpdateTeamRequest) (*empty.Empty, error) {
-	team := mapper.ToModel(req.Team)
+	team := converter.ToModel(req.Team)
 
 	_, err := s.repo.Update(ctx, team)
 	if err != nil {
@@ -56,7 +56,8 @@ func (s *Service) RemoveTeam(ctx context.Context, req *v1.RemoveTeamRequest) (*e
 }
 
 func (s *Service) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
-	teamModels, err := s.repo.Query(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
+	teamModels, err := s.repo.Get(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
+
 	if err != nil {
 		return nil, fmt.Errorf("get teams error: %w", err)
 	}
@@ -67,7 +68,7 @@ func (s *Service) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.Ge
 
 	teamsProto := make([]*v1.Team, len(teamModels))
 	for idx, team := range teamModels {
-		teamsProto[idx] = mapper.ToDTO(&team)
+		teamsProto[idx] = converter.ToDTO(&team)
 	}
 
 	return &v1.GetTeamsReply{Teams: teamsProto}, nil

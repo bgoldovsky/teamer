@@ -1,3 +1,5 @@
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/golang/protobuf v1.3.3
 ## explicit
 github.com/golang/protobuf/proto
@@ -35,9 +37,17 @@ github.com/jackc/pgx/v4/pgxpool
 github.com/jackc/puddle
 # github.com/konsorten/go-windows-terminal-sequences v1.0.3
 github.com/konsorten/go-windows-terminal-sequences
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/sirupsen/logrus v1.6.0
 ## explicit
 github.com/sirupsen/logrus
+# github.com/stretchr/objx v0.2.0
+github.com/stretchr/objx
+# github.com/stretchr/testify v1.5.1
+## explicit
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
 # golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59
 golang.org/x/crypto/pbkdf2
 # golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7
@@ -110,3 +120,5 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2

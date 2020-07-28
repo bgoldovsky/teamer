@@ -5,8 +5,6 @@ import (
 	"net"
 	"time"
 
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -32,26 +30,4 @@ func NewDatabase(ctx context.Context, connString string) *pgxpool.Pool {
 	}
 
 	return p
-}
-
-type contextKey string
-
-const queryer contextKey = "queryer"
-
-type Queryer interface {
-	Exec(ctx context.Context, sql string, arguments ...interface{}) (commandTag pgconn.CommandTag, err error)
-	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
-	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
-}
-
-func NewContext(ctx context.Context, value Queryer) context.Context {
-	return context.WithValue(ctx, queryer, value)
-}
-
-func FromContext(ctx context.Context) Queryer {
-	if queryer, ok := ctx.Value(queryer).(Queryer); ok {
-		return queryer
-	}
-
-	return nil
 }

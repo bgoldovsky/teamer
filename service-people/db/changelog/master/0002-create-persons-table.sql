@@ -2,7 +2,7 @@
 
 create table if not exists persons (
     id             bigserial    primary key,
-    team_id        bigint       not null references teams (id) on delete cascade,
+    team_id        bigint       references teams (id) on delete cascade,
     --
     first_name     text         not null,
     middle_name    text,

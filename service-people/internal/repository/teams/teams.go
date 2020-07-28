@@ -3,6 +3,8 @@ package teams
 import (
 	"bytes"
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -12,11 +14,24 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+var (
+	ErrTeamNotFount = errors.New("team not found")
+)
+
+type team struct {
+	ID          sql.NullInt64
+	Name        sql.NullString
+	Description sql.NullString
+	Slack       sql.NullString
+	Created     sql.NullTime
+	Updated     sql.NullTime
+}
+
 type Repository interface {
 	Save(ctx context.Context, team *models.Team) (*models.Team, error)
 	Update(ctx context.Context, team *models.Team) (*models.Team, error)
 	Remove(ctx context.Context, teamID int64) (int64, error)
-	Query(ctx context.Context, filter *v1.TeamFilter, limit, offset uint, sort, order string) ([]models.Team, error)
+	Get(ctx context.Context, filter *v1.TeamFilter, limit, offset uint, sort, order string) ([]models.Team, error)
 }
 
 type Queryer interface {
@@ -24,17 +39,17 @@ type Queryer interface {
 	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
 }
 
-type RepositoryPgsql struct {
+type RepositoryDB struct {
 	database Queryer
 }
 
 func NewRepository(database Queryer) Repository {
-	return &RepositoryPgsql{
+	return &RepositoryDB{
 		database: database,
 	}
 }
 
-func (r *RepositoryPgsql) Save(ctx context.Context, team *models.Team) (*models.Team, error) {
+func (r *RepositoryDB) Save(ctx context.Context, team *models.Team) (*models.Team, error) {
 	attributes := make(map[string]interface{})
 	attributes["name"] = team.Name
 	attributes["description"] = team.Description
@@ -48,7 +63,7 @@ func (r *RepositoryPgsql) Save(ctx context.Context, team *models.Team) (*models.
 	return t, nil
 }
 
-func (r *RepositoryPgsql) Update(ctx context.Context, team *models.Team) (*models.Team, error) {
+func (r *RepositoryDB) Update(ctx context.Context, t *models.Team) (*models.Team, error) {
 	var (
 		i           uint8
 		values      []interface{}
@@ -57,9 +72,9 @@ func (r *RepositoryPgsql) Update(ctx context.Context, team *models.Team) (*model
 		attributes  = make(map[string]interface{})
 	)
 
-	attributes["name"] = team.Name
-	attributes["description"] = team.Description
-	attributes["slack"] = team.Slack
+	attributes["name"] = t.Name
+	attributes["description"] = t.Description
+	attributes["slack"] = t.Slack
 
 	returns = append(returns, "id")
 	returns = append(returns, "name")
@@ -76,21 +91,29 @@ func (r *RepositoryPgsql) Update(ctx context.Context, team *models.Team) (*model
 	}
 
 	template := `update "teams" set %s where id = %d returning %s`
-	query := fmt.Sprintf(template, strings.Join(placeholder, ","), team.ID, strings.Join(returns, ","))
+	query := fmt.Sprintf(template, strings.Join(placeholder, ","), t.ID, strings.Join(returns, ","))
 
-	var replyTeam models.Team
+	var data team
 	err := r.database.QueryRow(ctx, query, values...).Scan(
-		&replyTeam.ID,
-		&replyTeam.Name,
-		&replyTeam.Description,
-		&replyTeam.Slack,
-		&replyTeam.Updated,
-		&replyTeam.Created)
+		&data.ID,
+		&data.Name,
+		&data.Description,
+		&data.Slack,
+		&data.Updated,
+		&data.Created)
 
-	return &replyTeam, err
+	if err == pgx.ErrNoRows {
+		return nil, ErrTeamNotFount
+	}
+
+	if err == nil {
+		return nil, err
+	}
+
+	return data.convert(), err
 }
 
-func (r *RepositoryPgsql) Remove(ctx context.Context, teamID int64) (int64, error) {
+func (r *RepositoryDB) Remove(ctx context.Context, teamID int64) (int64, error) {
 	var query bytes.Buffer
 	query.WriteString("delete from teams where id = $1;")
 	_, err := r.database.Query(ctx, query.String(), teamID)
@@ -98,7 +121,7 @@ func (r *RepositoryPgsql) Remove(ctx context.Context, teamID int64) (int64, erro
 	return teamID, err
 }
 
-func (r *RepositoryPgsql) Query(
+func (r *RepositoryDB) Get(
 	ctx context.Context,
 	filter *v1.TeamFilter,
 	limit, offset uint,
@@ -125,7 +148,7 @@ func (r *RepositoryPgsql) Query(
 	return r.query(ctx, ccc, query.String(), args...)
 }
 
-func (r *RepositoryPgsql) put(ctx context.Context, attributes map[string]interface{}) (*models.Team, error) {
+func (r *RepositoryDB) put(ctx context.Context, attributes map[string]interface{}) (*models.Team, error) {
 	var (
 		i           uint8
 		err         error
@@ -160,16 +183,20 @@ func (r *RepositoryPgsql) put(ctx context.Context, attributes map[string]interfa
 	return &oo[0], nil
 }
 
-func (r *RepositoryPgsql) query(ctx context.Context, columns []string, query string, args ...interface{}) ([]models.Team, error) {
+func (r *RepositoryDB) query(ctx context.Context, columns []string, query string, args ...interface{}) ([]models.Team, error) {
 	rows, err := r.database.Query(ctx, query, args...)
+
+	if err == pgx.ErrNoRows {
+		return []models.Team{}, nil
+	}
+
 	if err != nil {
 		return nil, err
 	}
 
-	var tt []models.Team
-
+	var teams []models.Team
 	for rows.Next() {
-		var t models.Team
+		var t team
 		var dest []interface{}
 
 		for _, c := range columns {
@@ -197,13 +224,14 @@ func (r *RepositoryPgsql) query(ctx context.Context, columns []string, query str
 			return nil, err
 		}
 
-		tt = append(tt, t)
+		rt := t.convert()
+		teams = append(teams, *rt)
 	}
 
-	return tt, nil
+	return teams, nil
 }
 
-func (r *RepositoryPgsql) where(f *v1.TeamFilter) (string, []interface{}) {
+func (r *RepositoryDB) where(f *v1.TeamFilter) (string, []interface{}) {
 	var (
 		i           uint8
 		where       []string
@@ -245,4 +273,20 @@ func (r *RepositoryPgsql) where(f *v1.TeamFilter) (string, []interface{}) {
 	}
 
 	return "", values
+}
+
+func (t *team) convert() *models.Team {
+	model := models.Team{
+		ID:          t.ID.Int64,
+		Name:        t.Name.String,
+		Description: t.Description.String,
+		Slack:       t.Slack.String,
+		Created:     t.Created.Time,
+	}
+
+	if t.Updated.Valid {
+		model.Updated = t.Updated.Time
+	}
+
+	return &model
 }
