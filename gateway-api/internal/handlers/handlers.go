@@ -2,17 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
-	"net/http"
-	"strconv"
-	"time"
-
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
 	"github.com/bgoldovsky/teamer/gateway-api/internal/middleware"
 	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
 	teamsSrv "github.com/bgoldovsky/teamer/gateway-api/internal/services/teams"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"net/http"
+	"strconv"
 )
 
 const defaultErrMsg = "internal server error"
@@ -41,29 +38,11 @@ func (h *Handlers) findRoutes() {
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
 	h.router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
-	h.router.HandleFunc("/token", h.GetToken).Methods("GET")
 }
 
 func (h *Handlers) Run(port string) {
 	logger.Log.WithField("port", port).Infoln("Server running")
 	logger.Log.Fatalln(http.ListenAndServe(port, middleware.LogMiddleware(middleware.PanicMiddleware(h.router))))
-}
-
-func (h *Handlers) GetToken(w http.ResponseWriter, _ *http.Request) {
-	token := jwt.New(jwt.SigningMethodHS256)
-
-	claims := make(jwt.MapClaims)
-	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
-	claims["admin"] = true
-	claims["name"] = "JohnDoe"
-
-	token.Claims = claims
-	signString, _ := h.jwtMiddleware.Options.ValidationKeyGetter(token)
-	tokenString, err := token.SignedString(signString)
-	if err != nil {
-		respondError(w, http.StatusInternalServerError, "token error")
-	}
-	_, _ = w.Write([]byte(tokenString))
 }
 
 func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
