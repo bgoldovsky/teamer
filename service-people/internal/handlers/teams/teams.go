@@ -41,15 +41,11 @@ func (h *Handler) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 }
 
 func (h *Handler) UpdateTeam(ctx context.Context, req *v1.UpdateTeamRequest) (*empty.Empty, error) {
-	if req.Team == nil {
-		return nil, status.Error(codes.InvalidArgument, "team not specified")
-	}
-
-	if len(req.Team.Name) == 0 {
+	if len(req.Name) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "team name not specified")
 	}
 
-	if len(req.Team.Slack) == 0 {
+	if len(req.Slack) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "team slack not specified")
 	}
 

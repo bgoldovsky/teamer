@@ -2,20 +2,18 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/clients/teams"
-
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
+	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/clients/teams"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/middleware"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-	"github.com/logrusorgru/aurora"
 )
 
 const defaultErrMsg = "internal server error"
@@ -34,15 +32,16 @@ func New(client *teams.Client) *Handlers {
 
 func (h *Handlers) Initialize(signingKey string) {
 	h.jwtMiddleware = middleware.NewJWT([]byte(signingKey))
+	h.jwtMiddleware.Options.ErrorHandler = onError
 	h.Router = mux.NewRouter()
 	h.findRoutes()
 }
 
 func (h *Handlers) findRoutes() {
-	h.Router.HandleFunc("/teams", h.getTeams).Methods("GET")
-	h.Router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.updateTeam))).Methods("PUT")
-	h.Router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.deleteTeam))).Methods("DELETE")
-	h.Router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.createTeam))).Methods("POST")
+	h.Router.HandleFunc("/teams", h.GetTeams).Methods("GET")
+	h.Router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
+	h.Router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
+	h.Router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
 	h.Router.HandleFunc("/token", h.GetToken).Methods("GET")
 }
 
@@ -63,16 +62,16 @@ func (h *Handlers) GetToken(w http.ResponseWriter, _ *http.Request) {
 	signString, _ := h.jwtMiddleware.Options.ValidationKeyGetter(token)
 	tokenString, err := token.SignedString(signString)
 	if err != nil {
-		respondError(w, http.StatusInternalServerError, "token error")
+		respondError(w, http.StatusInternalServerError, "token error", err)
 	}
 	_, _ = w.Write([]byte(tokenString))
 }
 
-func (h *Handlers) createTeam(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
 	var form models.TeamForm
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(&form); err != nil {
-		respondError(w, http.StatusBadRequest, "invalid JSON")
+		respondError(w, http.StatusBadRequest, "invalid JSON", err)
 		return
 	}
 
@@ -80,68 +79,77 @@ func (h *Handlers) createTeam(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		logger.Log.WithField("form", form).WithError(err).Errorln("add team error")
-		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		respondError(w, http.StatusInternalServerError, defaultErrMsg, err)
 		return
 	}
 
 	respondJSON(w, http.StatusCreated, status)
 }
 
-func (h *Handlers) getTeams(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GetTeams(w http.ResponseWriter, r *http.Request) {
 	view, err := h.client.GetTeams(r.Context())
 
 	if err != nil {
-		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		respondError(w, http.StatusInternalServerError, defaultErrMsg, err)
+		return
+	}
+
+	if len(view) == 0 {
+		respondJSON(w, http.StatusNoContent, view)
 		return
 	}
 
 	respondJSON(w, http.StatusOK, view)
 }
 
-func (h *Handlers) deleteTeam(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) DeleteTeam(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		respondError(w, http.StatusBadRequest, "invalid ID")
+		respondError(w, http.StatusBadRequest, "invalid ID", err)
 		return
 	}
 
 	status, err := h.client.RemoveTeam(r.Context(), id)
 	if err != nil {
-		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		respondError(w, http.StatusInternalServerError, defaultErrMsg, err)
 		return
 	}
 
 	respondJSON(w, http.StatusOK, status)
 }
 
-func (h *Handlers) updateTeam(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UpdateTeam(w http.ResponseWriter, r *http.Request) {
 	var form models.TeamForm
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		respondError(w, http.StatusBadRequest, "invalid ID")
+		respondError(w, http.StatusBadRequest, "invalid ID", err)
 		return
 	}
 
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(&form); err != nil {
-		respondError(w, http.StatusBadRequest, "invalid JSON")
+		respondError(w, http.StatusBadRequest, "invalid JSON", err)
 		return
 	}
 
 	status, err := h.client.UpdateTeam(r.Context(), id, form.Name, form.Description, form.Slack)
 	if err != nil {
-		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		respondError(w, http.StatusInternalServerError, defaultErrMsg, err)
 		return
 	}
 
 	respondJSON(w, http.StatusOK, status)
 }
 
-func respondError(w http.ResponseWriter, statusCode int, message string) {
-	log.Printf("%s: %s\n", aurora.Red("Error"), message)
-	respondJSON(w, statusCode, map[string]string{"error": message})
+func onError(w http.ResponseWriter, _ *http.Request, err string) {
+	respondError(w, http.StatusUnauthorized, err, errors.New(err))
+}
+
+func respondError(w http.ResponseWriter, statusCode int, msg string, err error) {
+	logger.Log.Errorf("error: %s\n", err)
+	respondJSON(w, statusCode, map[string]string{"error": msg})
 }
 
 func respondJSON(w http.ResponseWriter, statusCode int, p interface{}) {

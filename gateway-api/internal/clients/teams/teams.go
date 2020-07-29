@@ -4,11 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
-
 	v1 "github.com/bgoldovsky/teamer-bot/gateway-api/internal/generated/clients/people/v1"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/interceptors"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
+	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc"
 )
@@ -109,7 +108,7 @@ func (c *Client) GetTeams(ctx context.Context) ([]*models.TeamView, error) {
 		return nil, err
 	}
 
-	view := models.FromReply(teams)
+	view := models.FromTeamsReply(teams)
 	return view, nil
 }
 

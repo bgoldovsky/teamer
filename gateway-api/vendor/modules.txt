@@ -1,6 +1,8 @@
 # github.com/auth0/go-jwt-middleware v0.0.0-20200507191422-d30d7b9ece63
 ## explicit
 github.com/auth0/go-jwt-middleware
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 ## explicit
 github.com/dgrijalva/jwt-go
@@ -18,12 +20,18 @@ github.com/golang/protobuf/ptypes/wrappers
 github.com/gorilla/mux
 # github.com/konsorten/go-windows-terminal-sequences v1.0.3
 github.com/konsorten/go-windows-terminal-sequences
-# github.com/logrusorgru/aurora v2.0.3+incompatible
-## explicit
-github.com/logrusorgru/aurora
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/sirupsen/logrus v1.6.0
 ## explicit
 github.com/sirupsen/logrus
+# github.com/stretchr/objx v0.3.0
+## explicit
+github.com/stretchr/objx
+# github.com/stretchr/testify v1.3.0
+## explicit
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
 # golang.org/x/net v0.0.0-20190311183353-d8887717615a
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2

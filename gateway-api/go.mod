@@ -7,7 +7,8 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.2
 	github.com/gorilla/mux v1.7.4
-	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/sirupsen/logrus v1.6.0
+	github.com/stretchr/objx v0.3.0 // indirect
+	github.com/stretchr/testify v1.3.0
 	google.golang.org/grpc v1.30.0
 )

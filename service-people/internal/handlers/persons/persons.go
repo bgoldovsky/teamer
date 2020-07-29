@@ -53,27 +53,23 @@ func (h *Handler) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.
 }
 
 func (h *Handler) UpdatePerson(ctx context.Context, req *v1.UpdatePersonRequest) (*empty.Empty, error) {
-	if req.Person == nil {
-		return nil, status.Error(codes.InvalidArgument, "person  not specified")
-	}
-
-	if len(req.Person.FirstName) == 0 {
+	if len(req.FirstName) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person first name not specified")
 	}
 
-	if len(req.Person.LastName) == 0 {
+	if len(req.LastName) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person last name not specified")
 	}
 
-	if req.Person.Birthday.Nanos == 0 {
+	if req.Birthday.Nanos == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person birthday not specified")
 	}
 
-	if len(req.Person.Slack) == 0 {
+	if len(req.Slack) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person slack not specified")
 	}
 
-	if req.Person.Role == v1.Role_NONE {
+	if req.Role == v1.Role_NONE {
 		return nil, status.Error(codes.InvalidArgument, "person role not specified")
 	}
 
