@@ -5,9 +5,8 @@ import (
 	"time"
 
 	v1 "github.com/bgoldovsky/teamer-bot/gateway-api/internal/generated/clients/people/v1"
-	"github.com/golang/protobuf/ptypes"
+	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/stretchr/testify/mock"
 	"google.golang.org/grpc"
 )
@@ -121,16 +120,11 @@ func (m *ClientMock) ConfigureGetTeams(
 				Name:        name,
 				Description: description,
 				Slack:       slack,
-				Created:     toStamp(created),
-				Updated:     toStamp(updated),
+				Created:     models.ToTimestamp(created),
+				Updated:     models.ToTimestamp(updated),
 			},
 		},
 	}
 
 	m.On(`GetTeams`, arg).Return(fake, nil)
-}
-
-func toStamp(t time.Time) *timestamp.Timestamp {
-	stamp, _ := ptypes.TimestampProto(t)
-	return stamp
 }

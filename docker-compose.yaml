@@ -27,7 +27,6 @@ services:
       - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_people sslmode=disable
     depends_on:
       - db
-      - cache
     restart: on-failure:10
 
   gateway-api:
@@ -37,10 +36,12 @@ services:
       - "8080:8080"
     environment:
       - PORT=8080
+      - REDIS=cache:6379
       - SECRET=mySecretSigningString
       - PEOPLE_CLIENT=people:50051
     depends_on:
       - service-people
+      - cache
     restart: on-failure:10
     links:
       - "service-people:people"

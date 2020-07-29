@@ -12,5 +12,5 @@ Teamer bot microservices
 
 ### gateway-api
 
-0. Добавить Redis на get и сброс кеша на изменения
+0. Сделать слой services
 0. Начать реализацию persons...

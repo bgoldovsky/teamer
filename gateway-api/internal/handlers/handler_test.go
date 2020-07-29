@@ -11,6 +11,7 @@ import (
 
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/clients/teams"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
+	teamsRepo "github.com/bgoldovsky/teamer-bot/gateway-api/internal/repostiory/teams"
 	"github.com/gorilla/mux"
 )
 
@@ -23,19 +24,10 @@ var team = &models.TeamView{
 	Updated:     time.Now().UTC(),
 }
 
-func newMock() *teams.Client {
-	return teams.NewMock(
-		team.ID,
-		team.Name,
-		team.Description,
-		team.Slack,
-		team.Crated,
-		team.Updated)
-}
-
 func TestHandlers_CreateTeam(t *testing.T) {
-	client := newMock()
-	h := New(client)
+	client := newClientMock()
+	repo := newRepoMock()
+	h := New(client, repo)
 
 	reqBody := &models.TeamForm{
 		Name:        team.Name,
@@ -62,8 +54,9 @@ func TestHandlers_CreateTeam(t *testing.T) {
 }
 
 func TestHandlers_DeleteTeam(t *testing.T) {
-	client := newMock()
-	h := New(client)
+	client := newClientMock()
+	repo := newRepoMock()
+	h := New(client, repo)
 
 	req, _ := http.NewRequest("DELETE", "/teams", nil)
 	req = mux.SetURLVars(req, map[string]string{"id": strconv.FormatInt(team.ID, 10)})
@@ -83,8 +76,9 @@ func TestHandlers_DeleteTeam(t *testing.T) {
 }
 
 func TestHandlers_UpdateTeam(t *testing.T) {
-	client := newMock()
-	h := New(client)
+	client := newClientMock()
+	repo := newRepoMock()
+	h := New(client, repo)
 
 	reqBody := &models.TeamForm{
 		Name:        team.Name,
@@ -112,8 +106,10 @@ func TestHandlers_UpdateTeam(t *testing.T) {
 }
 
 func TestHandlers_GetTeams(t *testing.T) {
-	client := newMock()
-	h := New(client)
+	client := newClientMock()
+	repo := newRepoMock()
+	h := New(client, repo)
+
 	req, _ := http.NewRequest("GET", "/teams", nil)
 
 	rr := httptest.NewRecorder()
@@ -141,4 +137,24 @@ func TestHandlers_GetTeams(t *testing.T) {
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
 	}
+}
+
+func newClientMock() *teams.Client {
+	return teams.NewMock(
+		team.ID,
+		team.Name,
+		team.Description,
+		team.Slack,
+		team.Crated,
+		team.Updated)
+}
+
+func newRepoMock() *teamsRepo.RepositoryMock {
+	return teamsRepo.NewMock(
+		team.ID,
+		team.Name,
+		team.Description,
+		team.Slack,
+		team.Crated,
+		team.Updated)
 }

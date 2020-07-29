@@ -12,6 +12,7 @@ import (
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/middleware"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
+	teamsRepo "github.com/bgoldovsky/teamer-bot/gateway-api/internal/repostiory/teams"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
@@ -20,34 +21,36 @@ const defaultErrMsg = "internal server error"
 
 type Handlers struct {
 	client        *teams.Client
-	Router        *mux.Router
+	repo          teamsRepo.Repository
+	router        *mux.Router
 	jwtMiddleware *jwtMiddleware.JWTMiddleware
 }
 
-func New(client *teams.Client) *Handlers {
+func New(client *teams.Client, repo teamsRepo.Repository) *Handlers {
 	return &Handlers{
 		client: client,
+		repo:   repo,
 	}
 }
 
 func (h *Handlers) Initialize(signingKey string) {
 	h.jwtMiddleware = middleware.NewJWT([]byte(signingKey))
 	h.jwtMiddleware.Options.ErrorHandler = onError
-	h.Router = mux.NewRouter()
+	h.router = mux.NewRouter()
 	h.findRoutes()
 }
 
 func (h *Handlers) findRoutes() {
-	h.Router.HandleFunc("/teams", h.GetTeams).Methods("GET")
-	h.Router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
-	h.Router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
-	h.Router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
-	h.Router.HandleFunc("/token", h.GetToken).Methods("GET")
+	h.router.HandleFunc("/teams", h.GetTeams).Methods("GET")
+	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
+	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
+	h.router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
+	h.router.HandleFunc("/token", h.GetToken).Methods("GET")
 }
 
 func (h *Handlers) Run(port string) {
 	logger.Log.WithField("port", port).Infoln("Server running")
-	logger.Log.Fatalln(http.ListenAndServe(port, middleware.LogMiddleware(middleware.PanicMiddleware(h.Router))))
+	logger.Log.Fatalln(http.ListenAndServe(port, middleware.LogMiddleware(middleware.PanicMiddleware(h.router))))
 }
 
 func (h *Handlers) GetToken(w http.ResponseWriter, _ *http.Request) {
@@ -76,23 +79,29 @@ func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	status, err := h.client.AddTeam(r.Context(), form.Name, form.Description, form.Slack)
-
 	if err != nil {
 		logger.Log.WithField("form", form).WithError(err).Errorln("add team error")
 		respondError(w, http.StatusInternalServerError, defaultErrMsg, err)
 		return
 	}
 
+	h.clearRepo()
 	respondJSON(w, http.StatusCreated, status)
 }
 
 func (h *Handlers) GetTeams(w http.ResponseWriter, r *http.Request) {
-	view, err := h.client.GetTeams(r.Context())
+	if view := h.getRepo(); view != nil {
+		respondJSON(w, http.StatusOK, view)
+		return
+	}
 
+	view, err := h.client.GetTeams(r.Context())
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, defaultErrMsg, err)
 		return
 	}
+
+	h.saveRepo(view)
 
 	if len(view) == 0 {
 		respondJSON(w, http.StatusNoContent, view)
@@ -116,6 +125,7 @@ func (h *Handlers) DeleteTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.clearRepo()
 	respondJSON(w, http.StatusOK, status)
 }
 
@@ -140,6 +150,7 @@ func (h *Handlers) UpdateTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.clearRepo()
 	respondJSON(w, http.StatusOK, status)
 }
 
@@ -161,4 +172,27 @@ func respondJSON(w http.ResponseWriter, statusCode int, p interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	_, _ = w.Write(resp)
+}
+
+func (h *Handlers) clearRepo() {
+	err := h.repo.Clear()
+	if err != nil {
+		logger.Log.WithError(err).Error("clear teams repo error")
+	}
+}
+
+func (h *Handlers) saveRepo(teams []*models.TeamView) {
+	err := h.repo.Save(teams)
+	if err != nil {
+		logger.Log.WithError(err).Error("save teams repo error")
+	}
+}
+
+func (h *Handlers) getRepo() []*models.TeamView {
+	views, err := h.repo.Get()
+	if err != nil {
+		logger.Log.WithError(err).Error("save teams repo error")
+		return nil
+	}
+	return views
 }
