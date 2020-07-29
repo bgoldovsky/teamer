@@ -1,7 +1,7 @@
 FROM golang
 
-ADD . /go/src//github.com/bgoldovsky/teamer-bot/gateway-api
+ADD . /go/src/github.com/bgoldovsky/teamer/auth-api
 
-RUN go install /go/src/github.com/bgoldovsky/teamer-bot/gateway-api/cmd/service
+RUN go install /go/src/github.com/bgoldovsky/teamer/auth-api/cmd/service
 
 ENTRYPOINT /go/bin/service

@@ -2,15 +2,6 @@ package cfg
 
 import "os"
 
-func GetPeopleHost() string {
-	h := os.Getenv("PEOPLE_CLIENT")
-	if h == "" {
-		h = ":50051"
-		//panic("client teams service address not specified")
-	}
-	return h
-}
-
 func GetHTTPPort() string {
 	p := os.Getenv("PORT")
 	if p == "" {
@@ -18,15 +9,6 @@ func GetHTTPPort() string {
 		//panic("http port not specified")
 	}
 	return ":" + p
-}
-
-func GetRedisAddress() string {
-	a := os.Getenv("REDIS")
-	if a == "" {
-		a = "cache:6379"
-		//panic("redis address not specified")
-	}
-	return a
 }
 
 func GetSecret() string {

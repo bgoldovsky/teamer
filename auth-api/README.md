@@ -1,2 +1,2 @@
-# gateway-api
-Gateway for teamer-bot
+# auth-api
+Authorize service

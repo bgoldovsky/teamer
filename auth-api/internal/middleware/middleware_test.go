@@ -2,13 +2,15 @@ package middleware_test
 
 import (
 	"bytes"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
-	."github.com/bgoldovsky/teamer-bot/gateway-api/internal/middleware"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
+
+	. "github.com/bgoldovsky/teamer/auth-api/internal/middleware"
+
+	"github.com/bgoldovsky/teamer/auth-api/internal/logger"
 )
 
 func TestPanicMiddleware(t *testing.T) {

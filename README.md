@@ -12,5 +12,4 @@ Teamer bot microservices
 
 ### gateway-api
 
-0. Сделать слой services
 0. Начать реализацию persons...

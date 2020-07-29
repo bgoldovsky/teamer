@@ -1,7 +1,7 @@
 .PHONY:build
 build:
 	echo "building.."
-	go build -o bin/service-rus-id ./cmd/service/main.go
+	go build -o bin/gateway-api ./cmd/service/main.go
 
 .PHONY:run
 run:

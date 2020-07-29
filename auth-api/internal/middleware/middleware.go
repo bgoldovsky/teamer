@@ -1,12 +1,13 @@
 package middleware
 
 import (
-	jwtMiddleware "github.com/auth0/go-jwt-middleware"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"runtime/debug"
+
+	jwtMiddleware "github.com/auth0/go-jwt-middleware"
+	"github.com/bgoldovsky/teamer/auth-api/internal/logger"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/sirupsen/logrus"
 )
 
 func NewJWT(signingKey []byte) *jwtMiddleware.JWTMiddleware {
@@ -23,9 +24,9 @@ func PanicMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if a := recover(); a != nil {
 				logger.Log.WithFields(logrus.Fields{
-					"method": r.Method,
-					"path": r.URL.Path,
-					"stack": debug.Stack(),
+					"method":    r.Method,
+					"path":      r.URL.Path,
+					"stack":     debug.Stack(),
 					"recovered": a,
 				}).Error("panic recovered")
 			}
