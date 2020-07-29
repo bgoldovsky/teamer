@@ -3,7 +3,7 @@ package persons
 import (
 	"context"
 
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

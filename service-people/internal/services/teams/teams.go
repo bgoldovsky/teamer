@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/services/teams/converter"
+	"github.com/bgoldovsky/teamer/service-people/internal/services/teams/converter"
 
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/models"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/repository/teams"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/teamer/service-people/internal/models"
+	"github.com/bgoldovsky/teamer/service-people/internal/repository/teams"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 

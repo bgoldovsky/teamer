@@ -1,4 +1,4 @@
-module github.com/bgoldovsky/teamer-bot/service-people
+module github.com/bgoldovsky/teamer/service-people
 
 go 1.14
 

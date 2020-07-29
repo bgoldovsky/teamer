@@ -5,17 +5,17 @@ import (
 	"log"
 	"net"
 
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/cfg"
+	"github.com/bgoldovsky/teamer/service-people/internal/cfg"
 
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/database"
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/handlers/persons"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/handlers/teams"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/interceptors"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/logger"
-	teamsRepo "github.com/bgoldovsky/teamer-bot/service-people/internal/repository/teams"
-	personsSrv "github.com/bgoldovsky/teamer-bot/service-people/internal/services/persons"
-	teamsSrv "github.com/bgoldovsky/teamer-bot/service-people/internal/services/teams"
+	"github.com/bgoldovsky/teamer/service-people/internal/database"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/teamer/service-people/internal/handlers/persons"
+	"github.com/bgoldovsky/teamer/service-people/internal/handlers/teams"
+	"github.com/bgoldovsky/teamer/service-people/internal/interceptors"
+	"github.com/bgoldovsky/teamer/service-people/internal/logger"
+	teamsRepo "github.com/bgoldovsky/teamer/service-people/internal/repository/teams"
+	personsSrv "github.com/bgoldovsky/teamer/service-people/internal/services/persons"
+	teamsSrv "github.com/bgoldovsky/teamer/service-people/internal/services/teams"
 	"google.golang.org/grpc"
 )
 

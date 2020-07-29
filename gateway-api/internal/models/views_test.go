@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	v1 "github.com/bgoldovsky/teamer-bot/gateway-api/internal/generated/clients/people/v1"
-	. "github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
+	v1 "github.com/bgoldovsky/teamer/gateway-api/internal/generated/clients/people/v1"
+	. "github.com/bgoldovsky/teamer/gateway-api/internal/models"
 )
 
 var team = &v1.Team{

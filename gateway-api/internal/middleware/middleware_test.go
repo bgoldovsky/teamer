@@ -2,8 +2,8 @@ package middleware_test
 
 import (
 	"bytes"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
-	."github.com/bgoldovsky/teamer-bot/gateway-api/internal/middleware"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
+	."github.com/bgoldovsky/teamer/gateway-api/internal/middleware"
 	"net/http"
 	"net/http/httptest"
 	"os"

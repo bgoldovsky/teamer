@@ -5,7 +5,7 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/logger"
+	"github.com/bgoldovsky/teamer/service-people/internal/logger"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

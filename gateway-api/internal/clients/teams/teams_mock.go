@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/bgoldovsky/teamer-bot/gateway-api/internal/generated/clients/people/v1"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
+	v1 "github.com/bgoldovsky/teamer/gateway-api/internal/generated/clients/people/v1"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/stretchr/testify/mock"
 	"google.golang.org/grpc"

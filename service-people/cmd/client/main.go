@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
 	"google.golang.org/grpc"
 )
 

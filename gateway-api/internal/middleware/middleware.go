@@ -2,7 +2,7 @@ package middleware
 
 import (
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/sirupsen/logrus"
 	"net/http"

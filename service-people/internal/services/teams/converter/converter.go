@@ -3,8 +3,8 @@ package converter
 import (
 	"time"
 
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/models"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/teamer/service-people/internal/models"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 )

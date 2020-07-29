@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/bgoldovsky/teamer-bot/gateway-api/internal/generated/clients/people/v1"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/interceptors"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
+	v1 "github.com/bgoldovsky/teamer/gateway-api/internal/generated/clients/people/v1"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/interceptors"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc"
 )

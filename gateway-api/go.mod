@@ -1,4 +1,4 @@
-module github.com/bgoldovsky/teamer-bot/gateway-api
+module github.com/bgoldovsky/teamer/gateway-api
 
 go 1.14
 
@@ -9,7 +9,6 @@ require (
 	github.com/gomodule/redigo v1.8.2
 	github.com/gorilla/mux v1.7.4
 	github.com/sirupsen/logrus v1.6.0
-	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	google.golang.org/grpc v1.30.0
 )

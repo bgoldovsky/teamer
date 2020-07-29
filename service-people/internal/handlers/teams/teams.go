@@ -6,9 +6,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/logger"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/services/teams"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/teamer/service-people/internal/logger"
+	"github.com/bgoldovsky/teamer/service-people/internal/services/teams"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 

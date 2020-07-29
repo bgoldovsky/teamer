@@ -7,10 +7,10 @@ import (
 	"time"
 
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/middleware"
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
-	teamsSrv "github.com/bgoldovsky/teamer-bot/gateway-api/internal/services/teams"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/middleware"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
+	teamsSrv "github.com/bgoldovsky/teamer/gateway-api/internal/services/teams"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

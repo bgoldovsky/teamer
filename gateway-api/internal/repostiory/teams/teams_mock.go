@@ -3,7 +3,7 @@ package teams
 import (
 	"time"
 
-	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
+	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
 	"github.com/stretchr/testify/mock"
 )
 

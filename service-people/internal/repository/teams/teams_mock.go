@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/bgoldovsky/teamer-bot/service-people/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/teamer-bot/service-people/internal/models"
+	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/teamer/service-people/internal/models"
 	"github.com/stretchr/testify/mock"
 )
 
