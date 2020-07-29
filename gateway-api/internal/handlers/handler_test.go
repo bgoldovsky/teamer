@@ -12,6 +12,7 @@ import (
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/clients/teams"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/models"
 	teamsRepo "github.com/bgoldovsky/teamer-bot/gateway-api/internal/repostiory/teams"
+	teamsSrv "github.com/bgoldovsky/teamer-bot/gateway-api/internal/services/teams"
 	"github.com/gorilla/mux"
 )
 
@@ -27,7 +28,8 @@ var team = &models.TeamView{
 func TestHandlers_CreateTeam(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
-	h := New(client, repo)
+	s := teamsSrv.New(client, repo)
+	h := New(s)
 
 	reqBody := &models.TeamForm{
 		Name:        team.Name,
@@ -56,7 +58,8 @@ func TestHandlers_CreateTeam(t *testing.T) {
 func TestHandlers_DeleteTeam(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
-	h := New(client, repo)
+	s := teamsSrv.New(client, repo)
+	h := New(s)
 
 	req, _ := http.NewRequest("DELETE", "/teams", nil)
 	req = mux.SetURLVars(req, map[string]string{"id": strconv.FormatInt(team.ID, 10)})
@@ -78,7 +81,8 @@ func TestHandlers_DeleteTeam(t *testing.T) {
 func TestHandlers_UpdateTeam(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
-	h := New(client, repo)
+	s := teamsSrv.New(client, repo)
+	h := New(s)
 
 	reqBody := &models.TeamForm{
 		Name:        team.Name,
@@ -108,7 +112,8 @@ func TestHandlers_UpdateTeam(t *testing.T) {
 func TestHandlers_GetTeams(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
-	h := New(client, repo)
+	s := teamsSrv.New(client, repo)
+	h := New(s)
 
 	req, _ := http.NewRequest("GET", "/teams", nil)
 

@@ -6,6 +6,7 @@ import (
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/handlers"
 	"github.com/bgoldovsky/teamer-bot/gateway-api/internal/logger"
 	teamsRepo "github.com/bgoldovsky/teamer-bot/gateway-api/internal/repostiory/teams"
+	teamsSrv "github.com/bgoldovsky/teamer-bot/gateway-api/internal/services/teams"
 )
 
 func main() {
@@ -14,17 +15,19 @@ func main() {
 	port := cfg.GetHTTPPort()
 	redisAddress := cfg.GetRedisAddress()
 
-	client, err := teams.NewClient(peopleHost)
+	teamsClient, err := teams.NewClient(peopleHost)
 	if err != nil {
 		logger.Log.WithError(err).Fatal("can't connect team service service-teams")
 	}
 
-	repo, err := teamsRepo.NewRepository(redisAddress)
+	teamsRepository, err := teamsRepo.NewRepository(redisAddress)
 	if err != nil {
 		logger.Log.WithError(err).Fatal("can't connect redis")
 	}
 
-	app := handlers.New(client, repo)
+	teamsService := teamsSrv.New(teamsClient, teamsRepository)
+
+	app := handlers.New(teamsService)
 	app.Initialize(secret)
 	app.Run(port)
 }
