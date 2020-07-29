@@ -12,4 +12,11 @@ Teamer bot microservices
 
 ### gateway-api
 
-0. Начать реализацию persons...
+0. .idea в gitignore
+0. Начать реализацию persons
+0. Реализоватоь получение всех участников команды по ее ID
+
+### auth-api 
+
+0. Начать реализацию auth-service
+0. Перейти на сертефикаты 
