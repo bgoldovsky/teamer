@@ -5,23 +5,32 @@ volumes:
     driver: local
 
 services:
+
+  # databases and infrastructure
+
   db:
     image: postgres:latest
     ports:
       - "5433:5432"
     volumes:
       - database_data:/var/lib/postgresql/data
+    logging:
+      driver: none
 
   cache:
     image: redis:latest
     ports:
       - "6379:6379"
+    logging:
+      driver: none
 
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
     hostname: zookeeper
+    logging:
+      driver: none
 
   kafka:
     image: wurstmeister/kafka
@@ -38,6 +47,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - "zookeeper"
+    logging:
+      driver: none
+
+  # services
 
   service-people:
     image: service-people
@@ -75,9 +88,9 @@ services:
     depends_on:
       - service-people
       - cache
-    restart: on-failure:10
     links:
       - "service-people:people"
+    restart: on-failure:10
 
   auth-api:
     image: auth-api

@@ -13,7 +13,7 @@ func main() {
 	kafkaAddress := cfg.GetKafkaAddress()
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": kafkaAddress,
-		"group.id":          "myGroup",
+		"group.id":          "xxx",
 		"auto.offset.reset": "earliest",
 	})
 
