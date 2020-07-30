@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/bgoldovsky/teamer/service-people/internal/publisher"
+
 	"github.com/bgoldovsky/teamer/service-people/internal/cfg"
 
 	"github.com/bgoldovsky/teamer/service-people/internal/database"
@@ -25,9 +27,16 @@ func main() {
 	var db = database.NewDatabase(context.Background(), connString)
 	teamsRepository := teamsRepo.NewRepository(db)
 
+	// Publisher
+	kafkaAddress := cfg.GetKafkaAddress()
+	pub, err := publisher.New(kafkaAddress)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Services
 	personsService := personsSrv.New()
-	teamsService := teamsSrv.New(teamsRepository)
+	teamsService := teamsSrv.New(teamsRepository, pub)
 
 	// Handlers
 	personsHandler := persons.New(personsService)

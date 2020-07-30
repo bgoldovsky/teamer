@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package data_bus;
+
+option go_package = "internal/generated/data-bus/v1";
+
+message EventMessage {
+	bytes messageID = 1; // Уникальный идентификатор сообщения
+	EventData data = 2; // Данные сообщения
+}
+
+message EventData {
+	string event = 1; // Название события
+	int64 entityID = 2; //Идентификатор сущности
+	int64 occurredOn = 3; //Дата, когда событие произошло
+}

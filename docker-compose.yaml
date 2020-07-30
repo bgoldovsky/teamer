@@ -17,6 +17,28 @@ services:
     ports:
       - "6379:6379"
 
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    hostname: zookeeper
+
+  kafka:
+    image: wurstmeister/kafka
+    command: [start-kafka.sh]
+    ports:
+      - "9092:9092"
+    hostname: kafka
+    environment:
+      KAFKA_CREATE_TOPICS: "teams:1:1,persons:1:1"
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: 9092
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - "zookeeper"
+
   service-people:
     image: service-people
     build: ./service-people
@@ -25,8 +47,19 @@ services:
     environment:
       - PORT=50051
       - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_people sslmode=disable
+      - KAFKA=kafka:9092
     depends_on:
       - db
+      - kafka
+    restart: on-failure:10
+
+  service-duty-bot:
+    image: service-duty-bot
+    build: ./service-duty-bot
+    environment:
+      - KAFKA=kafka:9092
+    depends_on:
+      - kafka
     restart: on-failure:10
 
   gateway-api:

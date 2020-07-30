@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/bgoldovsky/teamer/service-people/internal/publisher"
+
 	"github.com/bgoldovsky/teamer/service-people/internal/services/teams/converter"
 
 	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
@@ -12,13 +14,20 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
+const (
+	topicTeams     = "teams"
+	eventTeamAdded = "team.added"
+)
+
 type Service struct {
-	repo teams.Repository
+	repo      teams.Repository
+	publisher publisher.Publisher
 }
 
-func New(repo teams.Repository) *Service {
+func New(repo teams.Repository, publisher publisher.Publisher) *Service {
 	return &Service{
-		repo: repo,
+		repo:      repo,
+		publisher: publisher,
 	}
 }
 
@@ -31,6 +40,11 @@ func (s *Service) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 
 	if err != nil {
 		return nil, fmt.Errorf("add team error: %w", err)
+	}
+
+	err = s.publisher.Publish(eventTeamAdded, team.ID, topicTeams)
+	if err != nil {
+		return nil, fmt.Errorf("publish %s to %s error: %w", eventTeamAdded, topicTeams, err)
 	}
 
 	return &v1.AddTeamReply{Id: team.ID}, nil

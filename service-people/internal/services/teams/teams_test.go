@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bgoldovsky/teamer/service-people/internal/publisher"
+
 	v1 "github.com/bgoldovsky/teamer/service-people/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/teamer/service-people/internal/models"
 	"github.com/bgoldovsky/teamer/service-people/internal/repository/teams"
@@ -24,7 +26,8 @@ var team = &models.Team{
 func TestService_AddTeam(t *testing.T) {
 	repo := teams.NewMock()
 	repo.ConfigureSave(team.ID, team.Name, team.Description, team.Slack)
-	service := New(repo)
+	pub := publisher.NewMock(eventTeamAdded, team.ID, topicTeams)
+	service := New(repo, pub)
 
 	request := &v1.AddTeamRequest{
 		Name:        team.Name,
@@ -41,7 +44,9 @@ func TestService_AddTeam(t *testing.T) {
 func TestService_UpdateTeam(t *testing.T) {
 	repo := teams.NewMock()
 	repo.ConfigureUpdate(team.ID, team.Name, team.Description, team.Slack, team.Created, team.Updated)
-	service := New(repo)
+	// TODO: удалить placeholder
+	pub := publisher.NewMock("", 0, "")
+	service := New(repo, pub)
 
 	request := &v1.UpdateTeamRequest{
 		Id:          team.ID,
@@ -59,7 +64,9 @@ func TestService_UpdateTeam(t *testing.T) {
 func TestService_RemoveTeam(t *testing.T) {
 	repo := teams.NewMock()
 	repo.ConfigureRemove(team.ID)
-	service := New(repo)
+	// TODO: удалить placeholder
+	pub := publisher.NewMock("", 0, "")
+	service := New(repo, pub)
 
 	request := &v1.RemoveTeamRequest{Id: team.ID}
 
@@ -72,7 +79,9 @@ func TestService_RemoveTeam(t *testing.T) {
 func TestService_GetTeams(t *testing.T) {
 	repo := teams.NewMock()
 	repo.ConfigureGet(team.ID, team.Name, team.Description, team.Slack, team.Created, team.Updated)
-	service := New(repo)
+	// TODO: удалить placeholder
+	pub := publisher.NewMock("", 0, "")
+	service := New(repo, pub)
 
 	created, _ := ptypes.TimestampProto(team.Created)
 	updated, _ := ptypes.TimestampProto(team.Updated)

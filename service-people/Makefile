@@ -16,7 +16,8 @@ test:
 
 .PHONY:proto
 proto:
-	protoc -I api/proto --go_out=plugins=grpc,paths=import:. api/proto/*.proto
+	protoc -I api/proto --go_out=plugins=grpc,paths=import:. api/proto/*.proto && \
+	protoc --go_out=. data-bus/proto/*.proto
 
 .PHONY:compose
 compose:
