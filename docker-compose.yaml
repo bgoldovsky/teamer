@@ -24,31 +24,31 @@ services:
     logging:
       driver: none
 
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-    hostname: zookeeper
-    logging:
-      driver: none
+ # zookeeper:
+ #   image: wurstmeister/zookeeper
+ #   ports:
+ #     - "2181:2181"
+ #   hostname: zookeeper
+ #   logging:
+ #     driver: none
 
-  kafka:
-    image: wurstmeister/kafka
-    command: [start-kafka.sh]
-    ports:
-      - "9092:9092"
-    hostname: kafka
-    environment:
-      KAFKA_CREATE_TOPICS: "teams:1:1,persons:1:1"
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_PORT: 9092
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - "zookeeper"
-    logging:
-      driver: none
+ # kafka:
+ #   image: wurstmeister/kafka
+ #   command: [start-kafka.sh]
+ #   ports:
+ #     - "9092:9092"
+ #   hostname: kafka
+ #   environment:
+ #     KAFKA_CREATE_TOPICS: "teams:1:1,persons:1:1"
+ #     KAFKA_ADVERTISED_HOST_NAME: kafka
+ #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+ #     KAFKA_ADVERTISED_PORT: 9092
+ #   volumes:
+ #     - /var/run/docker.sock:/var/run/docker.sock
+ #   depends_on:
+ #     - "zookeeper"
+ #   logging:
+ #     driver: none
 
   # services
 
@@ -63,17 +63,17 @@ services:
       - KAFKA=kafka:9092
     depends_on:
       - db
-      - kafka
+ #     - kafka
     restart: on-failure:10
 
-  service-duty-bot:
-    image: service-duty-bot
-    build: ./service-duty-bot
-    environment:
-      - KAFKA=kafka:9092
-    depends_on:
-      - kafka
-    restart: on-failure:10
+ # service-duty-bot:
+ #   image: service-duty-bot
+ #   build: ./service-duty-bot
+ #   environment:
+ #     - KAFKA=kafka:9092
+ #   depends_on:
+ #     - kafka
+ #   restart: on-failure:10
 
   gateway-api:
     image: gateway-api

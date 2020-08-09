@@ -42,10 +42,13 @@ func (s *Service) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 		return nil, fmt.Errorf("add team error: %w", err)
 	}
 
-	err = s.publisher.Publish(eventTeamAdded, team.ID, topicTeams)
-	if err != nil {
-		return nil, fmt.Errorf("publish %s to %s error: %w", eventTeamAdded, topicTeams, err)
-	}
+	// TODO: Вернуть пуюликацию события
+	/*
+		err = s.publisher.Publish(eventTeamAdded, team.ID, topicTeams)
+		if err != nil {
+			return nil, fmt.Errorf("publish %s to %s error: %w", eventTeamAdded, topicTeams, err)
+		}
+	*/
 
 	return &v1.AddTeamReply{Id: team.ID}, nil
 }
