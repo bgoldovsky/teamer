@@ -5,7 +5,7 @@ import "time"
 type Role int64
 
 const (
-	None Role = iota
+	_ Role = iota
 	BackEnd
 	FrontEnd
 	Mobile
