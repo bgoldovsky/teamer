@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
 	"github.com/gomodule/redigo/redis"
 )
 

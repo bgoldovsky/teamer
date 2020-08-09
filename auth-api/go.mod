@@ -1,4 +1,4 @@
-module github.com/bgoldovsky/teamer/auth-api
+module github.com/bgoldovsky/dutyer/auth-api
 
 go 1.14
 

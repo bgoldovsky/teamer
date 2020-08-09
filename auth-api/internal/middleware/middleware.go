@@ -5,7 +5,7 @@ import (
 	"runtime/debug"
 
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
-	"github.com/bgoldovsky/teamer/auth-api/internal/logger"
+	"github.com/bgoldovsky/dutyer/auth-api/internal/logger"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/sirupsen/logrus"
 )

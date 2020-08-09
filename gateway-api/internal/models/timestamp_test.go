@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/timestamp"
 )
 

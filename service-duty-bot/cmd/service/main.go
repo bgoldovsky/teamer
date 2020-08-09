@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/bgoldovsky/teamer/service-duty-bot/internal/cfg"
-	dataBus "github.com/bgoldovsky/teamer/service-duty-bot/internal/generated/data-bus/v1"
-	"github.com/bgoldovsky/teamer/service-duty-bot/internal/logger"
+	"github.com/bgoldovsky/dutyer/service-duty-bot/internal/cfg"
+	dataBus "github.com/bgoldovsky/dutyer/service-duty-bot/internal/generated/data-bus/v1"
+	"github.com/bgoldovsky/dutyer/service-duty-bot/internal/logger"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/golang/protobuf/proto"
 	_ "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka/librdkafka"

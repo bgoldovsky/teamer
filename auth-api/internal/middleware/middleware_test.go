@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/bgoldovsky/teamer/auth-api/internal/middleware"
+	. "github.com/bgoldovsky/dutyer/auth-api/internal/middleware"
 
-	"github.com/bgoldovsky/teamer/auth-api/internal/logger"
+	"github.com/bgoldovsky/dutyer/auth-api/internal/logger"
 )
 
 func TestPanicMiddleware(t *testing.T) {

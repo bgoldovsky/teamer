@@ -1,4 +1,4 @@
-module github.com/bgoldovsky/teamer/gateway-api
+module github.com/bgoldovsky/dutyer/gateway-api
 
 go 1.14
 

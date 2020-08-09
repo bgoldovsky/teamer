@@ -1,9 +1,9 @@
-# teamer
-Teamer bot microservices
+# dutyer
+dutyer bot microservices
 
 ##TODO:
 
-### service-people
+### service-teams
 
 0. Реализовать репозиторий persons
 0. Сделать моки persons репозитория

@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bgoldovsky/teamer/gateway-api/internal/clients/teams"
-	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
-	teamsRepo "github.com/bgoldovsky/teamer/gateway-api/internal/repostiory/teams"
-	. "github.com/bgoldovsky/teamer/gateway-api/internal/services/teams"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/clients/teams"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
+	teamsRepo "github.com/bgoldovsky/dutyer/gateway-api/internal/repostiory/teams"
+	. "github.com/bgoldovsky/dutyer/gateway-api/internal/services/teams"
 	"github.com/stretchr/testify/assert"
 )
 

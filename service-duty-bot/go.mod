@@ -1,4 +1,4 @@
-module github.com/bgoldovsky/teamer/service-duty-bot
+module github.com/bgoldovsky/dutyer/service-duty-bot
 
 go 1.14
 

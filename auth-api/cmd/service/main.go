@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/bgoldovsky/teamer/auth-api/internal/cfg"
-	"github.com/bgoldovsky/teamer/auth-api/internal/handlers"
+	"github.com/bgoldovsky/dutyer/auth-api/internal/cfg"
+	"github.com/bgoldovsky/dutyer/auth-api/internal/handlers"
 )
 
 func main() {

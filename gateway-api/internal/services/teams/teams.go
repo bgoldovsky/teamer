@@ -3,10 +3,10 @@ package teams
 import (
 	"context"
 
-	"github.com/bgoldovsky/teamer/gateway-api/internal/clients/teams"
-	"github.com/bgoldovsky/teamer/gateway-api/internal/logger"
-	"github.com/bgoldovsky/teamer/gateway-api/internal/models"
-	teamsRepo "github.com/bgoldovsky/teamer/gateway-api/internal/repostiory/teams"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/clients/teams"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
+	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
+	teamsRepo "github.com/bgoldovsky/dutyer/gateway-api/internal/repostiory/teams"
 	"github.com/sirupsen/logrus"
 )
 

@@ -52,14 +52,14 @@ services:
 
   # services
 
-  service-people:
-    image: service-people
-    build: ./service-people
+  service-teams:
+    image: service-teams
+    build: ./service-teams
     ports:
       - "50051:50051"
     environment:
       - PORT=50051
-      - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_people sslmode=disable
+      - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_teams sslmode=disable
       - KAFKA=kafka:9092
     depends_on:
       - db
@@ -84,12 +84,12 @@ services:
       - PORT=8080
       - REDIS=cache:6379
       - SECRET=mySecretSigningString
-      - PEOPLE_CLIENT=people:50051
+      - SERVICE_TEAMS=teams:50051
     depends_on:
-      - service-people
+      - service-teams
       - cache
     links:
-      - "service-people:people"
+      - "service-teams:teams"
     restart: on-failure:10
 
   auth-api:

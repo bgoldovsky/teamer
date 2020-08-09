@@ -1,2 +1,0 @@
-# service-people
-People service

@@ -2,8 +2,8 @@ package cfg
 
 import "os"
 
-func GetPeopleHost() string {
-	h := os.Getenv("PEOPLE_CLIENT")
+func GetTeamsHost() string {
+	h := os.Getenv("SERVICE_TEAMS")
 	if h == "" {
 		h = ":50051"
 		//panic("client teams service address not specified")

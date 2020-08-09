@@ -85,7 +85,8 @@ message Person {
   string slack = 8; // Идентификатор в Slack
   Role role = 9; // Тип разработчика
   google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
-  bool isActive = 11; // Активен в системе
-  google.protobuf.Timestamp created = 12; // Время создания
-  google.protobuf.Timestamp updated = 13; // Время изменения
+  int64 duty_order = 11; // Уникальный порядок дежурства сотрудника
+  bool isActive = 12; // Активен в системе
+  google.protobuf.Timestamp created = 13; // Время создания
+  google.protobuf.Timestamp updated = 14; // Время изменения
 }

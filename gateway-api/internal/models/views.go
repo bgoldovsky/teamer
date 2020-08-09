@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	v1 "github.com/bgoldovsky/teamer/gateway-api/internal/generated/clients/people/v1"
+	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/teams/v1"
 )
 
 type TeamView struct {
