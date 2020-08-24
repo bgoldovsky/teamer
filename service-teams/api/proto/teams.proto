@@ -6,12 +6,14 @@ option go_package = "internal/generated/rpc/v1";
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 service Teams {
   rpc AddTeam (AddTeamRequest) returns (AddTeamReply) {} // Добавить новую команду
   rpc UpdateTeam (UpdateTeamRequest) returns (google.protobuf.Empty) {} // Изменить данные команды
   rpc RemoveTeam (RemoveTeamRequest) returns (google.protobuf.Empty) {} // Удалить команду
   rpc GetTeams (GetTeamsRequest) returns (GetTeamsReply) {} // Получить список команд
+  rpc GetTeam (GetTeamRequest) returns (GetTeamReply) {} // Получить команду и всех ее участников
 }
 
 message AddTeamRequest {
@@ -58,6 +60,34 @@ message Team {
   string name = 2; // Название команды
   string description = 3; // Описание деятельности команды
   string slack = 4; // Идентификатор в Slack
-  google.protobuf.Timestamp created = 12; // Время создания
-  google.protobuf.Timestamp updated = 13; // Время изменения
+  google.protobuf.Timestamp created = 5; // Время создания
+  google.protobuf.Timestamp updated = 6; // Время изменения
+}
+
+message GetTeamRequest {
+  int64 id = 1;  // Уникальный идентификатор команды
+}
+
+message GetTeamReply {
+  int64 id = 1; // Уникальный идентификатор команды
+  string name = 2; // Название команды
+  string description = 3; // Описание деятельности команды
+  string slack = 4; // Идентификатор в Slack
+  google.protobuf.Timestamp created = 5; // Время создания
+  google.protobuf.Timestamp updated = 6; // Время изменения
+  repeated Member members = 7; // Список участников команды
+}
+
+message Member {
+  int64 id = 1; // Уникальный идентификатор сотрудника
+  string first_name = 2; // Имя
+  google.protobuf.StringValue middle_name = 3; // Отчество
+  string last_name = 4; // Фамилия
+  google.protobuf.Timestamp birthday = 5; // Дата рождения
+  google.protobuf.StringValue email = 6; // Email
+  google.protobuf.StringValue phone = 7; // Телефон
+  string slack = 8; // Идентификатор в Slack
+  int64 role = 9; // Тип разработчика
+  int64 duty_order = 10; // Уникальный порядок дежурства сотрудника
+  bool isActive = 11; // Активен в системе
 }

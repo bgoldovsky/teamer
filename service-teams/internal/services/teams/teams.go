@@ -4,19 +4,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bgoldovsky/dutyer/service-teams/internal/publisher"
-
-	"github.com/bgoldovsky/dutyer/service-teams/internal/services/teams/converter"
-
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/models"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/publisher"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/repository/teams"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/services/teams/converter"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
 const (
-	topicTeams     = "teams"
-	eventTeamAdded = "team.added"
+	topicTeams       = "teams"
+	eventTeamAdded   = "team.added"
+	eventTeamChanged = "team.changed"
+	eventTeamRemoved = "team.removed"
 )
 
 type Service struct {

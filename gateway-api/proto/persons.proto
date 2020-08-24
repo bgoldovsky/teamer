@@ -50,8 +50,9 @@ message UpdatePersonRequest {
   google.protobuf.StringValue phone = 7; // Телефон
   string slack = 8; // Идентификатор в Slack
   Role role = 9; // Тип разработчика
-  google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
-  bool isActive = 11; // Активен в системе
+  int64 duty_order = 10; // Уникальный порядок дежурства сотрудника
+  google.protobuf.Int64Value team_id  = 11; // Уникальный идентификатор команды сотрудника
+  bool isActive = 12; // Активен в системе
 }
 
 message RemovePersonRequest {

@@ -4,16 +4,20 @@ import (
 	"context"
 
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/repository/persons"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type Service struct {
+	repo persons.Repository
 }
 
-func New() *Service {
-	return &Service{}
+func New(repo persons.Repository) *Service {
+	return &Service{
+		repo: repo,
+	}
 }
 
 func (s *Service) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.AddPersonReply, error) {

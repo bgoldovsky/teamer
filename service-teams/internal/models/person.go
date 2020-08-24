@@ -17,7 +17,7 @@ type Person struct {
 	FirstName  string
 	MiddleName *string
 	LastName   string
-	Birthday   int64
+	Birthday   *time.Time
 	Email      *string
 	Phone      *string
 	Slack      string

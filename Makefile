@@ -10,4 +10,10 @@ build:
 up:
 	 docker-compose up
 
+.PHONY:test
+test:
+	echo "testing.."
+	go clean -testcache
+	go test -v -cover ./...
+
 .DEFAULT_GOAL := compose

@@ -10,6 +10,7 @@ create table if not exists persons (
     birthday       timestamp    not null,
     email          text,
     phone          text,
+    slack          text         not null,
     role           int          not null check (role>0),
     duty_order     int          unique,
     is_active      boolean      not null,

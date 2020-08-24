@@ -5,10 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bgoldovsky/dutyer/service-teams/internal/publisher"
-
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/models"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/publisher"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/repository/teams"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
