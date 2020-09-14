@@ -3,20 +3,24 @@ package persons
 import (
 	"context"
 
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/publisher"
+
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/persons"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/repository/persons"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type Service struct {
-	repo persons.Repository
+	repo      persons.Repository
+	publisher publisher.Publisher
 }
 
-func New(repo persons.Repository) *Service {
+func New(repo persons.Repository, publisher publisher.Publisher) *Service {
 	return &Service{
-		repo: repo,
+		repo:      repo,
+		publisher: publisher,
 	}
 }
 

@@ -2,24 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/service-teams/internal/services/persons/converter/converter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service-teams/internal/services/persons/converter/converter_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/proto/persons.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/api/proto/persons.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/api/proto/teams.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/api/proto/teams.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/db/changelog/master/0002-create-persons-table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/db/changelog/master/0002-create-persons-table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/db/fixture/master/0002-insert-persons-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/db/fixture/master/0002-insert-persons-data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/persons.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/teams.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/teams.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/models/person.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/models/person.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/repository/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/repository/persons/persons_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/repository/persons/persons_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/services/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/services/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/teams/teams_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/services/teams/teams_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/cmd/service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/cmd/service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/handlers/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/handlers/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/handlers/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/handlers/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/models/person.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/models/person.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/models/team.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/models/team.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/publisher/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/publisher/publisher_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/publisher/publisher_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/repository/persons/persons_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/repository/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/repository/teams/teams_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/persons/converter/converter.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/persons/converter/converter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/persons/converter/converter_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/persons/converter/converter_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/teams/converter/converter.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/converter/converter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/teams/converter/converter_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/converter/converter_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/services/teams/teams_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +65,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/service-teams/internal/app" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

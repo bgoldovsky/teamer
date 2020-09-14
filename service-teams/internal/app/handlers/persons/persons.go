@@ -6,9 +6,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/logger"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/services/persons"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 

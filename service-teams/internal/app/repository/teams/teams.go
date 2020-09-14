@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/models"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/models"
 	"github.com/jackc/pgx/v4"
 )
 

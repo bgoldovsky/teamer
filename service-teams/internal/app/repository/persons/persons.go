@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/models"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/models"
 	"github.com/jackc/pgx/v4"
 )
 
@@ -383,7 +383,6 @@ func (p *person) convert() *models.Person {
 		ID:        p.ID.Int64,
 		FirstName: p.FirstName.String,
 		LastName:  p.LastName.String,
-		Birthday:  p.Birthday.Time,
 		Slack:     p.Slack.String,
 		Role:      models.Role(p.Role.Int64),
 		DutyOrder: p.DutyOrder.Int64,
@@ -405,6 +404,10 @@ func (p *person) convert() *models.Person {
 
 	if p.TeamID.Valid {
 		model.TeamID = &p.TeamID.Int64
+	}
+
+	if p.Birthday.Valid {
+		model.Birthday = &p.Birthday.Time
 	}
 
 	if p.Updated.Valid {

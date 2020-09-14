@@ -2,13 +2,14 @@ package teams
 
 import (
 	"context"
+	"errors"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/services/teams"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/logger"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/services/teams"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
@@ -84,4 +85,8 @@ func (h *Handler) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.Ge
 	}
 
 	return reply, nil
+}
+
+func (h *Handler) GetTeam(context.Context, *v1.GetTeamRequest) (*v1.GetTeamReply, error) {
+	return nil, errors.New("not implemented")
 }

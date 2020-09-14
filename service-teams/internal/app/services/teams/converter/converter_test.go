@@ -6,7 +6,7 @@ import (
 
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
 
-	"github.com/bgoldovsky/dutyer/service-teams/internal/models"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/models"
 )
 
 func TestToDTO(t *testing.T) {

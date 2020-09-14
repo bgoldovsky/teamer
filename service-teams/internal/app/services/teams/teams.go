@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/models"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/publisher"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/teams"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/services/teams/converter"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/models"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/publisher"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/repository/teams"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/services/teams/converter"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 

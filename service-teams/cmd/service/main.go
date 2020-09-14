@@ -5,19 +5,18 @@ import (
 	"log"
 	"net"
 
-	"github.com/bgoldovsky/dutyer/service-teams/internal/publisher"
-
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/handlers/persons"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/handlers/teams"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/app/publisher"
+	personsRepo "github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/persons"
+	teamsRepo "github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/teams"
+	personsSrv "github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons"
+	teamsSrv "github.com/bgoldovsky/dutyer/service-teams/internal/app/services/teams"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/cfg"
-
 	"github.com/bgoldovsky/dutyer/service-teams/internal/database"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/handlers/persons"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/handlers/teams"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/interceptors"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/logger"
-	teamsRepo "github.com/bgoldovsky/dutyer/service-teams/internal/repository/teams"
-	personsSrv "github.com/bgoldovsky/dutyer/service-teams/internal/services/persons"
-	teamsSrv "github.com/bgoldovsky/dutyer/service-teams/internal/services/teams"
 	"google.golang.org/grpc"
 )
 
@@ -26,6 +25,7 @@ func main() {
 	connString := cfg.GetConnString()
 	var db = database.NewDatabase(context.Background(), connString)
 	teamsRepository := teamsRepo.NewRepository(db)
+	personsRepository := personsRepo.NewRepository(db)
 
 	// Publisher
 	kafkaAddress := cfg.GetKafkaAddress()
@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// Services
-	personsService := personsSrv.New()
+	personsService := personsSrv.New(personsRepository, pub)
 	teamsService := teamsSrv.New(teamsRepository, pub)
 
 	// Handlers
