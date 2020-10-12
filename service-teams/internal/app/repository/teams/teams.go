@@ -1,3 +1,5 @@
+//go:generate mockgen -destination teams_mock/teams_mock.go -source teams.go
+
 package teams
 
 import (
@@ -15,102 +17,98 @@ import (
 )
 
 var (
-	ErrTeamNotFount = errors.New("team not found")
+	ErrTeamNotFount = errors.New("teams not found")
 )
 
-type team struct {
-	ID          sql.NullInt64
-	Name        sql.NullString
-	Description sql.NullString
-	Slack       sql.NullString
-	Created     sql.NullTime
-	Updated     sql.NullTime
-}
-
 type Repository interface {
+	Get(ctx context.Context, teamID int64) (*models.Team, error)
+	GetList(ctx context.Context, filter *v1.TeamFilter, limit, offset uint, sort, order string) ([]models.Team, error)
 	Save(ctx context.Context, team *models.Team) (*models.Team, error)
 	Update(ctx context.Context, team *models.Team) (*models.Team, error)
 	Remove(ctx context.Context, teamID int64) (int64, error)
-	Get(ctx context.Context, filter *v1.TeamFilter, limit, offset uint, sort, order string) ([]models.Team, error)
 }
 
-type Queryer interface {
+type queryer interface {
 	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
 	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
 }
 
 type repository struct {
-	database Queryer
+	database queryer
 }
 
-func NewRepository(database Queryer) *repository {
+func NewRepository(database queryer) *repository {
 	return &repository{
 		database: database,
 	}
 }
 
-func (r *repository) Save(ctx context.Context, team *models.Team) (*models.Team, error) {
-	attributes := make(map[string]interface{})
-	attributes["name"] = team.Name
-	attributes["description"] = team.Description
-	attributes["slack"] = team.Slack
+func (r *repository) Get(ctx context.Context, teamID int64) (*models.Team, error) {
+	// Список запрашиваемых полей
+	columns := []string{"id", "name", "description", "slack", "created_at", "updated_at"}
+	for i, c := range columns {
+		columns[i] = fmt.Sprintf(`"t".%q`, c)
+	}
 
-	t, err := r.put(ctx, attributes)
+	// Формирование запроса
+	var query bytes.Buffer
+	query.WriteString(fmt.Sprintf(`select %s from "teams" as "t" where "t"."id" = $1`, strings.Join(columns, ",")))
+
+	// Выполнение запроса
+	teams, err := r.query(ctx, query.String(), teamID)
 	if err != nil {
 		return nil, err
 	}
 
-	return t, nil
+	return &teams[0], nil
+}
+
+func (r *repository) GetList(
+	ctx context.Context,
+	filter *v1.TeamFilter,
+	limit, offset uint,
+	sort, order string,
+) ([]models.Team, error) {
+	// Список запрашиваемых полей
+	columns := []string{"id", "name", "description", "slack", "created_at", "updated_at"}
+	for i, c := range columns {
+		columns[i] = fmt.Sprintf(`"t".%q`, c)
+	}
+
+	// Формирование запроса
+	var query bytes.Buffer
+	query.WriteString(fmt.Sprintf(`select %s from "teams" as "t"`, strings.Join(columns, ",")))
+	where, args := r.where(filter)
+	if where != "" {
+		query.WriteString(" ")
+		query.WriteString(where)
+	}
+	query.WriteString(fmt.Sprintf(` order by "t".%q %s limit %d offset %d;`, order, sort, limit, offset))
+
+	// Выполнение запроса
+	return r.query(ctx, query.String(), args...)
+}
+
+func (r *repository) Save(ctx context.Context, team *models.Team) (*models.Team, error) {
+	attributes := map[string]interface{}{
+		"name":        team.Name,
+		"description": team.Description,
+		"slack":       team.Slack,
+	}
+
+	return r.put(ctx, attributes)
 }
 
 func (r *repository) Update(ctx context.Context, t *models.Team) (*models.Team, error) {
-	var (
-		i           uint8
-		values      []interface{}
-		placeholder []string
-		returns     []string
-		attributes  = make(map[string]interface{})
-	)
-
-	attributes["name"] = t.Name
-	attributes["description"] = t.Description
-	attributes["slack"] = t.Slack
-
-	returns = append(returns, "id")
-	returns = append(returns, "name")
-	returns = append(returns, "description")
-	returns = append(returns, "slack")
-	returns = append(returns, "updated_at")
-	returns = append(returns, "created_at")
-
-	attributes["updated_at"] = time.Now().Local()
-	for k, v := range attributes {
-		i += 1
-		values = append(values, v)
-		placeholder = append(placeholder, fmt.Sprintf("%q = $%d", k, i))
+	var attributes = map[string]interface{}{
+		"id":          t.ID,
+		"name":        t.Name,
+		"description": t.Description,
+		"slack":       t.Slack,
+		"updated_at":  time.Now().Local(),
 	}
 
-	template := `update "teams" set %s where id = %d returning %s`
-	query := fmt.Sprintf(template, strings.Join(placeholder, ","), t.ID, strings.Join(returns, ","))
-
-	var data team
-	err := r.database.QueryRow(ctx, query, values...).Scan(
-		&data.ID,
-		&data.Name,
-		&data.Description,
-		&data.Slack,
-		&data.Updated,
-		&data.Created)
-
-	if err == pgx.ErrNoRows {
-		return nil, ErrTeamNotFount
-	}
-
-	if err == nil {
-		return nil, err
-	}
-
-	return data.convert(), err
+	return r.put(ctx, attributes)
 }
 
 func (r *repository) Remove(ctx context.Context, teamID int64) (int64, error) {
@@ -121,33 +119,6 @@ func (r *repository) Remove(ctx context.Context, teamID int64) (int64, error) {
 	return teamID, err
 }
 
-func (r *repository) Get(
-	ctx context.Context,
-	filter *v1.TeamFilter,
-	limit, offset uint,
-	sort, order string,
-) ([]models.Team, error) {
-	var query bytes.Buffer
-
-	ccc := []string{"id", "name", "description", "slack", "created_at", "updated_at"}
-	columns := []string{"id", "name", "description", "slack", "created_at", "updated_at"}
-
-	for i, c := range columns {
-		columns[i] = fmt.Sprintf(`"t".%q`, c)
-	}
-
-	query.WriteString(fmt.Sprintf(`select %s from "teams" as "t"`, strings.Join(columns, ",")))
-
-	where, args := r.where(filter)
-	if where != "" {
-		query.WriteString(" ")
-		query.WriteString(where)
-	}
-
-	query.WriteString(fmt.Sprintf(` order by "t".%q %s limit %d offset %d;`, order, sort, limit, offset))
-	return r.query(ctx, ccc, query.String(), args...)
-}
-
 func (r *repository) put(ctx context.Context, attributes map[string]interface{}) (*models.Team, error) {
 	var (
 		i           uint8
@@ -156,8 +127,10 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 		columns     []string
 		returns     []string
 		placeholder []string
+		update      []string
 	)
 
+	// Имена возвращаемых полей
 	returns = append(returns, "id")
 	returns = append(returns, "name")
 	returns = append(returns, "description")
@@ -165,67 +138,51 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 	returns = append(returns, "created_at")
 	returns = append(returns, "updated_at")
 
+	// Подготовка коллекции значений, имен полей и плейсхолдеров для передаваемых значений
 	for k, v := range attributes {
 		i += 1
 		values = append(values, v)
 		columns = append(columns, fmt.Sprintf("%q", k))
 		placeholder = append(placeholder, fmt.Sprintf("$%d", i))
+		update = append(update, fmt.Sprintf("%s=excluded.%s", k, k))
 	}
 
-	query := fmt.Sprintf(`insert into "teams" (%s) values (%s) returning %s`,
-		strings.Join(columns, ","), strings.Join(placeholder, ","), strings.Join(returns, ","))
+	// Построение sql запрса
+	query := fmt.Sprintf(`insert into "teams" (%s) values (%s) on conflict (id) do update set %s returning %s`,
+		strings.Join(columns, ","),
+		strings.Join(placeholder, ","),
+		strings.Join(update, ","),
+		strings.Join(returns, ","))
 
-	oo, err := r.query(ctx, returns, query, values...)
+	// Выполнение запроса
+	teams, err := r.query(ctx, query, values...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &oo[0], nil
+	return &teams[0], nil
 }
 
-func (r *repository) query(ctx context.Context, columns []string, query string, args ...interface{}) ([]models.Team, error) {
+func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Team, error) {
 	rows, err := r.database.Query(ctx, query, args...)
-
-	if err == pgx.ErrNoRows {
-		return []models.Team{}, nil
+	if isEmpty(err) {
+		return nil, ErrTeamNotFount
 	}
 
 	if err != nil {
 		return nil, err
 	}
 
+	defer rows.Close()
 	var teams []models.Team
+
 	for rows.Next() {
 		var t team
-		var dest []interface{}
-
-		for _, c := range columns {
-			if c == `id` {
-				dest = append(dest, &t.ID)
-			}
-			if c == `name` {
-				dest = append(dest, &t.Name)
-			}
-			if c == `description` {
-				dest = append(dest, &t.Description)
-			}
-			if c == `slack` {
-				dest = append(dest, &t.Slack)
-			}
-			if c == `created_at` {
-				dest = append(dest, &t.Created)
-			}
-			if c == `updated_at` {
-				dest = append(dest, &t.Updated)
-			}
-		}
-
-		if err := rows.Scan(dest...); err != nil {
+		if err := rows.Scan(&t.ID, &t.Name, &t.Description, &t.Slack, &t.Created, &t.Updated); err != nil {
 			return nil, err
 		}
-
-		rt := t.convert()
-		teams = append(teams, *rt)
+		team := t.convert()
+		teams = append(teams, team)
 	}
 
 	return teams, nil
@@ -275,7 +232,26 @@ func (r *repository) where(f *v1.TeamFilter) (string, []interface{}) {
 	return "", values
 }
 
-func (t *team) convert() *models.Team {
+func isEmpty(err error) bool {
+	if err != nil {
+		switch err {
+		case pgx.ErrNoRows:
+			return true
+		}
+	}
+	return false
+}
+
+type team struct {
+	ID          sql.NullInt64
+	Name        sql.NullString
+	Description sql.NullString
+	Slack       sql.NullString
+	Created     sql.NullTime
+	Updated     sql.NullTime
+}
+
+func (t *team) convert() models.Team {
 	model := models.Team{
 		ID:          t.ID.Int64,
 		Name:        t.Name.String,
@@ -288,5 +264,5 @@ func (t *team) convert() *models.Team {
 		model.Updated = t.Updated.Time
 	}
 
-	return &model
+	return model
 }

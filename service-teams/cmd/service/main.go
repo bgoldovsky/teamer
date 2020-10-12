@@ -5,8 +5,6 @@ import (
 	"log"
 	"net"
 
-	"github.com/bgoldovsky/dutyer/service-teams/internal/app/handlers/persons"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/app/handlers/teams"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/app/publisher"
 	personsRepo "github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/persons"
 	teamsRepo "github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/teams"
@@ -15,6 +13,8 @@ import (
 	"github.com/bgoldovsky/dutyer/service-teams/internal/cfg"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/database"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/handlers/persons"
+	"github.com/bgoldovsky/dutyer/service-teams/internal/handlers/teams"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/interceptors"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/logger"
 	"google.golang.org/grpc"

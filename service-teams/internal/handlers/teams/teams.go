@@ -87,6 +87,6 @@ func (h *Handler) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.Ge
 	return reply, nil
 }
 
-func (h *Handler) GetTeam(context.Context, *v1.GetTeamRequest) (*v1.GetTeamReply, error) {
+func (h *Handler) GetTeam(context.Context, *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
 	return nil, errors.New("not implemented")
 }

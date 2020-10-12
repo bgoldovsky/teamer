@@ -2,14 +2,15 @@ package handlers
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/middleware"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
 	teamsSrv "github.com/bgoldovsky/dutyer/gateway-api/internal/services/teams"
 	"github.com/gorilla/mux"
-	"net/http"
-	"strconv"
 )
 
 const defaultErrMsg = "internal server error"

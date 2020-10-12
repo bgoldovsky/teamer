@@ -1,6 +1,6 @@
 .PHONY:compose
 compose:
-	 docker-compose build && docker-compose up
+	 docker-compose build && docker-compose up --remove-orphans
 
 .PHONY:build
 build:

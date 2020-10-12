@@ -13,10 +13,12 @@ import (
 )
 
 const (
-	topicTeams       = "teams"
-	eventTeamAdded   = "team.added"
-	eventTeamChanged = "team.changed"
-	eventTeamRemoved = "team.removed"
+	topicTeams     = "teams"
+	eventTeamAdded = "team.added"
+
+	// TODO Имена событий будут использованы с Kafka
+	//eventTeamChanged = "team.changed"
+	//eventTeamRemoved = "team.removed"
 )
 
 type Service struct {
@@ -73,7 +75,7 @@ func (s *Service) RemoveTeam(ctx context.Context, req *v1.RemoveTeamRequest) (*e
 }
 
 func (s *Service) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
-	teamModels, err := s.repo.Get(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
+	teamModels, err := s.repo.GetList(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
 
 	if err != nil {
 		return nil, fmt.Errorf("get teams error: %w", err)

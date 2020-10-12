@@ -42,16 +42,16 @@ type Repository interface {
 	Get(ctx context.Context, filter *v1.PersonFilter, limit, offset uint, sort, order string) ([]models.Person, error)
 }
 
-type Queryer interface {
+type queryer interface {
 	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
 	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
 }
 
 type repository struct {
-	database Queryer
+	database queryer
 }
 
-func NewRepository(database Queryer) *repository {
+func NewRepository(database queryer) *repository {
 	return &repository{
 		database: database,
 	}
@@ -161,15 +161,13 @@ func (r *repository) Remove(ctx context.Context, personID int64) (int64, error) 
 	return personID, err
 }
 
-// TODO: do refactor strict!
-
 func (r *repository) Get(
 	ctx context.Context,
 	filter *v1.PersonFilter,
 	limit, offset uint,
 	sort, order string,
 ) ([]models.Person, error) {
-	var query bytes.Buffer
+	var sqlQuery bytes.Buffer
 
 	ccc := []string{
 		"id",
@@ -186,8 +184,6 @@ func (r *repository) Get(
 		"is_active",
 		"updated_at",
 		"created_at",
-		"created_at",
-		"updated_at",
 	}
 
 	columns := []string{
@@ -205,24 +201,22 @@ func (r *repository) Get(
 		"is_active",
 		"updated_at",
 		"created_at",
-		"created_at",
-		"updated_at",
 	}
 
-	for i, c := range columns {
-		columns[i] = fmt.Sprintf(`"p".%q`, c)
+	for i, columnName := range columns {
+		columns[i] = fmt.Sprintf(`"p".%q`, columnName)
 	}
 
-	query.WriteString(fmt.Sprintf(`select %s from "persons" as "p"`, strings.Join(columns, ",")))
+	sqlQuery.WriteString(fmt.Sprintf(`select %s from "persons" as "p"`, strings.Join(columns, ",")))
 
 	where, args := r.where(filter)
 	if where != "" {
-		query.WriteString(" ")
-		query.WriteString(where)
+		sqlQuery.WriteString(" ")
+		sqlQuery.WriteString(where)
 	}
 
-	query.WriteString(fmt.Sprintf(` order by "".%q %s limit %d offset %d;`, order, sort, limit, offset))
-	return r.query(ctx, ccc, query.String(), args...)
+	sqlQuery.WriteString(fmt.Sprintf(` order by "".%q %s limit %d offset %d;`, order, sort, limit, offset))
+	return r.query(ctx, ccc, sqlQuery.String(), args...)
 }
 
 func (r *repository) put(ctx context.Context, attributes map[string]interface{}) (*models.Person, error) {
@@ -283,12 +277,6 @@ func (r *repository) query(ctx context.Context, columns []string, query string, 
 	for rows.Next() {
 		var p person
 		var dest []interface{}
-
-		/*
-			returns = append(returns, "")
-			returns = append(returns, "updated_at")
-			returns = append(returns, "created_at")
-		*/
 
 		for _, c := range columns {
 			if c == `id` {
