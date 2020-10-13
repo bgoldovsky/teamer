@@ -1,3 +1,5 @@
+//go:generate mockgen -destination persons_mock/persons_mock.go -source persons.go
+
 package persons
 
 import (
@@ -15,31 +17,15 @@ import (
 )
 
 var (
-	ErrPersonNotFount = errors.New("person not found")
+	ErrPersonsNotFount = errors.New("person not found")
 )
 
-type person struct {
-	ID         sql.NullInt64
-	FirstName  sql.NullString
-	MiddleName sql.NullString
-	LastName   sql.NullString
-	Birthday   sql.NullTime
-	Email      sql.NullString
-	Phone      sql.NullString
-	Slack      sql.NullString
-	Role       sql.NullInt64
-	TeamID     sql.NullInt64
-	DutyOrder  sql.NullInt64
-	IsActive   sql.NullBool
-	Created    sql.NullTime
-	Updated    sql.NullTime
-}
-
 type Repository interface {
+	Get(ctx context.Context, personID int64) (*models.Person, error)
+	GetList(ctx context.Context, filter *v1.PersonFilter, limit, offset uint, sort, order string) ([]models.Person, error)
 	Save(ctx context.Context, person *models.Person) (*models.Person, error)
 	Update(ctx context.Context, person *models.Person) (*models.Person, error)
 	Remove(ctx context.Context, personID int64) (int64, error)
-	Get(ctx context.Context, filter *v1.PersonFilter, limit, offset uint, sort, order string) ([]models.Person, error)
 }
 
 type queryer interface {
@@ -57,135 +43,8 @@ func NewRepository(database queryer) *repository {
 	}
 }
 
-func (r *repository) Save(ctx context.Context, person *models.Person) (*models.Person, error) {
-	attributes := make(map[string]interface{})
-
-	attributes["team_id"] = person.TeamID
-	attributes["first_name"] = person.FirstName
-	attributes["middle_name"] = person.MiddleName
-	attributes["last_name"] = person.LastName
-	attributes["birthday"] = person.Birthday
-	attributes["email"] = person.Email
-	attributes["phone"] = person.Phone
-	attributes["role"] = person.Role
-	attributes["slack"] = person.Slack
-	attributes["duty_order"] = person.DutyOrder
-	attributes["is_active"] = person.IsActive
-
-	t, err := r.put(ctx, attributes)
-	if err != nil {
-		return nil, err
-	}
-
-	return t, nil
-}
-
-func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Person, error) {
-	var (
-		i           uint8
-		values      []interface{}
-		placeholder []string
-		returns     []string
-		attributes  = make(map[string]interface{})
-	)
-
-	attributes["team_id"] = p.TeamID
-	attributes["first_name"] = p.FirstName
-	attributes["middle_name"] = p.MiddleName
-	attributes["last_name"] = p.LastName
-	attributes["birthday"] = p.Birthday
-	attributes["email"] = p.Email
-	attributes["phone"] = p.Phone
-	attributes["slack"] = p.Slack
-	attributes["role"] = p.Role
-	attributes["duty_order"] = p.DutyOrder
-	attributes["is_active"] = p.IsActive
-
-	returns = append(returns, "id")
-	returns = append(returns, "team_id")
-	returns = append(returns, "first_name")
-	returns = append(returns, "middle_name")
-	returns = append(returns, "last_name")
-	returns = append(returns, "birthday")
-	returns = append(returns, "email")
-	returns = append(returns, "phone")
-	returns = append(returns, "slack")
-	returns = append(returns, "role")
-	returns = append(returns, "duty_order")
-	returns = append(returns, "is_active")
-	returns = append(returns, "updated_at")
-	returns = append(returns, "created_at")
-
-	attributes["updated_at"] = time.Now().Local()
-	for k, v := range attributes {
-		i += 1
-		values = append(values, v)
-		placeholder = append(placeholder, fmt.Sprintf("%q = $%d", k, i))
-	}
-
-	template := `update "persons" set %s where id = %d returning %s`
-	query := fmt.Sprintf(template, strings.Join(placeholder, ","), p.ID, strings.Join(returns, ","))
-
-	var data person
-	err := r.database.QueryRow(ctx, query, values...).Scan(
-		&data.ID,
-		&data.TeamID,
-		&data.FirstName,
-		&data.MiddleName,
-		&data.LastName,
-		&data.Birthday,
-		&data.Email,
-		&data.Phone,
-		&data.Slack,
-		&data.Role,
-		&data.IsActive,
-		&data.Updated,
-		&data.Created)
-
-	if err == pgx.ErrNoRows {
-		return nil, ErrPersonNotFount
-	}
-
-	if err == nil {
-		return nil, err
-	}
-
-	return data.convert(), err
-}
-
-func (r *repository) Remove(ctx context.Context, personID int64) (int64, error) {
-	var query bytes.Buffer
-	query.WriteString("delete from teams where id = $1;")
-	_, err := r.database.Query(ctx, query.String(), personID)
-
-	return personID, err
-}
-
-func (r *repository) Get(
-	ctx context.Context,
-	filter *v1.PersonFilter,
-	limit, offset uint,
-	sort, order string,
-) ([]models.Person, error) {
-	var sqlQuery bytes.Buffer
-
-	ccc := []string{
-		"id",
-		"team_id",
-		"first_name",
-		"middle_name",
-		"last_name",
-		"birthday",
-		"email",
-		"phone",
-		"slack",
-		"role",
-		"duty_order",
-		"is_active",
-		"updated_at",
-		"created_at",
-	}
-
+func (r *repository) Get(ctx context.Context, personID int64) (*models.Person, error) {
+	// Список запрашиваемых полей
 	columns := []string{
 		"id",
 		"team_id",
@@ -207,16 +66,105 @@ func (r *repository) Get(
 		columns[i] = fmt.Sprintf(`"p".%q`, columnName)
 	}
 
-	sqlQuery.WriteString(fmt.Sprintf(`select %s from "persons" as "p"`, strings.Join(columns, ",")))
+	// Формирование запроса
+	var query bytes.Buffer
+	query.WriteString(fmt.Sprintf(`select %s from "persons" as "p" where "p"."id" = $1`, strings.Join(columns, ",")))
 
-	where, args := r.where(filter)
-	if where != "" {
-		sqlQuery.WriteString(" ")
-		sqlQuery.WriteString(where)
+	// Выполнение запроса
+	persons, err := r.query(ctx, query.String(), personID)
+	if err != nil {
+		return nil, err
 	}
 
-	sqlQuery.WriteString(fmt.Sprintf(` order by "".%q %s limit %d offset %d;`, order, sort, limit, offset))
-	return r.query(ctx, ccc, sqlQuery.String(), args...)
+	return &persons[0], nil
+}
+
+func (r *repository) GetList(
+	ctx context.Context,
+	filter *v1.PersonFilter,
+	limit, offset uint,
+	sort, order string,
+) ([]models.Person, error) {
+	// Список запрашиваемых полей
+	columns := []string{
+		"id",
+		"team_id",
+		"first_name",
+		"middle_name",
+		"last_name",
+		"birthday",
+		"email",
+		"phone",
+		"slack",
+		"role",
+		"duty_order",
+		"is_active",
+		"updated_at",
+		"created_at",
+	}
+
+	for i, columnName := range columns {
+		columns[i] = fmt.Sprintf(`"p".%q`, columnName)
+	}
+
+	// Формирование запроса
+	var query bytes.Buffer
+	query.WriteString(fmt.Sprintf(`select %s from "persons" as "p"`, strings.Join(columns, ",")))
+	where, args := r.where(filter)
+	if where != "" {
+		query.WriteString(" ")
+		query.WriteString(where)
+	}
+	query.WriteString(fmt.Sprintf(` order by "".%q %s limit %d offset %d;`, order, sort, limit, offset))
+
+	// Выполнение запроса
+	return r.query(ctx, query.String(), args...)
+}
+
+func (r *repository) Save(ctx context.Context, person *models.Person) (*models.Person, error) {
+	attributes := map[string]interface{}{
+		"team_id":     person.TeamID,
+		"first_name":  person.FirstName,
+		"middle_name": person.MiddleName,
+		"last_name":   person.LastName,
+		"birthday":    person.Birthday,
+		"email":       person.Email,
+		"phone":       person.Phone,
+		"role":        person.Role,
+		"slack":       person.Slack,
+		"duty_order":  person.DutyOrder,
+		"is_active":   person.IsActive,
+	}
+
+	return r.put(ctx, attributes)
+}
+
+func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Person, error) {
+	var attributes = map[string]interface{}{
+		"id":          p.ID,
+		"team_id":     p.TeamID,
+		"first_name":  p.FirstName,
+		"middle_name": p.MiddleName,
+		"last_name":   p.LastName,
+		"birthday":    p.Birthday,
+		"email":       p.Email,
+		"phone":       p.Phone,
+		"slack":       p.Slack,
+		"role":        p.Role,
+		"duty_order":  p.DutyOrder,
+		"is_active":   p.IsActive,
+		"updated_at":  time.Now().Local(),
+	}
+
+	return r.put(ctx, attributes)
+}
+
+func (r *repository) Remove(ctx context.Context, personID int64) (int64, error) {
+	var query bytes.Buffer
+	query.WriteString("delete from teams where id = $1;")
+	_, err := r.database.Query(ctx, query.String(), personID)
+
+	return personID, err
 }
 
 func (r *repository) put(ctx context.Context, attributes map[string]interface{}) (*models.Person, error) {
@@ -227,8 +175,10 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 		columns     []string
 		returns     []string
 		placeholder []string
+		update      []string
 	)
 
+	// Имена возвращаемых полей
 	returns = append(returns, "id")
 	returns = append(returns, "team_id")
 	returns = append(returns, "first_name")
@@ -244,97 +194,74 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 	returns = append(returns, "updated_at")
 	returns = append(returns, "created_at")
 
+	// Подготовка коллекции значений, имен полей и плейсхолдеров для передаваемых значений
 	for k, v := range attributes {
 		i += 1
 		values = append(values, v)
 		columns = append(columns, fmt.Sprintf("%q", k))
 		placeholder = append(placeholder, fmt.Sprintf("$%d", i))
+		update = append(update, fmt.Sprintf("%s=excluded.%s", k, k))
 	}
 
-	query := fmt.Sprintf(`insert into "persons" (%s) values (%s) returning %s`,
-		strings.Join(columns, ","), strings.Join(placeholder, ","), strings.Join(returns, ","))
+	query := fmt.Sprintf(`insert into "persons" (%s) values (%s) on conflict (id) do update set %s returning %s`,
+		strings.Join(columns, ","),
+		strings.Join(placeholder, ","),
+		strings.Join(update, ","),
+		strings.Join(returns, ","))
 
-	oo, err := r.query(ctx, returns, query, values...)
+	// Выполнение запроса
+	persons, err := r.query(ctx, query, values...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &oo[0], nil
+	return &persons[0], nil
 }
 
-func (r *repository) query(ctx context.Context, columns []string, query string, args ...interface{}) ([]models.Person, error) {
+func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Person, error) {
 	rows, err := r.database.Query(ctx, query, args...)
-
-	if err == pgx.ErrNoRows {
-		return []models.Person{}, nil
+	if isEmpty(err) {
+		return nil, ErrPersonsNotFount
 	}
 
 	if err != nil {
 		return nil, err
 	}
 
+	defer rows.Close()
 	var persons []models.Person
+
 	for rows.Next() {
 		var p person
-		var dest []interface{}
+		err := rows.Scan(
+			&p.ID,
+			&p.TeamID,
+			&p.FirstName,
+			&p.MiddleName,
+			&p.LastName,
+			&p.Birthday,
+			&p.Email,
+			&p.Phone,
+			&p.Slack,
+			&p.Role,
+			&p.DutyOrder,
+			&p.IsActive,
+			&p.Updated,
+			&p.Created,
+		)
 
-		for _, c := range columns {
-			if c == `id` {
-				dest = append(dest, &p.ID)
-			}
-			if c == `team_id` {
-				dest = append(dest, &p.TeamID)
-			}
-			if c == `first_name` {
-				dest = append(dest, &p.FirstName)
-			}
-			if c == `middle_name` {
-				dest = append(dest, &p.MiddleName)
-			}
-			if c == `last_name` {
-				dest = append(dest, &p.LastName)
-			}
-			if c == `birthday` {
-				dest = append(dest, &p.Birthday)
-			}
-			if c == `email` {
-				dest = append(dest, &p.Email)
-			}
-			if c == `phone` {
-				dest = append(dest, &p.Phone)
-			}
-			if c == `slack` {
-				dest = append(dest, &p.Slack)
-			}
-			if c == `role` {
-				dest = append(dest, &p.Role)
-			}
-			if c == `duty_order` {
-				dest = append(dest, &p.DutyOrder)
-			}
-			if c == `is_active` {
-				dest = append(dest, &p.IsActive)
-			}
-			if c == `created_at` {
-				dest = append(dest, &p.Created)
-			}
-			if c == `updated_at` {
-				dest = append(dest, &p.Updated)
-			}
-		}
-
-		if err := rows.Scan(dest...); err != nil {
+		if err != nil {
 			return nil, err
 		}
 
-		rp := p.convert()
-		persons = append(persons, *rp)
+		person := p.convert()
+		persons = append(persons, person)
 	}
 
 	return persons, nil
 }
 
-func (r *repository) where(f *v1.PersonFilter) (string, []interface{}) {
+func (r *repository) where(filter *v1.PersonFilter) (string, []interface{}) {
 	var (
 		i           uint8
 		where       []string
@@ -342,23 +269,51 @@ func (r *repository) where(f *v1.PersonFilter) (string, []interface{}) {
 		placeholder []string
 	)
 
-	if f == nil {
+	if filter == nil {
 		return "", values
 	}
 
-	if f.PersonIds != nil {
-		for _, id := range f.PersonIds {
-			i += 1
-			values = append(values, id)
-			placeholder = append(placeholder, fmt.Sprintf("$%d", i))
-		}
-
-		if len(f.PersonIds) > 0 {
-			where = append(where, fmt.Sprintf(`"p"."id" in (%s)`, strings.Join(placeholder, ",")))
-			placeholder = nil
-		}
+	// Подготовка значений для фильтра по ID и заглушек для их подстановки
+	for _, id := range filter.PersonIds {
+		i += 1
+		values = append(values, id)
+		placeholder = append(placeholder, fmt.Sprintf("$%d", i))
 	}
 
+	// Генерация запроса по ID
+	if len(filter.PersonIds) > 0 {
+		where = append(where, fmt.Sprintf(`"p"."id" in (%s)`, strings.Join(placeholder, ",")))
+		placeholder = nil
+	}
+
+	// Подготовка значений для фильтра по TeamID и заглушек для их подстановки
+	for _, id := range filter.TeamIds {
+		i += 1
+		values = append(values, id)
+		placeholder = append(placeholder, fmt.Sprintf("$%d", i))
+	}
+
+	// Генерация запроса по TeamID
+	if len(filter.TeamIds) > 0 {
+		where = append(where, fmt.Sprintf(`"p"."team_id" in (%s)`, strings.Join(placeholder, ",")))
+		placeholder = nil
+	}
+
+	// Генерация запроса по DateFrom
+	if filter.DateFrom != nil && filter.DateFrom.Seconds > 0 {
+		i += 1
+		where = append(where, fmt.Sprintf(`"t"."created_at" > $%d`, i))
+		values = append(values, time.Unix(filter.DateFrom.Seconds, 0).Format(time.RFC3339Nano))
+	}
+
+	// Генерация запроса по DateTo
+	if filter.DateTo != nil && filter.DateTo.Seconds > 0 {
+		i += 1
+		where = append(where, fmt.Sprintf(`"t"."created_at" < $%d`, i))
+		values = append(values, time.Unix(filter.DateTo.Seconds, 0).Format(time.RFC3339Nano))
+	}
+
+	// Склеивание тела запроса
 	if len(where) > 0 {
 		return "where " + strings.Join(where, " and "), values
 	}
@@ -366,7 +321,34 @@ func (r *repository) where(f *v1.PersonFilter) (string, []interface{}) {
 	return "", values
 }
 
-func (p *person) convert() *models.Person {
+func isEmpty(err error) bool {
+	if err != nil {
+		switch err {
+		case pgx.ErrNoRows:
+			return true
+		}
+	}
+	return false
+}
+
+type person struct {
+	ID         sql.NullInt64
+	FirstName  sql.NullString
+	MiddleName sql.NullString
+	LastName   sql.NullString
+	Birthday   sql.NullTime
+	Email      sql.NullString
+	Phone      sql.NullString
+	Slack      sql.NullString
+	Role       sql.NullInt64
+	TeamID     sql.NullInt64
+	DutyOrder  sql.NullInt64
+	IsActive   sql.NullBool
+	Created    sql.NullTime
+	Updated    sql.NullTime
+}
+
+func (p *person) convert() models.Person {
 	model := models.Person{
 		ID:        p.ID.Int64,
 		FirstName: p.FirstName.String,
@@ -402,5 +384,5 @@ func (p *person) convert() *models.Person {
 		model.Updated = p.Updated.Time
 	}
 
-	return &model
+	return model
 }

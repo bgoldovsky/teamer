@@ -96,7 +96,6 @@ func (c *Client) RemoveTeam(ctx context.Context, id int64) (*models.StatusView, 
 func (c *Client) GetTeams(ctx context.Context) ([]*models.TeamView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.GetTeamsRequest{
-		Filter: nil,
 		Limit:  1000,
 		Offset: 0,
 		Order:  "id",

@@ -2,27 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/service-teams/api/proto/duties.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service-teams/db/changelog/master/0003-create-duties-table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service-teams/db/fixture/master/0003-insert-duties-data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams_mock/teams_mock.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/duties.pb.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons_mock/persons_mock.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/persons.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/persons.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/proto/persons.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/api/proto/persons.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/api/proto/teams.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/api/proto/teams.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/cmd/service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/cmd/service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/handlers/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/handlers/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/handlers/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/handlers/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/db/changelog/master/0002-create-persons-table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/db/changelog/master/0002-create-persons-table.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/persons.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/persons.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/teams.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/teams.pb.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

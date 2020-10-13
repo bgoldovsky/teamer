@@ -18,4 +18,3 @@ create table if not exists persons (
     created_at timestamp with time zone default now() not null,
     updated_at timestamp with time zone default now() not null
 );
-create index on teams (id);

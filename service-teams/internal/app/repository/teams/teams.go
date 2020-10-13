@@ -188,7 +188,7 @@ func (r *repository) query(ctx context.Context, query string, args ...interface{
 	return teams, nil
 }
 
-func (r *repository) where(f *v1.TeamFilter) (string, []interface{}) {
+func (r *repository) where(filter *v1.TeamFilter) (string, []interface{}) {
 	var (
 		i           uint8
 		where       []string
@@ -196,35 +196,38 @@ func (r *repository) where(f *v1.TeamFilter) (string, []interface{}) {
 		placeholder []string
 	)
 
-	if f == nil {
+	if filter == nil {
 		return "", values
 	}
 
-	if f.Ids != nil {
-		for _, id := range f.Ids {
-			i += 1
-			values = append(values, id)
-			placeholder = append(placeholder, fmt.Sprintf("$%d", i))
-		}
-
-		if len(f.Ids) > 0 {
-			where = append(where, fmt.Sprintf(`"t"."id" in (%s)`, strings.Join(placeholder, ",")))
-			placeholder = nil
-		}
+	// Подготовка значений для фильтра по ID и заглушек для их подстановки
+	for _, id := range filter.Ids {
+		i += 1
+		values = append(values, id)
+		placeholder = append(placeholder, fmt.Sprintf("$%d", i))
 	}
 
-	if f.DateFrom != nil && f.DateFrom.Seconds > 0 {
+	// Генерация запроса по ID
+	if len(filter.Ids) > 0 {
+		where = append(where, fmt.Sprintf(`"t"."id" in (%s)`, strings.Join(placeholder, ",")))
+		placeholder = nil
+	}
+
+	// Генерация запроса по DateFrom
+	if filter.DateFrom != nil && filter.DateFrom.Seconds > 0 {
 		i += 1
 		where = append(where, fmt.Sprintf(`"t"."created_at" > $%d`, i))
-		values = append(values, time.Unix(f.DateFrom.Seconds, 0).Format(time.RFC3339Nano))
+		values = append(values, time.Unix(filter.DateFrom.Seconds, 0).Format(time.RFC3339Nano))
 	}
 
-	if f.DateTo != nil && f.DateTo.Seconds > 0 {
+	// Генерация запроса по DateTo
+	if filter.DateTo != nil && filter.DateTo.Seconds > 0 {
 		i += 1
 		where = append(where, fmt.Sprintf(`"t"."created_at" < $%d`, i))
-		values = append(values, time.Unix(f.DateTo.Seconds, 0).Format(time.RFC3339Nano))
+		values = append(values, time.Unix(filter.DateTo.Seconds, 0).Format(time.RFC3339Nano))
 	}
 
+	// Склеивание тела запроса
 	if len(where) > 0 {
 		return "where " + strings.Join(where, " and "), values
 	}

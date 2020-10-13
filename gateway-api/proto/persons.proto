@@ -69,6 +69,8 @@ message GetPersonsRequest {
 message PersonFilter {
   repeated int64 person_ids = 1; // Список уникальных идентификаторов сотрудников
   repeated int64 team_ids = 2; // Список уникальных идентификаторов групп
+  google.protobuf.Timestamp DateFrom = 3; // Создана после
+  google.protobuf.Timestamp DateTo = 4; // Создана до
 }
 
 message GetPersonsReply {
