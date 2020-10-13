@@ -52,23 +52,23 @@ services:
 
   # services
 
-  service-teams:
-    image: service-teams
-    build: ./service-teams
+  service-dutyer:
+    image: service-dutyer
+    build: service-dutyer
     ports:
       - "50051:50051"
     environment:
       - PORT=50051
-      - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_teams sslmode=disable
+      - CONNECTION_STRING=host=db port=5432 user=postgres password=postgres dbname=service_dutyer sslmode=disable
       - KAFKA=kafka:9092
     depends_on:
       - db
  #     - kafka
     restart: on-failure:10
 
- # service-duty-bot:
- #   image: service-duty-bot
- #   build: ./service-duty-bot
+ # service-slack-bot:
+ #   image: service-slack-bot
+ #   build: ./service-slack-bot
  #   environment:
  #     - KAFKA=kafka:9092
  #   depends_on:
@@ -84,12 +84,12 @@ services:
       - PORT=8080
       - REDIS=cache:6379
       - SECRET=mySecretSigningString
-      - SERVICE_TEAMS=teams:50051
+      - SERVICE_DUTYER=service-dutyer:50051
     depends_on:
-      - service-teams
+      - service-dutyer
       - cache
     links:
-      - "service-teams:teams"
+      - "service-dutyer"
     restart: on-failure:10
 
   auth-api:

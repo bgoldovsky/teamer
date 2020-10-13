@@ -36,7 +36,7 @@ func newClient(client client) *Client {
 func NewClient(host string) (*Client, error) {
 	conn, err := grpc.Dial(host, grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptors.LoggingInterceptor))
 	if err != nil {
-		logger.Log.WithError(err).Fatal("can't connect service-teams")
+		logger.Log.WithError(err).Fatal("can't connect service-dutyer")
 	}
 
 	client := v1.NewTeamsClient(conn)

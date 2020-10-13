@@ -3,7 +3,7 @@ package cfg
 import "os"
 
 func GetTeamsHost() string {
-	h := os.Getenv("SERVICE_TEAMS")
+	h := os.Getenv("SERVICE_DUTYER")
 	if h == "" {
 		h = ":50051"
 		//panic("client teams service address not specified")

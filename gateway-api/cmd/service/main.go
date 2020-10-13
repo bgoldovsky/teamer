@@ -17,7 +17,7 @@ func main() {
 
 	teamsClient, err := teams.NewClient(teamsHost)
 	if err != nil {
-		logger.Log.WithError(err).Fatal("can't connect team service service-teams")
+		logger.Log.WithError(err).Fatal("can't connect team service service-dutyer")
 	}
 
 	teamsRepository, err := teamsRepo.NewRepository(redisAddress)
