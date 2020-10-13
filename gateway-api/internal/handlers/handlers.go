@@ -39,6 +39,12 @@ func (h *Handlers) findRoutes() {
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
 	h.router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
+
+	// TODO: Проксировать и отладить CRUD участников команд
+	h.router.HandleFunc("/persons", h.GetTeams).Methods("GET")
+	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
+	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
+	h.router.Handle("/persons", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
 }
 
 func (h *Handlers) Run(port string) {

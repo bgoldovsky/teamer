@@ -3,6 +3,9 @@
 github.com/confluentinc/confluent-kafka-go/kafka/librdkafka
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
+# github.com/golang/mock v1.2.0
+## explicit
+github.com/golang/mock/gomock
 # github.com/golang/protobuf v1.3.3
 ## explicit
 github.com/golang/protobuf/proto

@@ -13,7 +13,7 @@ import (
 
 	"github.com/bgoldovsky/dutyer/service-teams/internal/app/models"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
-	"github.com/jackc/pgx/v4"
+	pgx "github.com/jackc/pgx/v4"
 )
 
 var (
@@ -333,6 +333,7 @@ func isEmpty(err error) bool {
 
 type person struct {
 	ID         sql.NullInt64
+	TeamID     sql.NullInt64
 	FirstName  sql.NullString
 	MiddleName sql.NullString
 	LastName   sql.NullString
@@ -341,7 +342,6 @@ type person struct {
 	Phone      sql.NullString
 	Slack      sql.NullString
 	Role       sql.NullInt64
-	TeamID     sql.NullInt64
 	DutyOrder  sql.NullInt64
 	IsActive   sql.NullBool
 	Created    sql.NullTime
@@ -351,6 +351,7 @@ type person struct {
 func (p *person) convert() models.Person {
 	model := models.Person{
 		ID:        p.ID.Int64,
+		TeamID:    p.TeamID.Int64,
 		FirstName: p.FirstName.String,
 		LastName:  p.LastName.String,
 		Slack:     p.Slack.String,
@@ -373,7 +374,7 @@ func (p *person) convert() models.Person {
 	}
 
 	if p.TeamID.Valid {
-		model.TeamID = &p.TeamID.Int64
+		model.TeamID = p.TeamID.Int64
 	}
 
 	if p.Birthday.Valid {

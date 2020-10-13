@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// Services
-	personsService := personsSrv.New(personsRepository, pub)
+	personsService := personsSrv.New(personsRepository)
 	teamsService := teamsSrv.New(teamsRepository, pub)
 
 	// Handlers

@@ -6,7 +6,6 @@ option go_package = "internal/generated/rpc/v1";
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
 
 service Teams {
   rpc AddTeam (AddTeamRequest) returns (AddTeamReply) {} // Добавить новую команду

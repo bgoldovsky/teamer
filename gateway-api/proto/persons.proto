@@ -24,6 +24,7 @@ enum Role {
 }
 
 message AddPersonRequest {
+  int64 team_id  = 1; // Уникальный идентификатор команды
   string first_name = 2; // Имя
   google.protobuf.StringValue middle_name = 3; // Отчество
   string last_name = 4; // Фамилия
@@ -32,8 +33,7 @@ message AddPersonRequest {
   google.protobuf.StringValue phone = 7; // Телефон
   string slack = 8; // Идентификатор в Slack
   Role role = 9; // Тип разработчика
-  google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
-  bool isActive = 11; // Активен в системе
+  bool isActive = 10; // Участвует ли в дежурствах
 }
 
 message AddPersonReply {
@@ -42,17 +42,17 @@ message AddPersonReply {
 
 message UpdatePersonRequest {
   int64 id = 1; // Уникальный идентификатор сотрудника
-  string first_name = 2; // Имя
-  google.protobuf.StringValue middle_name = 3; // Отчество
-  string last_name = 4; // Фамилия
-  google.protobuf.Timestamp birthday = 5; // Дата рождения
-  google.protobuf.StringValue email = 6; // Email
-  google.protobuf.StringValue phone = 7; // Телефон
-  string slack = 8; // Идентификатор в Slack
-  Role role = 9; // Тип разработчика
-  int64 duty_order = 10; // Уникальный порядок дежурства сотрудника
-  google.protobuf.Int64Value team_id  = 11; // Уникальный идентификатор команды сотрудника
-  bool isActive = 12; // Активен в системе
+  int64 team_id  = 2; // Уникальный идентификатор команды
+  string first_name = 3; // Имя
+  google.protobuf.StringValue middle_name = 4; // Отчество
+  string last_name = 5; // Фамилия
+  google.protobuf.Timestamp birthday = 6; // Дата рождения
+  google.protobuf.StringValue email = 7; // Email
+  google.protobuf.StringValue phone = 8; // Телефон
+  string slack = 9; // Идентификатор в Slack
+  Role role = 10; // Тип разработчика
+  int64 duty_order = 11; // Уникальный порядок дежурства сотрудника
+  bool isActive = 12; // Участвует ли в дежурствах
 }
 
 message RemovePersonRequest {
@@ -61,14 +61,15 @@ message RemovePersonRequest {
 
 message GetPersonsRequest {
   PersonFilter filter = 1; // Фильтр сотрудников
-  int64 limit = 3; // Пагинация, получаемые записи
-  int64 offset = 4; // Пагинация, пропускаемые записи
-  string order = 5; // Поле для сортировки
+  int64 limit = 2; // Пагинация, получаемые записи
+  int64 offset = 3; // Пагинация, пропускаемые записи
+  string order = 4; // Поле для сортировки id|name
+  string sort = 5; // Тип сортировки asc|desc
 }
 
 message PersonFilter {
   repeated int64 person_ids = 1; // Список уникальных идентификаторов сотрудников
-  repeated int64 team_ids = 2; // Список уникальных идентификаторов групп
+  repeated int64 team_ids = 2; // Список уникальных идентификаторов команд
   google.protobuf.Timestamp DateFrom = 3; // Создана после
   google.protobuf.Timestamp DateTo = 4; // Создана до
 }
@@ -79,17 +80,17 @@ message GetPersonsReply {
 
 message Person {
   int64 id = 1; // Уникальный идентификатор сотрудника
-  string first_name = 2; // Имя
-  google.protobuf.StringValue middle_name = 3; // Отчество
-  string last_name = 4; // Фамилия
-  google.protobuf.Timestamp birthday = 5; // Дата рождения
-  google.protobuf.StringValue email = 6; // Email
-  google.protobuf.StringValue phone = 7; // Телефон
-  string slack = 8; // Идентификатор в Slack
-  Role role = 9; // Тип разработчика
-  google.protobuf.Int32Value team_id  = 10; // Уникальный идентификатор команды сотрудника
+  int64 team_id  = 2; // Уникальный идентификатор команды
+  string first_name = 3; // Имя
+  google.protobuf.StringValue middle_name = 4; // Отчество
+  string last_name = 5; // Фамилия
+  google.protobuf.Timestamp birthday = 6; // Дата рождения
+  google.protobuf.StringValue email = 7; // Email
+  google.protobuf.StringValue phone = 8; // Телефон
+  string slack = 9; // Идентификатор в Slack
+  Role role = 10; // Тип разработчика
   int64 duty_order = 11; // Уникальный порядок дежурства сотрудника
-  bool isActive = 12; // Активен в системе
+  bool isActive = 12; // Участвует ли в дежурствах
   google.protobuf.Timestamp created = 13; // Время создания
   google.protobuf.Timestamp updated = 14; // Время изменения
 }

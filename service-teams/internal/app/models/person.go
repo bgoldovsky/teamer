@@ -14,6 +14,7 @@ const (
 
 type Person struct {
 	ID         int64
+	TeamID     int64
 	FirstName  string
 	MiddleName *string
 	LastName   string
@@ -22,7 +23,6 @@ type Person struct {
 	Phone      *string
 	Slack      string
 	Role       Role
-	TeamID     *int64
 	DutyOrder  int64
 	IsActive   bool
 	Created    time.Time

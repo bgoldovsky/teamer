@@ -17,6 +17,7 @@ func ToModel(dto *v1.UpdatePersonRequest) *models.Person {
 
 	person := &models.Person{
 		ID:        dto.Id,
+		TeamID:    dto.TeamId,
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		Birthday:  toTimestamp(dto.Birthday),
@@ -40,10 +41,6 @@ func ToModel(dto *v1.UpdatePersonRequest) *models.Person {
 		person.Phone = &dto.Phone.Value
 	}
 
-	if dto.TeamId != nil {
-		person.TeamID = &dto.TeamId.Value
-	}
-
 	return person
 }
 
@@ -54,6 +51,7 @@ func ToDTO(model *models.Person) *v1.Person {
 
 	person := &v1.Person{
 		Id:        model.ID,
+		TeamId:    model.TeamID,
 		FirstName: model.FirstName,
 		LastName:  model.LastName,
 		// TODO: реализовать нулябельные типы
@@ -70,10 +68,6 @@ func ToDTO(model *models.Person) *v1.Person {
 
 	if model.MiddleName != nil {
 		person.MiddleName = &wrappers.StringValue{Value: *model.MiddleName}
-	}
-
-	if model.TeamID != nil {
-		person.TeamId = &wrappers.Int64Value{Value: *model.TeamID}
 	}
 
 	return person

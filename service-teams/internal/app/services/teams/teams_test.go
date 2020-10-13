@@ -1,6 +1,5 @@
 package teams
 
-/*
 import (
 	"context"
 	"testing"
@@ -8,13 +7,14 @@ import (
 
 	"github.com/bgoldovsky/dutyer/service-teams/internal/app/models"
 	"github.com/bgoldovsky/dutyer/service-teams/internal/app/publisher"
-	"github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/teams"
+	mockTeams "github.com/bgoldovsky/dutyer/service-teams/internal/app/repository/teams/teams_mock"
 	v1 "github.com/bgoldovsky/dutyer/service-teams/internal/generated/rpc/v1"
+	"github.com/golang/mock/gomock"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
 )
 
-var team = &models.Team{
+var team = models.Team{
 	ID:          777,
 	Name:        "Dream Team",
 	Description: "Fail Better",
@@ -24,10 +24,17 @@ var team = &models.Team{
 }
 
 func TestService_AddTeam(t *testing.T) {
-	repo := teams.NewMock()
-	repo.ConfigureSave(team.ID, team.Name, team.Description, team.Slack)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctx := context.Background()
+
+	repoMock := mockTeams.NewMockRepository(ctrl)
+	repoMock.EXPECT().
+		Save(ctx, gomock.Any()).
+		Return(&team, nil)
+
 	pub := publisher.NewMock(eventTeamAdded, team.ID, topicTeams)
-	service := New(repo, pub)
+	service := New(repoMock, pub)
 
 	request := &v1.AddTeamRequest{
 		Name:        team.Name,
@@ -42,11 +49,17 @@ func TestService_AddTeam(t *testing.T) {
 }
 
 func TestService_UpdateTeam(t *testing.T) {
-	repo := teams.NewMock()
-	repo.ConfigureUpdate(team.ID, team.Name, team.Description, team.Slack, team.Created, team.Updated)
-	// TODO: удалить placeholder
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctx := context.Background()
+
+	repoMock := mockTeams.NewMockRepository(ctrl)
+	repoMock.EXPECT().
+		Update(ctx, gomock.Any()).
+		Return(&team, nil)
+
 	pub := publisher.NewMock("", 0, "")
-	service := New(repo, pub)
+	service := New(repoMock, pub)
 
 	request := &v1.UpdateTeamRequest{
 		Id:          team.ID,
@@ -62,11 +75,17 @@ func TestService_UpdateTeam(t *testing.T) {
 }
 
 func TestService_RemoveTeam(t *testing.T) {
-	repo := teams.NewMock()
-	repo.ConfigureRemove(team.ID)
-	// TODO: удалить placeholder
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctx := context.Background()
+
+	repoMock := mockTeams.NewMockRepository(ctrl)
+	repoMock.EXPECT().
+		Remove(ctx, team.ID).
+		Return(team.ID, nil)
+
 	pub := publisher.NewMock("", 0, "")
-	service := New(repo, pub)
+	service := New(repoMock, pub)
 
 	request := &v1.RemoveTeamRequest{Id: team.ID}
 
@@ -77,11 +96,17 @@ func TestService_RemoveTeam(t *testing.T) {
 }
 
 func TestService_GetTeams(t *testing.T) {
-	repo := teams.NewMock()
-	repo.ConfigureGet(team.ID, team.Name, team.Description, team.Slack, team.Created, team.Updated)
-	// TODO: удалить placeholder
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctx := context.Background()
+
+	repoMock := mockTeams.NewMockRepository(ctrl)
+	repoMock.EXPECT().
+		GetList(ctx, gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+		Return([]models.Team{team}, nil)
+
 	pub := publisher.NewMock("", 0, "")
-	service := New(repo, pub)
+	service := New(repoMock, pub)
 
 	created, _ := ptypes.TimestampProto(team.Created)
 	updated, _ := ptypes.TimestampProto(team.Updated)
@@ -103,5 +128,3 @@ func TestService_GetTeams(t *testing.T) {
 	assert.Equal(t, created, act.Teams[0].Created)
 	assert.Equal(t, updated, act.Teams[0].Updated)
 }
-
-*/

@@ -2,7 +2,7 @@
 
 create table if not exists persons (
     id             bigserial    primary key,
-    team_id        bigint       references teams (id) on delete cascade,
+    team_id        bigint       not null references teams (id) on delete cascade,
     --
     first_name     text         not null,
     middle_name    text,
@@ -12,9 +12,10 @@ create table if not exists persons (
     phone          text,
     slack          text         not null,
     role           int          not null check (role>0),
-    duty_order     int          unique,
+    duty_order     int          not null,
     is_active      boolean      not null,
     --
     created_at timestamp with time zone default now() not null,
     updated_at timestamp with time zone default now() not null
 );
+create unique index on persons (team_id,duty_order);

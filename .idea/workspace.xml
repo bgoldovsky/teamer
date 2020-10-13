@@ -2,16 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons_mock/persons_mock.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/internal/app/services/persons/persons_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/AUTHORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/CONTRIBUTORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/gomock/call.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/gomock/callset.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/gomock/controller.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service-teams/vendor/github.com/golang/mock/gomock/matchers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/persons.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/persons.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/proto/persons.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/api/proto/persons.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/api/proto/teams.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/api/proto/teams.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/cmd/service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/cmd/service/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/db/changelog/master/0002-create-persons-table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/db/changelog/master/0002-create-persons-table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/db/fixture/master/0002-insert-persons-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/db/fixture/master/0002-insert-persons-data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/models/person.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/models/person.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/repository/persons/persons_mock.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/repository/teams/teams_mock.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/services/persons/converter/converter.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/persons/converter/converter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/services/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/app/services/teams/teams_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/persons.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/persons.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/teams.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/internal/generated/rpc/v1/teams.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-teams/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/service-teams/vendor/modules.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +87,71 @@
       <recent name="$PROJECT_DIR$/service-teams/internal/app" />
     </key>
   </component>
+  <component name="RunManager" selected="Go Test.TestService_GetPersons in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons">
+    <configuration name="TestService_AddPerson in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="dutyer" />
+      <working_directory value="$PROJECT_DIR$/service-teams/internal/app/services/persons" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestService_AddPerson\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestService_GetPersons in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="dutyer" />
+      <working_directory value="$PROJECT_DIR$/service-teams/internal/app/services/persons" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestService_GetPersons\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestService_RemovePerson in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="dutyer" />
+      <working_directory value="$PROJECT_DIR$/service-teams/internal/app/services/persons" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestService_RemovePerson\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestService_UpdatePerson in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="dutyer" />
+      <working_directory value="$PROJECT_DIR$/service-teams/internal/app/services/persons" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestService_UpdatePerson\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="dutyer" />
+      <working_directory value="$PROJECT_DIR$/service-teams/internal/app/services/persons" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.TestService_GetPersons in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+        <item itemvalue="Go Test.TestService_RemovePerson in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+        <item itemvalue="Go Test.go test github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+        <item itemvalue="Go Test.TestService_UpdatePerson in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+        <item itemvalue="Go Test.TestService_AddPerson in github.com/bgoldovsky/dutyer/service-teams/internal/app/services/persons" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -110,14 +195,30 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="619" y="318" key="EnvironmentVariablesDialog/0.0.1440.900@0.0.1440.900" timestamp="1596946178365" />
+    <state width="1398" height="244" key="GridCell.Tab.0.bottom" timestamp="1602607942039">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="244" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1602607942039" />
+    <state width="1398" height="244" key="GridCell.Tab.0.center" timestamp="1602607942036">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="244" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1602607942036" />
+    <state width="1398" height="244" key="GridCell.Tab.0.left" timestamp="1602607942034">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="244" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1602607942034" />
+    <state width="1398" height="244" key="GridCell.Tab.0.right" timestamp="1602607942038">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="244" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1602607942038" />
     <state x="221" y="89" key="SettingsEditor" timestamp="1596945342405">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1596945342405" />
-    <state x="421" y="176" width="598" height="548" key="find.popup" timestamp="1602537807608">
+    <state x="421" y="176" width="598" height="548" key="find.popup" timestamp="1602605950032">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="421" y="176" width="598" height="548" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1602537807608" />
+    <state x="421" y="176" width="598" height="548" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1602605950032" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1597131607129">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
