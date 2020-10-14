@@ -71,7 +71,7 @@ func (s *Service) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 		return nil, fmt.Errorf("add team error: %w", err)
 	}
 
-	// TODO: Вернуть пуюликацию события
+	// TODO: Вернуть публикацию события
 	/*
 		err = s.publisher.Publish(eventTeamAdded, team.ID, topicTeams)
 		if err != nil {

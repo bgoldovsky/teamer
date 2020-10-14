@@ -53,10 +53,6 @@ func ToDTO(model *models.Person) *v1.Person {
 		TeamId:    model.TeamID,
 		FirstName: model.FirstName,
 		LastName:  model.LastName,
-		// TODO: реализовать нулябельные типы
-		Birthday:  nil,
-		Email:     nil,
-		Phone:     nil,
 		Slack:     model.Slack,
 		Role:      v1.Role(model.Role),
 		DutyOrder: model.DutyOrder,
@@ -67,6 +63,18 @@ func ToDTO(model *models.Person) *v1.Person {
 
 	if model.MiddleName != nil {
 		person.MiddleName = &wrappers.StringValue{Value: *model.MiddleName}
+	}
+
+	if model.Birthday != nil {
+		person.Birthday = getTimestamp(model.Birthday)
+	}
+
+	if model.Email != nil {
+		person.Email = &wrappers.StringValue{Value: *model.Email}
+	}
+
+	if model.Phone != nil {
+		person.Phone = &wrappers.StringValue{Value: *model.Phone}
 	}
 
 	return person
