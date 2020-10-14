@@ -2,32 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons_mock.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service-dutyer/internal/app/publisher/publisher_mock/publisher_mock.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams_mock.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/persons.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/persons.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/teams.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/generated/clients/teams/v1/teams.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/proto/persons.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/proto/teams.proto" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/proto/teams.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/api/proto/duties.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/api/proto/duties.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-dutyer/api/proto/persons.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/api/proto/persons.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/api/proto/teams.proto" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/api/proto/teams.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/publisher/publisher.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/publisher/publisher_mock.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/persons_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/persons_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/teams/teams_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/teams/teams_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/db/fixture/master/0001-insert-teams-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/db/fixture/master/0001-insert-teams-data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/converter/converter.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/converter/converter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/converter/converter_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/converter/converter_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-dutyer/internal/generated/rpc/v1/persons.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/generated/rpc/v1/persons.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/generated/rpc/v1/teams.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/generated/rpc/v1/teams.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/handlers/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/handlers/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/handlers/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/handlers/teams/teams.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,4 +1,4 @@
-insert into teams (name, description, slack)
-values ('Dream Team', 'Fail better', 'QWERTY'),
-       ('Support Team', 'Main support team', 'YTREWQ')
+insert into teams (id, name, description, slack)
+values (1, 'Default', 'Default team', 'QWERTY'),
+       (2, 'Dream Team', 'Fail better', 'YTREWQ')
 ;

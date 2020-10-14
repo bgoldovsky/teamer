@@ -52,8 +52,7 @@ message UpdatePersonRequest {
   google.protobuf.StringValue phone = 8; // Телефон
   string slack = 9; // Идентификатор в Slack
   Role role = 10; // Тип разработчика
-  int64 duty_order = 11; // Уникальный порядок дежурства сотрудника
-  bool isActive = 12; // Участвует ли в дежурствах
+  bool isActive = 11; // Участвует ли в дежурствах
 }
 
 message RemovePersonRequest {

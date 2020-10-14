@@ -25,8 +25,7 @@ func ToModel(dto *v1.UpdatePersonRequest) *models.Person {
 		Slack: dto.Slack,
 		Role:  models.Role(dto.Role),
 
-		DutyOrder: dto.DutyOrder,
-		IsActive:  dto.IsActive,
+		IsActive: dto.IsActive,
 	}
 
 	if dto.MiddleName != nil {

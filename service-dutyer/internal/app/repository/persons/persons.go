@@ -122,6 +122,11 @@ func (r *repository) GetList(
 }
 
 func (r *repository) Save(ctx context.Context, person *models.Person) (*models.Person, error) {
+	dutyOrder, err := r.getNextDutyOrder(ctx, person.TeamID)
+	if err != nil {
+		return nil, err
+	}
+
 	attributes := map[string]interface{}{
 		"team_id":     person.TeamID,
 		"first_name":  person.FirstName,
@@ -132,7 +137,7 @@ func (r *repository) Save(ctx context.Context, person *models.Person) (*models.P
 		"phone":       person.Phone,
 		"role":        person.Role,
 		"slack":       person.Slack,
-		"duty_order":  person.DutyOrder,
+		"duty_order":  dutyOrder,
 		"is_active":   person.IsActive,
 	}
 
@@ -151,7 +156,6 @@ func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Pers
 		"phone":       p.Phone,
 		"slack":       p.Slack,
 		"role":        p.Role,
-		"duty_order":  p.DutyOrder,
 		"is_active":   p.IsActive,
 		"updated_at":  time.Now().Local(),
 	}
@@ -386,4 +390,20 @@ func (p *person) convert() models.Person {
 	}
 
 	return model
+}
+
+func (r *repository) getNextDutyOrder(ctx context.Context, teamID int64) (int64, error) {
+	const query = `select max("duty_order") from "persons" where team_id=$1;`
+	var dutyOrder int64
+
+	row := r.database.QueryRow(ctx, query, teamID)
+	err := row.Scan(&dutyOrder)
+	if isEmpty(err) {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, fmt.Errorf("next duty order for team %v error: %w", teamID, err)
+	}
+
+	return dutyOrder + 1, nil
 }
