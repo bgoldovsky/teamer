@@ -121,24 +121,24 @@ func (r *repository) GetList(
 	return r.query(ctx, query.String(), args...)
 }
 
-func (r *repository) Save(ctx context.Context, person *models.Person) (*models.Person, error) {
-	dutyOrder, err := r.getNextDutyOrder(ctx, person.TeamID)
+func (r *repository) Save(ctx context.Context, p *models.Person) (*models.Person, error) {
+	dutyOrder, err := r.getNextDutyOrder(ctx, p.TeamID)
 	if err != nil {
 		return nil, err
 	}
 
 	attributes := map[string]interface{}{
-		"team_id":     person.TeamID,
-		"first_name":  person.FirstName,
-		"middle_name": person.MiddleName,
-		"last_name":   person.LastName,
-		"birthday":    person.Birthday,
-		"email":       person.Email,
-		"phone":       person.Phone,
-		"role":        person.Role,
-		"slack":       person.Slack,
+		"team_id":     p.TeamID,
+		"first_name":  p.FirstName,
+		"middle_name": p.MiddleName,
+		"last_name":   p.LastName,
+		"birthday":    p.Birthday,
+		"email":       p.Email,
+		"phone":       p.Phone,
+		"role":        p.Role,
+		"slack":       p.Slack,
 		"duty_order":  dutyOrder,
-		"is_active":   person.IsActive,
+		"is_active":   p.IsActive,
 	}
 
 	return r.put(ctx, attributes)
@@ -147,7 +147,6 @@ func (r *repository) Save(ctx context.Context, person *models.Person) (*models.P
 func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Person, error) {
 	var attributes = map[string]interface{}{
 		"id":          p.ID,
-		"team_id":     p.TeamID,
 		"first_name":  p.FirstName,
 		"middle_name": p.MiddleName,
 		"last_name":   p.LastName,
@@ -158,6 +157,20 @@ func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Pers
 		"role":        p.Role,
 		"is_active":   p.IsActive,
 		"updated_at":  time.Now().Local(),
+	}
+
+	currentPerson, err := r.Get(ctx, p.TeamID)
+	if err != nil {
+		return nil, err
+	}
+
+	if currentPerson.TeamID != p.TeamID {
+		dutyOrder, err := r.getNextDutyOrder(ctx, p.TeamID)
+		if err != nil {
+			return nil, err
+		}
+		attributes["team_id"] = p.TeamID
+		attributes["duty_order"] = dutyOrder
 	}
 
 	return r.put(ctx, attributes)

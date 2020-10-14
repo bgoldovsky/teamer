@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/forms.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/forms.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/converter/converter.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/persons/converter/converter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/services/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
