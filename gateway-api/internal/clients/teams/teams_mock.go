@@ -97,6 +97,12 @@ func (m *ClientMock) GetTeams(_ context.Context, in *v1.GetTeamsRequest, _ ...gr
 	return res, args.Error(1)
 }
 
+func (m *ClientMock) GetTeam(_ context.Context, in *v1.GetTeamRequest, _ ...grpc.CallOption) (*v1.GetTeamReply, error) {
+	args := m.Called(in)
+	res, _ := args.Get(0).(*v1.GetTeamReply)
+	return res, args.Error(1)
+}
+
 func (m *ClientMock) ConfigureGetTeams(
 	id int64,
 	name string,
@@ -113,18 +119,18 @@ func (m *ClientMock) ConfigureGetTeams(
 		Sort:   "desc",
 	}
 
-	fake := &v1.GetTeamsReply{
-		Teams: []*v1.Team{
-			{
-				Id:          id,
-				Name:        name,
-				Description: description,
-				Slack:       slack,
-				Created:     models.ToTimestamp(created),
-				Updated:     models.ToTimestamp(updated),
-			},
-		},
+	team := &v1.Team{
+		Id:          id,
+		Name:        name,
+		Description: description,
+		Slack:       slack,
+		Created:     models.ToTimestamp(created),
+		Updated:     models.ToTimestamp(updated),
 	}
 
-	m.On(`GetTeams`, arg).Return(fake, nil)
+	fakeGetTeams := &v1.GetTeamsReply{Teams: []*v1.Team{team}}
+	fakeGetTeam := &v1.GetTeamReply{Team: team}
+
+	m.On(`GetTeams`, arg).Return(fakeGetTeam, nil)
+	m.On(`GetTeams`, arg).Return(fakeGetTeams, nil)
 }

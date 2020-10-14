@@ -17,10 +17,11 @@ const (
 )
 
 type client interface {
+	GetTeam(ctx context.Context, in *v1.GetTeamRequest, opts ...grpc.CallOption) (*v1.GetTeamReply, error)
+	GetTeams(ctx context.Context, in *v1.GetTeamsRequest, opts ...grpc.CallOption) (*v1.GetTeamsReply, error)
 	AddTeam(ctx context.Context, in *v1.AddTeamRequest, opts ...grpc.CallOption) (*v1.AddTeamReply, error)
 	UpdateTeam(ctx context.Context, in *v1.UpdateTeamRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	RemoveTeam(ctx context.Context, in *v1.RemoveTeamRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	GetTeams(ctx context.Context, in *v1.GetTeamsRequest, opts ...grpc.CallOption) (*v1.GetTeamsReply, error)
 }
 
 type Client struct {
@@ -91,6 +92,19 @@ func (c *Client) RemoveTeam(ctx context.Context, id int64) (*models.StatusView, 
 	}
 
 	return models.NewStatusView(id, "successfully removed"), nil
+}
+
+func (c *Client) GetTeam(ctx context.Context, teamID int64) (*models.TeamView, error) {
+	ctx = getTimeoutContext(ctx)
+	request := &v1.GetTeamRequest{Id: teamID}
+
+	team, err := c.client.GetTeam(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	view := models.FromTeamReply(team.Team)
+	return view, nil
 }
 
 func (c *Client) GetTeams(ctx context.Context) ([]*models.TeamView, error) {

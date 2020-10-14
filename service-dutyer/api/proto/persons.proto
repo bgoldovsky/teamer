@@ -9,10 +9,11 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 service Persons {
+  rpc GetPerson (GetPersonRequest) returns (GetPersonReply) {} // Получить сотрудника по ID
+  rpc GetPersons (GetPersonsRequest) returns (GetPersonsReply) {} // Получить список сотрудников
   rpc AddPerson (AddPersonRequest) returns (AddPersonReply) {}  // Добавить нового сотрудника
   rpc UpdatePerson (UpdatePersonRequest) returns (google.protobuf.Empty) {} // Изменить данные сотрудника
   rpc RemovePerson (RemovePersonRequest) returns (google.protobuf.Empty) {} // Удалить сотрудника
-  rpc GetPersons (GetPersonsRequest) returns (GetPersonsReply) {} // Получить список сотрудников
 }
 
 enum Role {
@@ -76,6 +77,14 @@ message PersonFilter {
 
 message GetPersonsReply {
   repeated Person persons = 1; // Список сотрудников
+}
+
+message GetPersonRequest {
+  int64 id = 1;  // Уникальный идентификатор сотрудника
+}
+
+message GetPersonReply {
+  Person person = 1; // Сотрудник
 }
 
 message Person {

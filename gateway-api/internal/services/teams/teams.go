@@ -22,6 +22,31 @@ func New(client *teams.Client, repo teamsRepo.Repository) *Service {
 	}
 }
 
+func (s *Service) GetTeam(ctx context.Context, teamID int64) (*models.TeamView, error) {
+	view, err := s.client.GetTeam(ctx, teamID)
+	if err != nil {
+		logger.Log.WithError(err).Errorln("get team error")
+		return nil, err
+	}
+
+	return view, nil
+}
+
+func (s *Service) GetTeams(ctx context.Context) ([]*models.TeamView, error) {
+	if view := s.getRepo(); view != nil {
+		return view, nil
+	}
+
+	view, err := s.client.GetTeams(ctx)
+	if err != nil {
+		logger.Log.WithError(err).Errorln("get teams error")
+		return nil, err
+	}
+
+	s.saveRepo(view)
+	return view, nil
+}
+
 func (s *Service) AddTeam(ctx context.Context, form *models.TeamForm) (*models.StatusView, error) {
 	status, err := s.client.AddTeam(ctx, form.Name, form.Description, form.Slack)
 	if err != nil {
@@ -53,21 +78,6 @@ func (s *Service) RemoveTeam(ctx context.Context, id int64) (*models.StatusView,
 
 	s.clearRepo()
 	return status, nil
-}
-
-func (s *Service) GetTeams(ctx context.Context) ([]*models.TeamView, error) {
-	if view := s.getRepo(); view != nil {
-		return view, nil
-	}
-
-	view, err := s.client.GetTeams(ctx)
-	if err != nil {
-		logger.Log.WithError(err).Errorln("get teams error")
-		return nil, err
-	}
-
-	s.saveRepo(view)
-	return view, nil
 }
 
 func (s *Service) clearRepo() {

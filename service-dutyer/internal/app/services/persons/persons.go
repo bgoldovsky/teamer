@@ -24,6 +24,33 @@ func New(repo persons.Repository) *Service {
 	}
 }
 
+func (s *Service) GetPerson(ctx context.Context, req *v1.GetPersonRequest) (*v1.GetPersonReply, error) {
+	person, err := s.repo.Get(ctx, req.Id)
+	if err != nil {
+		return nil, fmt.Errorf("get person error: %w", err)
+	}
+	return &v1.GetPersonReply{Person: converter.ToDTO(person)}, nil
+}
+
+func (s *Service) GetPersons(ctx context.Context, req *v1.GetPersonsRequest) (*v1.GetPersonsReply, error) {
+	personModels, err := s.repo.GetList(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
+
+	if err != nil {
+		return nil, fmt.Errorf("get persons error: %w", err)
+	}
+
+	if len(personModels) == 0 {
+		return &v1.GetPersonsReply{Persons: []*v1.Person{}}, nil
+	}
+
+	personsProto := make([]*v1.Person, len(personModels))
+	for idx, person := range personModels {
+		personsProto[idx] = converter.ToDTO(&person)
+	}
+
+	return &v1.GetPersonsReply{Persons: personsProto}, nil
+}
+
 func (s *Service) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.AddPersonReply, error) {
 	model := &models.Person{
 		TeamID:    req.TeamId,
@@ -75,25 +102,6 @@ func (s *Service) RemoverPerson(ctx context.Context, req *v1.RemovePersonRequest
 		return nil, fmt.Errorf("remove person error: %w", err)
 	}
 	return &empty.Empty{}, nil
-}
-
-func (s *Service) GetPersons(ctx context.Context, req *v1.GetPersonsRequest) (*v1.GetPersonsReply, error) {
-	personModels, err := s.repo.GetList(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
-
-	if err != nil {
-		return nil, fmt.Errorf("get persons error: %w", err)
-	}
-
-	if len(personModels) == 0 {
-		return &v1.GetPersonsReply{Persons: []*v1.Person{}}, nil
-	}
-
-	personsProto := make([]*v1.Person, len(personModels))
-	for idx, person := range personModels {
-		personsProto[idx] = converter.ToDTO(&person)
-	}
-
-	return &v1.GetPersonsReply{Persons: personsProto}, nil
 }
 
 func toTime(stamp *timestamp.Timestamp) *time.Time {

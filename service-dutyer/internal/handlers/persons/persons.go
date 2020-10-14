@@ -22,6 +22,26 @@ func New(service *persons.Service) *Handler {
 	}
 }
 
+func (h *Handler) GetPerson(ctx context.Context, req *v1.GetPersonRequest) (*v1.GetPersonReply, error) {
+	reply, err := h.service.GetPerson(ctx, req)
+	if err != nil {
+		logger.Log.WithField("req", req).WithError(err).Errorln("get person error")
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return reply, nil
+}
+
+func (h *Handler) GetPersons(ctx context.Context, req *v1.GetPersonsRequest) (*v1.GetPersonsReply, error) {
+	reply, err := h.service.GetPersons(ctx, req)
+	if err != nil {
+		logger.Log.WithField("req", req).WithError(err).Errorln("get persons error")
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return reply, nil
+}
+
 func (h *Handler) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.AddPersonReply, error) {
 	if len(req.FirstName) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person first name not specified")
@@ -86,16 +106,6 @@ func (h *Handler) RemovePerson(ctx context.Context, req *v1.RemovePersonRequest)
 	reply, err := h.service.RemoverPerson(ctx, req)
 	if err != nil {
 		logger.Log.WithField("req", req).WithError(err).Errorln("remove person error")
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return reply, nil
-}
-
-func (h *Handler) GetPersons(ctx context.Context, req *v1.GetPersonsRequest) (*v1.GetPersonsReply, error) {
-	reply, err := h.service.GetPersons(ctx, req)
-	if err != nil {
-		logger.Log.WithField("req", req).WithError(err).Errorln("get persons error")
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 

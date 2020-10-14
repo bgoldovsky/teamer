@@ -36,6 +36,7 @@ func (h *Handlers) Initialize(signingKey string) {
 
 func (h *Handlers) findRoutes() {
 	h.router.HandleFunc("/teams", h.GetTeams).Methods("GET")
+	h.router.HandleFunc("/teams/{id}", h.GetTeam).Methods("GET")
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
 	h.router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
@@ -50,6 +51,43 @@ func (h *Handlers) findRoutes() {
 func (h *Handlers) Run(port string) {
 	logger.Log.WithField("port", port).Infoln("Server running")
 	logger.Log.Fatalln(http.ListenAndServe(port, middleware.LogMiddleware(middleware.PanicMiddleware(h.router))))
+}
+
+func (h *Handlers) GetTeam(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	teamID, err := strconv.ParseInt(params["id"], 10, 64)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid ID")
+		return
+	}
+
+	view, err := h.service.GetTeam(r.Context(), teamID)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	if view == nil {
+		respondJSON(w, http.StatusNoContent, view)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, view)
+}
+
+func (h *Handlers) GetTeams(w http.ResponseWriter, r *http.Request) {
+	view, err := h.service.GetTeams(r.Context())
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	if len(view) == 0 {
+		respondJSON(w, http.StatusNoContent, view)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, view)
 }
 
 func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
@@ -67,21 +105,6 @@ func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusCreated, status)
-}
-
-func (h *Handlers) GetTeams(w http.ResponseWriter, r *http.Request) {
-	view, err := h.service.GetTeams(r.Context())
-	if err != nil {
-		respondError(w, http.StatusInternalServerError, defaultErrMsg)
-		return
-	}
-
-	if len(view) == 0 {
-		respondJSON(w, http.StatusNoContent, view)
-		return
-	}
-
-	respondJSON(w, http.StatusOK, view)
 }
 
 func (h *Handlers) DeleteTeam(w http.ResponseWriter, r *http.Request) {

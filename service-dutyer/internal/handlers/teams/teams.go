@@ -2,7 +2,6 @@ package teams
 
 import (
 	"context"
-	"errors"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -21,6 +20,34 @@ func New(service *teams.Service) *Handler {
 	return &Handler{
 		service: service,
 	}
+}
+
+func (h *Handler) GetTeam(ctx context.Context, req *v1.GetTeamRequest) (*v1.GetTeamReply, error) {
+	reply, err := h.service.GetTeam(ctx, req)
+	if err != nil {
+		logger.Log.WithField("req", req).WithError(err).Errorln("get team error")
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return reply, nil
+}
+
+func (h *Handler) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
+	if req.Order != "id" && req.Order != "name" {
+		return nil, status.Error(codes.InvalidArgument, "order must be id|name")
+	}
+
+	if req.Sort != "asc" && req.Sort != "desc" {
+		return nil, status.Error(codes.InvalidArgument, "sort must be asc|desc")
+	}
+
+	reply, err := h.service.GetTeams(ctx, req)
+	if err != nil {
+		logger.Log.WithField("req", req).WithError(err).Errorln("get teams error")
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return reply, nil
 }
 
 func (h *Handler) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddTeamReply, error) {
@@ -67,26 +94,4 @@ func (h *Handler) RemoveTeam(ctx context.Context, req *v1.RemoveTeamRequest) (*e
 	}
 
 	return reply, nil
-}
-
-func (h *Handler) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
-	if req.Order != "id" && req.Order != "name" {
-		return nil, status.Error(codes.InvalidArgument, "order must be id|name")
-	}
-
-	if req.Sort != "asc" && req.Sort != "desc" {
-		return nil, status.Error(codes.InvalidArgument, "sort must be asc|desc")
-	}
-
-	reply, err := h.service.GetTeams(ctx, req)
-	if err != nil {
-		logger.Log.WithField("req", req).WithError(err).Errorln("get teams error")
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return reply, nil
-}
-
-func (h *Handler) GetTeam(context.Context, *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
-	return nil, errors.New("not implemented")
 }

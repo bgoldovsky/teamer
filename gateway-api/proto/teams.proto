@@ -8,10 +8,11 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service Teams {
+  rpc GetTeam (GetTeamRequest) returns (GetTeamReply) {} // Получить команду
+  rpc GetTeams (GetTeamsRequest) returns (GetTeamsReply) {} // Получить список команд
   rpc AddTeam (AddTeamRequest) returns (AddTeamReply) {} // Добавить новую команду
   rpc UpdateTeam (UpdateTeamRequest) returns (google.protobuf.Empty) {} // Изменить данные команды
   rpc RemoveTeam (RemoveTeamRequest) returns (google.protobuf.Empty) {} // Удалить команду
-  rpc GetTeams (GetTeamsRequest) returns (GetTeamsReply) {} // Получить список команд
 }
 
 message AddTeamRequest {
@@ -51,6 +52,14 @@ message TeamFilter {
 
 message GetTeamsReply {
   repeated Team teams = 1; // Список команд
+}
+
+message GetTeamRequest {
+  int64 id = 1;  // Уникальный идентификатор команды
+}
+
+message GetTeamReply {
+  Team team = 1; // Команда
 }
 
 message Team {

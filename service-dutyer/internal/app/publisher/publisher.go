@@ -1,3 +1,5 @@
+//go:generate mockgen -destination publisher_mock/publisher_mock.go -source publisher.go
+
 package publisher
 
 import (
