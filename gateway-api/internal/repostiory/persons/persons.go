@@ -1,4 +1,4 @@
-package teams
+package persons
 
 import (
 	"encoding/json"
@@ -10,17 +10,16 @@ import (
 )
 
 const (
-	teamsKey = "teams"
+	personsKey = "persons"
 )
 
 var (
-	ErrTeamsNotFound = errors.New("teams not found")
+	ErrPersonsNotFound = errors.New("persons not found")
 )
 
-// TODO: убрать указатели
 type Repository interface {
-	Save(teams []models.TeamView) error
-	Get() ([]models.TeamView, error)
+	Save(persons []models.PersonView) error
+	Get() ([]models.PersonView, error)
 	Clear() error
 }
 
@@ -50,52 +49,52 @@ func newPool(address string) (*redis.Pool, error) {
 	}, nil
 }
 
-func (r *repository) Save(teams []models.TeamView) error {
+func (r *repository) Save(persons []models.PersonView) error {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	bytes, err := json.Marshal(teams)
+	bytes, err := json.Marshal(persons)
 	if err != nil {
-		return fmt.Errorf("marshal teams error: %w. data: %v", err, bytes)
+		return fmt.Errorf("marshal persons error: %w. data: %v", err, bytes)
 	}
 
-	_, err = conn.Do("SET", teamsKey, bytes)
+	_, err = conn.Do("SET", personsKey, bytes)
 	if err != nil {
-		return fmt.Errorf("save teams error: %w", err)
+		return fmt.Errorf("save persons error: %w", err)
 	}
 
 	return nil
 }
 
-func (r *repository) Get() ([]models.TeamView, error) {
+func (r *repository) Get() ([]models.PersonView, error) {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	s, err := redis.String(conn.Do("GET", teamsKey))
+	s, err := redis.String(conn.Do("GET", personsKey))
 	if err == redis.ErrNil {
-		return nil, ErrTeamsNotFound
+		return nil, ErrPersonsNotFound
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("retrieve teams error: %w", err)
+		return nil, fmt.Errorf("retrieve persons error: %w", err)
 	}
 
-	var teams []models.TeamView
-	err = json.Unmarshal([]byte(s), &teams)
+	var persons []models.PersonView
+	err = json.Unmarshal([]byte(s), &persons)
 	if err != nil {
-		return nil, fmt.Errorf("unmarshal teams error: %w. data: %v", err, teams)
+		return nil, fmt.Errorf("unmarshal persons error: %w. data: %v", err, persons)
 	}
 
-	return teams, nil
+	return persons, nil
 }
 
 func (r *repository) Clear() error {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	_, err := conn.Do("DEL", teamsKey)
+	_, err := conn.Do("DEL", personsKey)
 	if err != nil {
-		return fmt.Errorf("clear teams error: %w", err)
+		return fmt.Errorf("clear persons error: %w", err)
 	}
 
 	return nil

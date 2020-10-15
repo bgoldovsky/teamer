@@ -2,7 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/persons/persons.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/persons/persons_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gateway-api/internal/services/persons/persons.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gateway-api/internal/services/persons/persons_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/cmd/service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/cmd/service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/forms.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/forms.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/views.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/views.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/views_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/views_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,27 +75,27 @@
       <recent name="$PROJECT_DIR$/service-teams/internal/app" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.go test github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams">
-    <configuration name="TestService_AddTeam in github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Test.go test github.com/bgoldovsky/dutyer/gateway-api/internal/models">
+    <configuration name="TestFromPersonReply in github.com/bgoldovsky/dutyer/gateway-api/internal/models" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="dutyer" />
-      <working_directory value="$PROJECT_DIR$/service-dutyer/internal/app/services/teams" />
+      <working_directory value="$PROJECT_DIR$/gateway-api/internal/models" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" />
+      <package value="github.com/bgoldovsky/dutyer/gateway-api/internal/models" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestService_AddTeam\E$" />
+      <pattern value="^\QTestFromPersonReply\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestService_GetTeam in github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFromPersonsReply in github.com/bgoldovsky/dutyer/gateway-api/internal/models" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="dutyer" />
-      <working_directory value="$PROJECT_DIR$/service-dutyer/internal/app/services/teams" />
+      <working_directory value="$PROJECT_DIR$/gateway-api/internal/models" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" />
+      <package value="github.com/bgoldovsky/dutyer/gateway-api/internal/models" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestService_GetTeam\E$" />
+      <pattern value="^\QTestFromPersonsReply\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestService_RemoveTeam in github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -93,12 +109,12 @@
       <pattern value="^\QTestService_RemoveTeam\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="go test github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/persons" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="go test github.com/bgoldovsky/dutyer/gateway-api/internal/models" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="dutyer" />
-      <working_directory value="$PROJECT_DIR$/service-dutyer/internal/app/services/persons" />
+      <working_directory value="$PROJECT_DIR$/gateway-api/internal/models" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/persons" />
+      <package value="github.com/bgoldovsky/dutyer/gateway-api/internal/models" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <method v="2" />
@@ -115,11 +131,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.go test github.com/bgoldovsky/dutyer/gateway-api/internal/models" />
+        <item itemvalue="Go Test.TestFromPersonsReply in github.com/bgoldovsky/dutyer/gateway-api/internal/models" />
+        <item itemvalue="Go Test.TestFromPersonReply in github.com/bgoldovsky/dutyer/gateway-api/internal/models" />
         <item itemvalue="Go Test.go test github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" />
         <item itemvalue="Go Test.TestService_RemoveTeam in github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" />
-        <item itemvalue="Go Test.TestService_AddTeam in github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" />
-        <item itemvalue="Go Test.TestService_GetTeam in github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams" />
-        <item itemvalue="Go Test.go test github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/persons" />
       </list>
     </recent_temporary>
   </component>
@@ -170,30 +186,30 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="508" y="212" key="FileChooserDialogImpl/0.0.1440.900@0.0.1440.900" timestamp="1602608462575" />
-    <state width="1398" height="244" key="GridCell.Tab.0.bottom" timestamp="1602675508763">
+    <state width="1398" height="244" key="GridCell.Tab.0.bottom" timestamp="1602783328187">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="244" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1602675508763" />
-    <state width="1398" height="244" key="GridCell.Tab.0.center" timestamp="1602675508760">
+    <state width="1398" height="244" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1602783328187" />
+    <state width="1398" height="244" key="GridCell.Tab.0.center" timestamp="1602783328185">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="244" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1602675508760" />
-    <state width="1398" height="244" key="GridCell.Tab.0.left" timestamp="1602675508758">
+    <state width="1398" height="244" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1602783328185" />
+    <state width="1398" height="244" key="GridCell.Tab.0.left" timestamp="1602783328184">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="244" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1602675508758" />
-    <state width="1398" height="244" key="GridCell.Tab.0.right" timestamp="1602675508762">
+    <state width="1398" height="244" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1602783328184" />
+    <state width="1398" height="244" key="GridCell.Tab.0.right" timestamp="1602783328186">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="244" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1602675508762" />
+    <state width="1398" height="244" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1602783328186" />
     <state x="221" y="89" key="SettingsEditor" timestamp="1596945342405">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1596945342405" />
-    <state x="421" y="176" width="676" height="548" key="find.popup" timestamp="1602689869949">
+    <state x="421" y="176" width="676" height="548" key="find.popup" timestamp="1602789059808">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="421" y="176" width="676" height="548" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1602689869949" />
+    <state x="421" y="176" width="676" height="548" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1602789059808" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1597131607129">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

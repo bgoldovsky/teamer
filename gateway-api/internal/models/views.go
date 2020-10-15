@@ -6,15 +6,6 @@ import (
 	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/teams/v1"
 )
 
-type TeamView struct {
-	ID          int64     `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Slack       string    `json:"slack"`
-	Crated      time.Time `json:"created"`
-	Updated     time.Time `json:"updated"`
-}
-
 type StatusView struct {
 	ID  int64  `json:"id"`
 	Msg string `json:"message"`
@@ -27,14 +18,24 @@ func NewStatusView(id int64, msg string) *StatusView {
 	}
 }
 
-func FromTeamsReply(reply *v1.GetTeamsReply) []*TeamView {
+type TeamView struct {
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Slack       string    `json:"slack"`
+	Crated      time.Time `json:"created"`
+	Updated     time.Time `json:"updated"`
+}
+
+func FromTeamsReply(reply *v1.GetTeamsReply) []TeamView {
 	if reply == nil || len(reply.Teams) == 0 {
-		return []*TeamView{}
+		return []TeamView{}
 	}
 
-	view := make([]*TeamView, len(reply.Teams))
+	view := make([]TeamView, len(reply.Teams))
 	for idx, t := range reply.Teams {
-		view[idx] = FromTeamReply(t)
+		team := FromTeamReply(t)
+		view[idx] = *team
 	}
 	return view
 }
@@ -52,4 +53,70 @@ func FromTeamReply(reply *v1.Team) *TeamView {
 		Crated:      ToTime(reply.Created),
 		Updated:     ToTime(reply.Updated),
 	}
+}
+
+type PersonView struct {
+	ID         int64      `json:"id"`
+	TeamId     int64      `json:"team_id"`
+	FirstName  string     `json:"first_name"`
+	MiddleName *string    `json:"middle_name"`
+	LastName   string     `json:"last_name"`
+	Birthday   *time.Time `json:"birthday"`
+	Email      *string    `json:"email"`
+	Phone      *string    `json:"phone"`
+	Slack      string     `json:"slack"`
+	Role       int64      `json:"role"`
+	IsActive   bool       `json:"is_active"`
+	Crated     time.Time  `json:"created"`
+	Updated    time.Time  `json:"updated"`
+}
+
+func FromPersonsReply(reply *v1.GetPersonsReply) []PersonView {
+	if reply == nil || len(reply.Persons) == 0 {
+		return []PersonView{}
+	}
+
+	view := make([]PersonView, len(reply.Persons))
+	for idx, p := range reply.Persons {
+		person := FromPersonReply(p)
+		view[idx] = *person
+	}
+	return view
+}
+
+func FromPersonReply(reply *v1.Person) *PersonView {
+	if reply == nil {
+		return nil
+	}
+
+	view := PersonView{
+		ID:        reply.Id,
+		TeamId:    reply.TeamId,
+		FirstName: reply.FirstName,
+		LastName:  reply.LastName,
+		Slack:     reply.Slack,
+		Role:      int64(reply.Role),
+		IsActive:  reply.IsActive,
+		Crated:    ToTime(reply.Created),
+		Updated:   ToTime(reply.Updated),
+	}
+
+	if reply.MiddleName != nil {
+		view.MiddleName = &reply.MiddleName.Value
+	}
+
+	if reply.Birthday != nil {
+		birthday := ToTime(reply.Birthday)
+		view.Birthday = &birthday
+	}
+
+	if reply.Email != nil {
+		view.Email = &reply.Email.Value
+	}
+
+	if reply.Phone != nil {
+		view.Phone = &reply.Phone.Value
+	}
+
+	return &view
 }

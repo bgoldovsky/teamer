@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bgoldovsky/dutyer/service-dutyer/internal/logger"
+
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/models"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	pgx "github.com/jackc/pgx/v4"
@@ -236,6 +238,8 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 }
 
 func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Person, error) {
+	logger.Log.WithField("query", query).Info("SQL query")
+
 	rows, err := r.database.Query(ctx, query, args...)
 	if isEmpty(err) {
 		return nil, ErrPersonsNotFount

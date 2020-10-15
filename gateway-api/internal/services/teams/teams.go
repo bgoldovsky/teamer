@@ -25,14 +25,14 @@ func New(client *teams.Client, repo teamsRepo.Repository) *Service {
 func (s *Service) GetTeam(ctx context.Context, teamID int64) (*models.TeamView, error) {
 	view, err := s.client.GetTeam(ctx, teamID)
 	if err != nil {
-		logger.Log.WithError(err).Errorln("get team error")
+		logger.Log.WithError(err).WithField("teamID", teamID).Errorln("get team error")
 		return nil, err
 	}
 
 	return view, nil
 }
 
-func (s *Service) GetTeams(ctx context.Context) ([]*models.TeamView, error) {
+func (s *Service) GetTeams(ctx context.Context) ([]models.TeamView, error) {
 	if view := s.getRepo(); view != nil {
 		return view, nil
 	}
@@ -69,10 +69,10 @@ func (s *Service) UpdateTeam(ctx context.Context, id int64, form *models.TeamFor
 	return status, nil
 }
 
-func (s *Service) RemoveTeam(ctx context.Context, id int64) (*models.StatusView, error) {
-	status, err := s.client.RemoveTeam(ctx, id)
+func (s *Service) RemoveTeam(ctx context.Context, teamID int64) (*models.StatusView, error) {
+	status, err := s.client.RemoveTeam(ctx, teamID)
 	if err != nil {
-		logger.Log.WithField("id", id).WithError(err).Errorln("remove team error")
+		logger.Log.WithField("teamID", teamID).WithError(err).Errorln("remove team error")
 		return nil, err
 	}
 
@@ -87,14 +87,14 @@ func (s *Service) clearRepo() {
 	}
 }
 
-func (s *Service) saveRepo(teams []*models.TeamView) {
+func (s *Service) saveRepo(teams []models.TeamView) {
 	err := s.repo.Save(teams)
 	if err != nil {
 		logger.Log.WithError(err).Error("save teams repo error")
 	}
 }
 
-func (s *Service) getRepo() []*models.TeamView {
+func (s *Service) getRepo() []models.TeamView {
 	views, err := s.repo.Get()
 	if err != nil {
 		logger.Log.WithError(err).Error("save teams repo error")

@@ -9,6 +9,7 @@ import (
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/middleware"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
+	personsSrv "github.com/bgoldovsky/dutyer/gateway-api/internal/services/persons"
 	teamsSrv "github.com/bgoldovsky/dutyer/gateway-api/internal/services/teams"
 	"github.com/gorilla/mux"
 )
@@ -16,14 +17,16 @@ import (
 const defaultErrMsg = "internal server error"
 
 type Handlers struct {
-	service       *teamsSrv.Service
-	router        *mux.Router
-	jwtMiddleware *jwtMiddleware.JWTMiddleware
+	teamsService   *teamsSrv.Service
+	personsService *personsSrv.Service
+	router         *mux.Router
+	jwtMiddleware  *jwtMiddleware.JWTMiddleware
 }
 
-func New(service *teamsSrv.Service) *Handlers {
+func New(teamsService *teamsSrv.Service, personsService *personsSrv.Service) *Handlers {
 	return &Handlers{
-		service: service,
+		teamsService:   teamsService,
+		personsService: personsService,
 	}
 }
 
@@ -41,11 +44,11 @@ func (h *Handlers) findRoutes() {
 	h.router.Handle("/teams/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
 	h.router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
 
-	// TODO: Проксировать и отладить CRUD участников команд
-	h.router.HandleFunc("/persons", h.GetTeams).Methods("GET")
-	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdateTeam))).Methods("PUT")
-	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeleteTeam))).Methods("DELETE")
-	h.router.Handle("/persons", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
+	h.router.HandleFunc("/persons", h.GetPersons).Methods("GET")
+	h.router.HandleFunc("/teams/{id}", h.GetPerson).Methods("GET")
+	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdatePerson))).Methods("PUT")
+	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeletePerson))).Methods("DELETE")
+	h.router.Handle("/persons", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreatePerson))).Methods("POST")
 }
 
 func (h *Handlers) Run(port string) {
@@ -61,7 +64,7 @@ func (h *Handlers) GetTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view, err := h.service.GetTeam(r.Context(), teamID)
+	view, err := h.teamsService.GetTeam(r.Context(), teamID)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -76,7 +79,7 @@ func (h *Handlers) GetTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetTeams(w http.ResponseWriter, r *http.Request) {
-	view, err := h.service.GetTeams(r.Context())
+	view, err := h.teamsService.GetTeams(r.Context())
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -98,7 +101,7 @@ func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, err := h.service.AddTeam(r.Context(), &form)
+	status, err := h.teamsService.AddTeam(r.Context(), &form)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -115,7 +118,7 @@ func (h *Handlers) DeleteTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, err := h.service.RemoveTeam(r.Context(), id)
+	status, err := h.teamsService.RemoveTeam(r.Context(), id)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -139,7 +142,102 @@ func (h *Handlers) UpdateTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, err := h.service.UpdateTeam(r.Context(), id, &form)
+	status, err := h.teamsService.UpdateTeam(r.Context(), id, &form)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, status)
+}
+
+func (h *Handlers) GetPerson(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	teamID, err := strconv.ParseInt(params["id"], 10, 64)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid ID")
+		return
+	}
+
+	view, err := h.personsService.GetPerson(r.Context(), teamID)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	if view == nil {
+		respondJSON(w, http.StatusNoContent, view)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, view)
+}
+
+func (h *Handlers) GetPersons(w http.ResponseWriter, r *http.Request) {
+	view, err := h.personsService.GetPersons(r.Context())
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	if len(view) == 0 {
+		respondJSON(w, http.StatusNoContent, view)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, view)
+}
+
+func (h *Handlers) CreatePerson(w http.ResponseWriter, r *http.Request) {
+	var form models.PersonForm
+	dec := json.NewDecoder(r.Body)
+	if err := dec.Decode(&form); err != nil {
+		respondError(w, http.StatusBadRequest, "invalid JSON")
+		return
+	}
+
+	status, err := h.personsService.AddPerson(r.Context(), &form)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	respondJSON(w, http.StatusCreated, status)
+}
+
+func (h *Handlers) DeletePerson(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id, err := strconv.ParseInt(params["id"], 10, 64)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid ID")
+		return
+	}
+
+	status, err := h.personsService.RemovePerson(r.Context(), id)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, defaultErrMsg)
+		return
+	}
+
+	respondJSON(w, http.StatusOK, status)
+}
+
+func (h *Handlers) UpdatePerson(w http.ResponseWriter, r *http.Request) {
+	var form models.PersonForm
+	params := mux.Vars(r)
+	id, err := strconv.ParseInt(params["id"], 10, 64)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid ID")
+		return
+	}
+
+	dec := json.NewDecoder(r.Body)
+	if err := dec.Decode(&form); err != nil {
+		respondError(w, http.StatusBadRequest, "invalid JSON")
+		return
+	}
+
+	status, err := h.personsService.UpdatePerson(r.Context(), id, &form)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return

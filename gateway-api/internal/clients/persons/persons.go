@@ -4,13 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/golang/protobuf/ptypes/wrappers"
-
 	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/teams/v1"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/interceptors"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"google.golang.org/grpc"
 )
 
@@ -49,47 +48,31 @@ func NewClient(host string) (*Client, error) {
 	return newClient(client), nil
 }
 
-// TODO: Заменить на PersonForm
-func (c *Client) AddPerson(
-	ctx context.Context,
-	teamID int64,
-	firstName string,
-	middleName *string,
-	lastName string,
-	birthday *time.Time,
-	email *string,
-	phone *string,
-	slack string,
-	role int64,
-	isActive bool,
-) (*models.StatusView, error) {
+func (c *Client) AddPerson(ctx context.Context, form *models.PersonForm) (*models.StatusView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.AddPersonRequest{
-		TeamId:    teamID,
-		FirstName: firstName,
-		LastName:  lastName,
-		Birthday:  nil,
-		Email:     nil,
-		Phone:     nil,
-		Slack:     slack,
-		Role:      v1.Role(role),
-		IsActive:  isActive,
+		TeamId:    form.TeamId,
+		FirstName: form.FirstName,
+		LastName:  form.LastName,
+		Slack:     form.Slack,
+		Role:      v1.Role(form.Role),
+		IsActive:  form.IsActive,
 	}
 
-	if middleName != nil {
-		request.MiddleName = &wrappers.StringValue{Value: *middleName}
+	if form.MiddleName != nil {
+		request.MiddleName = &wrappers.StringValue{Value: *form.MiddleName}
 	}
 
-	if birthday != nil {
-		request.Birthday = models.ToTimestamp(*birthday)
+	if form.Birthday != nil {
+		request.Birthday = models.ToTimestamp(*form.Birthday)
 	}
 
-	if email != nil {
-		request.Email = &wrappers.StringValue{Value: *email}
+	if form.Email != nil {
+		request.Email = &wrappers.StringValue{Value: *form.Email}
 	}
 
-	if phone != nil {
-		request.Phone = &wrappers.StringValue{Value: *phone}
+	if form.Phone != nil {
+		request.Phone = &wrappers.StringValue{Value: *form.Phone}
 	}
 
 	reply, err := c.client.AddPerson(ctx, request)
@@ -100,15 +83,31 @@ func (c *Client) AddPerson(
 	return models.NewStatusView(reply.Id, "successfully created"), nil
 }
 
-// TODO: Реализовать
-/*
-func (c *Client) UpdatePerson(ctx context.Context, id int64, name, description, slack string) (*models.StatusView, error) {
+func (c *Client) UpdatePerson(ctx context.Context, personID int64, form *models.PersonForm) (*models.StatusView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.UpdatePersonRequest{
-		Id:          id,
-		Name:        name,
-		Description: description,
-		Slack:       slack,
+		TeamId:    form.TeamId,
+		FirstName: form.FirstName,
+		LastName:  form.LastName,
+		Slack:     form.Slack,
+		Role:      v1.Role(form.Role),
+		IsActive:  form.IsActive,
+	}
+
+	if form.MiddleName != nil {
+		request.MiddleName = &wrappers.StringValue{Value: *form.MiddleName}
+	}
+
+	if form.Birthday != nil {
+		request.Birthday = models.ToTimestamp(*form.Birthday)
+	}
+
+	if form.Email != nil {
+		request.Email = &wrappers.StringValue{Value: *form.Email}
+	}
+
+	if form.Phone != nil {
+		request.Phone = &wrappers.StringValue{Value: *form.Phone}
 	}
 
 	_, err := c.client.UpdatePerson(ctx, request)
@@ -116,30 +115,26 @@ func (c *Client) UpdatePerson(ctx context.Context, id int64, name, description, 
 		return nil, err
 	}
 
-	return models.NewStatusView(id, "successfully updated"), nil
+	return models.NewStatusView(personID, "successfully updated"), nil
 }
-*/
 
-func (c *Client) RemovePerson(ctx context.Context, id int64) (*models.StatusView, error) {
+func (c *Client) RemovePerson(ctx context.Context, personID int64) (*models.StatusView, error) {
 	ctx = getTimeoutContext(ctx)
-	request := &v1.RemovePersonRequest{
-		Id: id,
-	}
+	request := &v1.RemovePersonRequest{Id: personID}
 
 	_, err := c.client.RemovePerson(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return models.NewStatusView(id, "successfully removed"), nil
+	return models.NewStatusView(personID, "successfully removed"), nil
 }
 
-/*
-func (c *Client) GetPerson(ctx context.Context, teamID int64) (*models.TeamView, error) {
+func (c *Client) GetPerson(ctx context.Context, teamID int64) (*models.PersonView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.GetPersonRequest{Id: teamID}
 
-	team, err := c.client.GetPerson(ctx, request)
+	person, err := c.client.GetPerson(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +143,7 @@ func (c *Client) GetPerson(ctx context.Context, teamID int64) (*models.TeamView,
 	return view, nil
 }
 
-func (c *Client) GetPersons(ctx context.Context) ([]*models.PersonView, error) {
+func (c *Client) GetPersons(ctx context.Context) ([]models.PersonView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.GetPersonsRequest{
 		Limit:  1000,
@@ -165,7 +160,6 @@ func (c *Client) GetPersons(ctx context.Context) ([]*models.PersonView, error) {
 	view := models.FromPersonsReply(persons)
 	return view, nil
 }
-*/
 
 func getTimeoutContext(ctx context.Context) context.Context {
 	ctx, _ = context.WithTimeout(ctx, time.Second*timeout)

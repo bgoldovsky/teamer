@@ -63,10 +63,10 @@ func (c *Client) AddTeam(ctx context.Context, name, description, slack string) (
 	return models.NewStatusView(reply.Id, "successfully created"), nil
 }
 
-func (c *Client) UpdateTeam(ctx context.Context, id int64, name, description, slack string) (*models.StatusView, error) {
+func (c *Client) UpdateTeam(ctx context.Context, teamID int64, name, description, slack string) (*models.StatusView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.UpdateTeamRequest{
-		Id:          id,
+		Id:          teamID,
 		Name:        name,
 		Description: description,
 		Slack:       slack,
@@ -77,21 +77,19 @@ func (c *Client) UpdateTeam(ctx context.Context, id int64, name, description, sl
 		return nil, err
 	}
 
-	return models.NewStatusView(id, "successfully updated"), nil
+	return models.NewStatusView(teamID, "successfully updated"), nil
 }
 
-func (c *Client) RemoveTeam(ctx context.Context, id int64) (*models.StatusView, error) {
+func (c *Client) RemoveTeam(ctx context.Context, teamID int64) (*models.StatusView, error) {
 	ctx = getTimeoutContext(ctx)
-	request := &v1.RemoveTeamRequest{
-		Id: id,
-	}
+	request := &v1.RemoveTeamRequest{Id: teamID}
 
 	_, err := c.client.RemoveTeam(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return models.NewStatusView(id, "successfully removed"), nil
+	return models.NewStatusView(teamID, "successfully removed"), nil
 }
 
 func (c *Client) GetTeam(ctx context.Context, teamID int64) (*models.TeamView, error) {
@@ -107,7 +105,7 @@ func (c *Client) GetTeam(ctx context.Context, teamID int64) (*models.TeamView, e
 	return view, nil
 }
 
-func (c *Client) GetTeams(ctx context.Context) ([]*models.TeamView, error) {
+func (c *Client) GetTeams(ctx context.Context) ([]models.TeamView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.GetTeamsRequest{
 		Limit:  1000,
