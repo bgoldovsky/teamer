@@ -2,24 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1acbbef7-8912-413a-ad12-53003045423d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/persons/persons.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/persons/persons_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gateway-api/internal/services/persons/persons.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gateway-api/internal/services/persons/persons_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/cmd/service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/cmd/service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/persons/persons_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/clients/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/handlers/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/forms.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/forms.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/views.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/views.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/models/views_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/models/views_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/repostiory/teams/teams_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-api/internal/services/teams/teams.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/app/repository/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/handlers/persons/persons.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/handlers/persons/persons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-dutyer/internal/interceptors/interceptors.go" beforeDir="false" afterPath="$PROJECT_DIR$/service-dutyer/internal/interceptors/interceptors.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,10 +192,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1596945342405" />
-    <state x="421" y="176" width="676" height="548" key="find.popup" timestamp="1602789059808">
+    <state x="421" y="176" width="676" height="548" key="find.popup" timestamp="1602791241351">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="421" y="176" width="676" height="548" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1602789059808" />
+    <state x="421" y="176" width="676" height="548" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1602791241351" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1597131607129">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

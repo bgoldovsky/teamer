@@ -18,7 +18,7 @@ func LoggingInterceptor(ctx context.Context,
 		if r := recover(); r != nil {
 			logger.Log.
 				WithField("recovered", r).
-				WithField("stackTrace", debug.Stack()).
+				WithField("stackTrace", string(debug.Stack())).
 				Error("panic recovered")
 		}
 	}()

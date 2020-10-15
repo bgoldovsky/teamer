@@ -51,10 +51,6 @@ func (h *Handler) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.
 		return nil, status.Error(codes.InvalidArgument, "person last name not specified")
 	}
 
-	if req.Birthday.Nanos == 0 {
-		return nil, status.Error(codes.InvalidArgument, "person birthday not specified")
-	}
-
 	if len(req.Slack) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person slack not specified")
 	}

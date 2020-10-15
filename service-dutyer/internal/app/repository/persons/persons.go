@@ -117,7 +117,7 @@ func (r *repository) GetList(
 		query.WriteString(" ")
 		query.WriteString(where)
 	}
-	query.WriteString(fmt.Sprintf(` order by "".%q %s limit %d offset %d;`, order, sort, limit, offset))
+	query.WriteString(fmt.Sprintf(` order by "p".%q %s limit %d offset %d;`, order, sort, limit, offset))
 
 	// Выполнение запроса
 	return r.query(ctx, query.String(), args...)
@@ -410,7 +410,7 @@ func (p *person) convert() models.Person {
 }
 
 func (r *repository) getNextDutyOrder(ctx context.Context, teamID int64) (int64, error) {
-	const query = `select max("duty_order") from "persons" where team_id=$1;`
+	const query = `select coalesce(max("duty_order"), 0) from "persons" where team_id=$1;`
 	var dutyOrder int64
 
 	row := r.database.QueryRow(ctx, query, teamID)
