@@ -165,9 +165,6 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 
 func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Team, error) {
 	rows, err := r.database.Query(ctx, query, args...)
-	if isEmpty(err) {
-		return nil, ErrTeamNotFount
-	}
 
 	if err != nil {
 		return nil, err
@@ -183,6 +180,10 @@ func (r *repository) query(ctx context.Context, query string, args ...interface{
 		}
 		team := t.convert()
 		teams = append(teams, team)
+	}
+
+	if len(teams) == 0 {
+		return nil, ErrTeamNotFount
 	}
 
 	return teams, nil
@@ -233,16 +234,6 @@ func (r *repository) where(filter *v1.TeamFilter) (string, []interface{}) {
 	}
 
 	return "", values
-}
-
-func isEmpty(err error) bool {
-	if err != nil {
-		switch err {
-		case pgx.ErrNoRows:
-			return true
-		}
-	}
-	return false
 }
 
 type team struct {

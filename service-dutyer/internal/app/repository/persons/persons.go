@@ -11,8 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bgoldovsky/dutyer/service-dutyer/internal/logger"
-
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/models"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	pgx "github.com/jackc/pgx/v4"
@@ -149,6 +147,7 @@ func (r *repository) Save(ctx context.Context, p *models.Person) (*models.Person
 func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Person, error) {
 	var attributes = map[string]interface{}{
 		"id":          p.ID,
+		"team_id":     p.TeamID,
 		"first_name":  p.FirstName,
 		"middle_name": p.MiddleName,
 		"last_name":   p.LastName,
@@ -161,11 +160,12 @@ func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Pers
 		"updated_at":  time.Now().Local(),
 	}
 
-	currentPerson, err := r.Get(ctx, p.TeamID)
+	currentPerson, err := r.Get(ctx, p.ID)
 	if err != nil {
 		return nil, err
 	}
 
+	attributes["duty_order"] = currentPerson.DutyOrder
 	if currentPerson.TeamID != p.TeamID {
 		dutyOrder, err := r.getNextDutyOrder(ctx, p.TeamID)
 		if err != nil {
@@ -180,7 +180,7 @@ func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Pers
 
 func (r *repository) Remove(ctx context.Context, personID int64) (int64, error) {
 	var query bytes.Buffer
-	query.WriteString("delete from teams where id = $1;")
+	query.WriteString("delete from persons where id = $1;")
 	_, err := r.database.Query(ctx, query.String(), personID)
 
 	return personID, err
@@ -238,13 +238,7 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 }
 
 func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Person, error) {
-	// TODO: удалить логирование
-	logger.Log.WithField("query", query).WithField("args", args).Info("SQL query")
-
 	rows, err := r.database.Query(ctx, query, args...)
-	if isEmpty(err) {
-		return nil, ErrPersonsNotFount
-	}
 
 	if err != nil {
 		return nil, err
@@ -278,6 +272,10 @@ func (r *repository) query(ctx context.Context, query string, args ...interface{
 
 		person := p.convert()
 		persons = append(persons, person)
+	}
+
+	if len(persons) == 0 {
+		return nil, ErrPersonsNotFount
 	}
 
 	return persons, nil

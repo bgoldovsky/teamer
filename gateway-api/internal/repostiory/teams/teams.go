@@ -17,7 +17,6 @@ var (
 	ErrTeamsNotFound = errors.New("teams not found")
 )
 
-// TODO: убрать указатели
 type Repository interface {
 	Save(teams []models.TeamView) error
 	Get() ([]models.TeamView, error)

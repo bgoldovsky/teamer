@@ -86,6 +86,7 @@ func (c *Client) AddPerson(ctx context.Context, form *models.PersonForm) (*model
 func (c *Client) UpdatePerson(ctx context.Context, personID int64, form *models.PersonForm) (*models.StatusView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.UpdatePersonRequest{
+		Id:        personID,
 		TeamId:    form.TeamId,
 		FirstName: form.FirstName,
 		LastName:  form.LastName,
