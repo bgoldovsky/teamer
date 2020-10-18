@@ -74,7 +74,7 @@ func (s *Service) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.
 
 	if req.Phone != nil {
 		phone := req.Phone.GetValue()
-		model.Email = &phone
+		model.Phone = &phone
 	}
 
 	model, err := s.repo.Save(ctx, model)

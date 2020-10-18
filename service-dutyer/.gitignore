@@ -14,7 +14,6 @@
 # IDE system files
 .idea
 .idea/
-.idea/warkplace.xml
 .vscode
 
 # Dependency directories (remove the comment below to include it)

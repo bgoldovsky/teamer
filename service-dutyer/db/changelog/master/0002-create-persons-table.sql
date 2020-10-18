@@ -2,12 +2,12 @@
 
 create table if not exists persons (
     id             bigserial    primary key,
-    team_id        bigint       not null references teams (id) on delete cascade,
+    team_id        bigint       not null references teams (id) on delete restrict,
     --
     first_name     text         not null,
     middle_name    text,
     last_name      text         not null,
-    birthday       timestamp    not null,
+    birthday       timestamp,
     email          text,
     phone          text,
     slack          text         not null,

@@ -17,14 +17,14 @@ type TeamForm struct {
 }
 
 type PersonForm struct {
-	TeamId     int64      `json:"team_id"`
-	FirstName  string     `json:"first_name"`
-	MiddleName *string    `json:"middle_name"`
-	LastName   string     `json:"last_name"`
+	TeamId     int64      `json:"teamId"`
+	FirstName  string     `json:"firstName"`
+	MiddleName *string    `json:"middleName"`
+	LastName   string     `json:"lastName"`
 	Birthday   *time.Time `json:"birthday"`
 	Email      *string    `json:"email"`
 	Phone      *string    `json:"phone"`
 	Slack      string     `json:"slack"`
 	Role       int64      `json:"role"`
-	IsActive   bool       `json:"is_active"`
+	IsActive   bool       `json:"isActive"`
 }

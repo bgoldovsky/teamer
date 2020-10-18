@@ -238,7 +238,8 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 }
 
 func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Person, error) {
-	logger.Log.WithField("query", query).Info("SQL query")
+	// TODO: удалить логирование
+	logger.Log.WithField("query", query).WithField("args", args).Info("SQL query")
 
 	rows, err := r.database.Query(ctx, query, args...)
 	if isEmpty(err) {

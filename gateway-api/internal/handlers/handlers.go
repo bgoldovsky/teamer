@@ -45,7 +45,7 @@ func (h *Handlers) findRoutes() {
 	h.router.Handle("/teams", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreateTeam))).Methods("POST")
 
 	h.router.HandleFunc("/persons", h.GetPersons).Methods("GET")
-	h.router.HandleFunc("/teams/{id}", h.GetPerson).Methods("GET")
+	h.router.HandleFunc("/persons/{id}", h.GetPerson).Methods("GET")
 	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.UpdatePerson))).Methods("PUT")
 	h.router.Handle("/persons/{id}", h.jwtMiddleware.Handler(http.HandlerFunc(h.DeletePerson))).Methods("DELETE")
 	h.router.Handle("/persons", h.jwtMiddleware.Handler(http.HandlerFunc(h.CreatePerson))).Methods("POST")
