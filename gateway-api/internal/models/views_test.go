@@ -163,7 +163,7 @@ func TestFromPersonReply(t *testing.T) {
 	}
 
 	expCreated := ToTime(person.Created)
-	if act.Crated != expCreated {
+	if act.Created != expCreated {
 		t.Errorf("expected %v, act %v", act.ID, expCreated)
 	}
 
@@ -227,7 +227,7 @@ func TestFromPersonsReply(t *testing.T) {
 	}
 
 	expCreated := ToTime(person.Created)
-	if act[0].Crated != expCreated {
+	if act[0].Created != expCreated {
 		t.Errorf("expected %v, act %v", act[0].ID, expCreated)
 	}
 

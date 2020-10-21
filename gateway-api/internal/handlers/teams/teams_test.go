@@ -28,8 +28,9 @@ var team = &models.TeamView{
 func TestHandlers_CreateTeam(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
+	router := mux.NewRouter()
 	s := teamsSrv.New(client, repo)
-	h := New(s)
+	h := New(router, "", s)
 
 	reqBody := &models.TeamForm{
 		Name:        team.Name,
@@ -58,8 +59,9 @@ func TestHandlers_CreateTeam(t *testing.T) {
 func TestHandlers_DeleteTeam(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
+	router := mux.NewRouter()
 	s := teamsSrv.New(client, repo)
-	h := New(s)
+	h := New(router, "", s)
 
 	req, _ := http.NewRequest("DELETE", "/teams", nil)
 	req = mux.SetURLVars(req, map[string]string{"id": strconv.FormatInt(team.ID, 10)})
@@ -81,8 +83,9 @@ func TestHandlers_DeleteTeam(t *testing.T) {
 func TestHandlers_UpdateTeam(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
+	router := mux.NewRouter()
 	s := teamsSrv.New(client, repo)
-	h := New(s)
+	h := New(router, "", s)
 
 	reqBody := &models.TeamForm{
 		Name:        team.Name,
@@ -112,8 +115,9 @@ func TestHandlers_UpdateTeam(t *testing.T) {
 func TestHandlers_GetTeams(t *testing.T) {
 	client := newClientMock()
 	repo := newRepoMock()
+	router := mux.NewRouter()
 	s := teamsSrv.New(client, repo)
-	h := New(s)
+	h := New(router, "", s)
 
 	req, _ := http.NewRequest("GET", "/teams", nil)
 

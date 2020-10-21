@@ -37,9 +37,8 @@ func main() {
 	personsService := personsSrv.New(personsClient, personsRepository)
 
 	// Handlers
-	app := handlers.New(teamsService, personsService)
-	app.Initialize(secret)
-	app.Run(port)
+	h := handlers.NewHandler(teamsService, personsService, secret)
+	h.Run(port)
 }
 
 func fatalOnError(msg string, err error) {

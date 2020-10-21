@@ -29,6 +29,9 @@ func PanicMiddleware(next http.Handler) http.Handler {
 					"stack":     debug.Stack(),
 					"recovered": a,
 				}).Error("panic recovered")
+
+				w.WriteHeader(http.StatusInternalServerError)
+				_, _ = w.Write([]byte("internal service error"))
 			}
 		}()
 		next.ServeHTTP(w, r)

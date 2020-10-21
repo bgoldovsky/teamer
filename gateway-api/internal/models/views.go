@@ -67,7 +67,7 @@ type PersonView struct {
 	Slack      string     `json:"slack"`
 	Role       int64      `json:"role"`
 	IsActive   bool       `json:"isActive"`
-	Crated     time.Time  `json:"created"`
+	Created    time.Time  `json:"created"`
 	Updated    time.Time  `json:"updated"`
 }
 
@@ -97,7 +97,7 @@ func FromPersonReply(reply *v1.Person) *PersonView {
 		Slack:     reply.Slack,
 		Role:      int64(reply.Role),
 		IsActive:  reply.IsActive,
-		Crated:    ToTime(reply.Created),
+		Created:   ToTime(reply.Created),
 		Updated:   ToTime(reply.Updated),
 	}
 

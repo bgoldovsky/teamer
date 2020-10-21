@@ -1,12 +1,13 @@
 package middleware
 
 import (
+	"net/http"
+	"runtime/debug"
+
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"runtime/debug"
 )
 
 func NewJWT(signingKey []byte) *jwtMiddleware.JWTMiddleware {
@@ -23,11 +24,14 @@ func PanicMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if a := recover(); a != nil {
 				logger.Log.WithFields(logrus.Fields{
-					"method": r.Method,
-					"path": r.URL.Path,
-					"stack": debug.Stack(),
+					"method":    r.Method,
+					"path":      r.URL.Path,
+					"stack":     debug.Stack(),
 					"recovered": a,
 				}).Error("panic recovered")
+
+				w.WriteHeader(http.StatusInternalServerError)
+				_, _ = w.Write([]byte("internal service error"))
 			}
 		}()
 		next.ServeHTTP(w, r)
