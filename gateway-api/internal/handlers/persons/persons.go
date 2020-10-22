@@ -50,13 +50,13 @@ func (h *Handlers) findRoutes() {
 
 func (h *Handlers) GetPerson(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	teamID, err := strconv.ParseInt(params["id"], 10, 64)
+	personID, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
 		resp.RespondError(w, http.StatusBadRequest, invalidPersonIDErrMsg)
 		return
 	}
 
-	view, err := h.service.GetPerson(r.Context(), teamID)
+	view, err := h.service.GetPerson(r.Context(), personID)
 	if isNotFound(err) {
 		resp.RespondError(w, http.StatusNoContent, notFoundErrMsg)
 		return
@@ -76,7 +76,13 @@ func (h *Handlers) GetPerson(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetPersons(w http.ResponseWriter, r *http.Request) {
-	view, err := h.service.GetPersons(r.Context())
+	var teamID *int64
+	if rawTeamID := r.URL.Query().Get("teamID"); rawTeamID != "" {
+		tmp, _ := strconv.ParseInt(rawTeamID, 10, 64)
+		teamID = &tmp
+	}
+
+	view, err := h.service.GetPersons(r.Context(), teamID)
 	if isNotFound(err) {
 		resp.RespondError(w, http.StatusNoContent, defaultErrMsg)
 		return

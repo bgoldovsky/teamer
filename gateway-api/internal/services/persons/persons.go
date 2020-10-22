@@ -32,12 +32,26 @@ func (s *Service) GetPerson(ctx context.Context, personID int64) (*models.Person
 	return view, nil
 }
 
-func (s *Service) GetPersons(ctx context.Context) ([]models.PersonView, error) {
+func (s *Service) GetPersons(ctx context.Context, teamID *int64) ([]models.PersonView, error) {
+	if teamID == nil {
+		return s.getAllPersons(ctx)
+	}
+
+	view, err := s.client.GetPersons(ctx, teamID)
+	if err != nil {
+		logger.Log.WithError(err).Errorln("get persons error")
+		return nil, err
+	}
+
+	return view, nil
+}
+
+func (s *Service) getAllPersons(ctx context.Context) ([]models.PersonView, error) {
 	if view := s.getRepo(); view != nil {
 		return view, nil
 	}
 
-	view, err := s.client.GetPersons(ctx)
+	view, err := s.client.GetPersons(ctx, nil)
 	if err != nil {
 		logger.Log.WithError(err).Errorln("get persons error")
 		return nil, err

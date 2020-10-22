@@ -132,6 +132,6 @@ func (m *ClientMock) ConfigureGetPersons(
 	fakeGetPersons := &v1.GetPersonsReply{Persons: []*v1.Person{person}}
 	fakeGetPerson := &v1.GetPersonReply{Person: person}
 
-	m.On(`GetPerson`, arg).Return(fakeGetPerson, nil)
+	m.On(`GetPerson`, arg, nil).Return(fakeGetPerson, nil)
 	m.On(`GetPersons`, arg).Return(fakeGetPersons, nil)
 }

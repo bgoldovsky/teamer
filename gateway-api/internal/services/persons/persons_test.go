@@ -27,7 +27,7 @@ func TestService_GetTeams(t *testing.T) {
 	repo := newRepoMock()
 	s := New(client, repo)
 
-	act, err := s.GetPersons(context.Background())
+	act, err := s.GetPersons(context.Background(), nil)
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, act)

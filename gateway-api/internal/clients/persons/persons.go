@@ -131,9 +131,9 @@ func (c *Client) RemovePerson(ctx context.Context, personID int64) (*models.Stat
 	return models.NewStatusView(personID, "successfully removed"), nil
 }
 
-func (c *Client) GetPerson(ctx context.Context, teamID int64) (*models.PersonView, error) {
+func (c *Client) GetPerson(ctx context.Context, personID int64) (*models.PersonView, error) {
 	ctx = getTimeoutContext(ctx)
-	request := &v1.GetPersonRequest{Id: teamID}
+	request := &v1.GetPersonRequest{Id: personID}
 
 	person, err := c.client.GetPerson(ctx, request)
 	if err != nil {
@@ -144,13 +144,19 @@ func (c *Client) GetPerson(ctx context.Context, teamID int64) (*models.PersonVie
 	return view, nil
 }
 
-func (c *Client) GetPersons(ctx context.Context) ([]models.PersonView, error) {
+func (c *Client) GetPersons(ctx context.Context, teamID *int64) ([]models.PersonView, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.GetPersonsRequest{
 		Limit:  1000,
 		Offset: 0,
 		Order:  "id",
 		Sort:   "desc",
+	}
+
+	if teamID != nil {
+		request.Filter = &v1.PersonFilter{
+			TeamIds: []int64{*teamID},
+		}
 	}
 
 	persons, err := c.client.GetPersons(ctx, request)
