@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "internal/generated/rpc/v1";
+option go_package = "internal/generated/clients/v1";
 
 import "google/protobuf/empty.proto";
 

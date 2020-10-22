@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/teams/v1"
+	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/v1"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/interceptors"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"

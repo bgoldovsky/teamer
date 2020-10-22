@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/teams/v1"
+	v1 "github.com/bgoldovsky/dutyer/gateway-api/internal/generated/clients/v1"
 	. "github.com/bgoldovsky/dutyer/gateway-api/internal/models"
 	"github.com/golang/protobuf/ptypes/wrappers"
 )
