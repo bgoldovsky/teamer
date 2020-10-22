@@ -1,2 +1,2 @@
 # service-dutyer
-Teams service
+Duty service

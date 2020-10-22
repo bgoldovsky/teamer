@@ -16,8 +16,13 @@ import (
 	pgx "github.com/jackc/pgx/v4"
 )
 
+const (
+	foreignKey = "persons_team_id_fkey"
+)
+
 var (
-	ErrTeamNotFount = errors.New("teams not found")
+	ErrTeamNotFound = errors.New("teams not found")
+	ErrTeamNotEmpty = errors.New("team not empty")
 )
 
 type Repository interface {
@@ -115,6 +120,9 @@ func (r *repository) Remove(ctx context.Context, teamID int64) (int64, error) {
 	var query bytes.Buffer
 	query.WriteString("delete from teams where id = $1;")
 	_, err := r.database.Query(ctx, query.String(), teamID)
+	if err != nil && strings.Contains(err.Error(), foreignKey) {
+		return teamID, ErrTeamNotEmpty
+	}
 
 	return teamID, err
 }
@@ -147,7 +155,7 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 		update = append(update, fmt.Sprintf("%s=excluded.%s", k, k))
 	}
 
-	// Построение sql запрса
+	// Построение sql запроса
 	query := fmt.Sprintf(`insert into "teams" (%s) values (%s) on conflict (id) do update set %s returning %s`,
 		strings.Join(columns, ","),
 		strings.Join(placeholder, ","),
@@ -183,7 +191,7 @@ func (r *repository) query(ctx context.Context, query string, args ...interface{
 	}
 
 	if len(teams) == 0 {
-		return nil, ErrTeamNotFount
+		return nil, ErrTeamNotFound
 	}
 
 	return teams, nil

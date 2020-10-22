@@ -16,8 +16,13 @@ import (
 	pgx "github.com/jackc/pgx/v4"
 )
 
+const (
+	foreignKey = "persons_team_id_fkey"
+)
+
 var (
 	ErrPersonsNotFount = errors.New("person not found")
+	ErrInvalidTeam     = errors.New("invalid team ID")
 )
 
 type Repository interface {
@@ -230,6 +235,11 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 
 	// Выполнение запроса
 	persons, err := r.query(ctx, query, values...)
+
+	if err != nil && strings.Contains(err.Error(), foreignKey) {
+		return nil, ErrInvalidTeam
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -239,7 +249,6 @@ func (r *repository) put(ctx context.Context, attributes map[string]interface{})
 
 func (r *repository) query(ctx context.Context, query string, args ...interface{}) ([]models.Person, error) {
 	rows, err := r.database.Query(ctx, query, args...)
-
 	if err != nil {
 		return nil, err
 	}

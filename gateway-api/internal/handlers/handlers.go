@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	personHandlers "github.com/bgoldovsky/dutyer/gateway-api/internal/handlers/persons"
-	teamHandlers "github.com/bgoldovsky/dutyer/gateway-api/internal/handlers/teams"
+	personHandler "github.com/bgoldovsky/dutyer/gateway-api/internal/handlers/persons"
+	teamHandler "github.com/bgoldovsky/dutyer/gateway-api/internal/handlers/teams"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/logger"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/middleware"
 	personsSrv "github.com/bgoldovsky/dutyer/gateway-api/internal/services/persons"
@@ -22,8 +22,8 @@ func NewHandler(
 	signingKey string,
 ) *Handler {
 	router := mux.NewRouter()
-	teamHandlers.New(router, signingKey, teamsService)
-	personHandlers.New(router, signingKey, personsService)
+	teamHandler.New(router, signingKey, teamsService)
+	personHandler.New(router, signingKey, personsService)
 
 	return &Handler{
 		router: router,

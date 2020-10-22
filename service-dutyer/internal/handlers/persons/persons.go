@@ -3,13 +3,12 @@ package persons
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/persons"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/logger"
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Handler struct {

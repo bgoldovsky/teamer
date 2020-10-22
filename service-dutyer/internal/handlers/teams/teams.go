@@ -3,13 +3,12 @@ package teams
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/logger"
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Handler struct {

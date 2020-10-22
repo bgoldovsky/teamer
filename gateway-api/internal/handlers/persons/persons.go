@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	jwtMiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/handlers/resp"
@@ -13,7 +14,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const defaultErrMsg = "internal server error"
+const (
+	defaultErrMsg         = "internal server error"
+	notFoundErrMsg        = "person not found"
+	invalidTeamIDErrMsg   = "invalid team ID"
+	invalidPersonIDErrMsg = "invalid person ID"
+)
 
 type Handlers struct {
 	service       *personsSrv.Service
@@ -46,11 +52,16 @@ func (h *Handlers) GetPerson(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	teamID, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		resp.RespondError(w, http.StatusBadRequest, "invalid ID")
+		resp.RespondError(w, http.StatusBadRequest, invalidPersonIDErrMsg)
 		return
 	}
 
 	view, err := h.service.GetPerson(r.Context(), teamID)
+	if isNotFound(err) {
+		resp.RespondError(w, http.StatusNoContent, notFoundErrMsg)
+		return
+	}
+
 	if err != nil {
 		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -66,6 +77,11 @@ func (h *Handlers) GetPerson(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) GetPersons(w http.ResponseWriter, r *http.Request) {
 	view, err := h.service.GetPersons(r.Context())
+	if isNotFound(err) {
+		resp.RespondError(w, http.StatusNoContent, defaultErrMsg)
+		return
+	}
+
 	if err != nil {
 		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -88,6 +104,11 @@ func (h *Handlers) CreatePerson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	status, err := h.service.AddPerson(r.Context(), &form)
+	if isInvalidTeam(err) {
+		resp.RespondError(w, http.StatusBadRequest, invalidTeamIDErrMsg)
+		return
+	}
+
 	if err != nil {
 		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
@@ -100,7 +121,7 @@ func (h *Handlers) DeletePerson(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		resp.RespondError(w, http.StatusBadRequest, "invalid ID")
+		resp.RespondError(w, http.StatusBadRequest, invalidPersonIDErrMsg)
 		return
 	}
 
@@ -118,7 +139,7 @@ func (h *Handlers) UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		resp.RespondError(w, http.StatusBadRequest, "invalid ID")
+		resp.RespondError(w, http.StatusBadRequest, invalidPersonIDErrMsg)
 		return
 	}
 
@@ -129,10 +150,28 @@ func (h *Handlers) UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	status, err := h.service.UpdatePerson(r.Context(), id, &form)
+	if isNotFound(err) {
+		resp.RespondError(w, http.StatusBadRequest, notFoundErrMsg)
+		return
+	}
+
+	if isInvalidTeam(err) {
+		resp.RespondError(w, http.StatusBadRequest, invalidTeamIDErrMsg)
+		return
+	}
+
 	if err != nil {
 		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
 		return
 	}
 
 	resp.RespondJSON(w, http.StatusOK, status)
+}
+
+func isNotFound(err error) bool {
+	return err != nil && strings.Contains(err.Error(), notFoundErrMsg)
+}
+
+func isInvalidTeam(err error) bool {
+	return err != nil && strings.Contains(err.Error(), invalidTeamIDErrMsg)
 }

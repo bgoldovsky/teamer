@@ -59,7 +59,7 @@ func TestService_UpdateTeam(t *testing.T) {
 	s := New(client, repo)
 
 	form := models.PersonForm{
-		TeamId:    person.ID,
+		TeamId:    person.TeamId,
 		FirstName: person.FirstName,
 		LastName:  person.LastName,
 		Slack:     person.Slack,
@@ -80,7 +80,7 @@ func TestService_AddTeam(t *testing.T) {
 	s := New(client, repo)
 
 	form := models.PersonForm{
-		TeamId:    person.ID,
+		TeamId:    person.TeamId,
 		FirstName: person.FirstName,
 		LastName:  person.LastName,
 		Slack:     person.Slack,
