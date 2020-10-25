@@ -26,7 +26,7 @@ func PanicMiddleware(next http.Handler) http.Handler {
 				logger.Log.WithFields(logrus.Fields{
 					"method":    r.Method,
 					"path":      r.URL.Path,
-					"stack":     debug.Stack(),
+					"stack":     string(debug.Stack()),
 					"recovered": a,
 				}).Error("panic recovered")
 

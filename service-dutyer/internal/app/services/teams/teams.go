@@ -5,31 +5,19 @@ import (
 	"fmt"
 
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/models"
-	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/publisher"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/repository/teams"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams/converter"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
-const (
-	topicTeams     = "teams"
-	eventTeamAdded = "team.added"
-
-	// TODO Имена событий будут использованы с Kafka
-	//eventTeamChanged = "team.changed"
-	//eventTeamRemoved = "team.removed"
-)
-
 type Service struct {
-	repo      teams.Repository
-	publisher publisher.Publisher
+	repo teams.Repository
 }
 
-func New(repo teams.Repository, publisher publisher.Publisher) *Service {
+func New(repo teams.Repository) *Service {
 	return &Service{
-		repo:      repo,
-		publisher: publisher,
+		repo: repo,
 	}
 }
 
@@ -43,7 +31,6 @@ func (s *Service) GetTeam(ctx context.Context, req *v1.GetTeamRequest) (*v1.GetT
 
 func (s *Service) GetTeams(ctx context.Context, req *v1.GetTeamsRequest) (*v1.GetTeamsReply, error) {
 	teamModels, err := s.repo.GetList(ctx, req.Filter, uint(req.Limit), uint(req.Offset), req.Sort, req.Order)
-
 	if err != nil {
 		return nil, fmt.Errorf("get teams error: %w", err)
 	}
@@ -70,14 +57,6 @@ func (s *Service) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 	if err != nil {
 		return nil, fmt.Errorf("add team error: %w", err)
 	}
-
-	// TODO: Вернуть публикацию события
-	/*
-		err = s.publisher.Publish(eventTeamAdded, team.ID, topicTeams)
-		if err != nil {
-			return nil, fmt.Errorf("publish %s to %s error: %w", eventTeamAdded, topicTeams, err)
-		}
-	*/
 
 	return &v1.AddTeamReply{Id: team.ID}, nil
 }

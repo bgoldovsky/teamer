@@ -22,7 +22,7 @@ const (
 
 var (
 	ErrPersonsNotFount = errors.New("person not found")
-	ErrInvalidTeam     = errors.New("invalid team ID")
+	ErrInvalidTeam     = errors.New("invalid teamID")
 )
 
 type Repository interface {
@@ -184,9 +184,8 @@ func (r *repository) Update(ctx context.Context, p *models.Person) (*models.Pers
 }
 
 func (r *repository) Remove(ctx context.Context, personID int64) (int64, error) {
-	var query bytes.Buffer
-	query.WriteString("delete from persons where id = $1;")
-	_, err := r.database.Query(ctx, query.String(), personID)
+	query := "delete from persons where id = $1;"
+	_, err := r.database.Query(ctx, query, personID)
 
 	return personID, err
 }

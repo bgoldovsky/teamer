@@ -11,20 +11,22 @@ import (
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/middleware"
 	"github.com/bgoldovsky/dutyer/gateway-api/internal/models"
 	teamsSrv "github.com/bgoldovsky/dutyer/gateway-api/internal/services/teams"
+	"github.com/go-playground/validator"
 	"github.com/gorilla/mux"
 )
 
 const (
-	defaultErrMsg       = "internal server error"
-	notFoundErrMsg      = "team not found"
-	invalidTeamIDErrMsg = "invalid team ID"
-	notEmptyTeamErrMsg  = "team not empty"
+	msgDefaultErr    = "internal server error"
+	msgTeamNotFound  = "team not found"
+	msgTeamNotEmpty  = "team not empty"
+	msgInvalidTeamID = "invalid team ID"
 )
 
 type Handlers struct {
 	router        *mux.Router
 	jwtMiddleware *jwtMiddleware.JWTMiddleware
 	service       *teamsSrv.Service
+	validate      *validator.Validate
 }
 
 func New(router *mux.Router, signingKey string, service *teamsSrv.Service) *Handlers {
@@ -32,6 +34,7 @@ func New(router *mux.Router, signingKey string, service *teamsSrv.Service) *Hand
 		service:       service,
 		router:        router,
 		jwtMiddleware: middleware.NewJWT([]byte(signingKey)),
+		validate:      validator.New(),
 	}
 
 	handler.jwtMiddleware.Options.ErrorHandler = resp.OnError
@@ -52,18 +55,23 @@ func (h *Handlers) GetTeam(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	teamID, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		resp.RespondError(w, http.StatusBadRequest, invalidTeamIDErrMsg)
+		resp.RespondError(w, http.StatusBadRequest, msgInvalidTeamID)
 		return
 	}
 
 	view, err := h.service.GetTeam(r.Context(), teamID)
+	if isInvalidArgument(err) {
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	if isNotFound(err) {
-		resp.RespondError(w, http.StatusNoContent, notFoundErrMsg)
+		resp.RespondError(w, http.StatusNoContent, msgTeamNotFound)
 		return
 	}
 
 	if err != nil {
-		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
+		resp.RespondError(w, http.StatusInternalServerError, msgDefaultErr)
 		return
 	}
 
@@ -77,13 +85,18 @@ func (h *Handlers) GetTeam(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) GetTeams(w http.ResponseWriter, r *http.Request) {
 	view, err := h.service.GetTeams(r.Context())
+	if isInvalidArgument(err) {
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	if isNotFound(err) {
-		resp.RespondError(w, http.StatusNoContent, notFoundErrMsg)
+		resp.RespondError(w, http.StatusNoContent, msgTeamNotFound)
 		return
 	}
 
 	if err != nil {
-		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
+		resp.RespondError(w, http.StatusInternalServerError, msgDefaultErr)
 		return
 	}
 
@@ -103,9 +116,20 @@ func (h *Handlers) CreateTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, err := h.service.AddTeam(r.Context(), &form)
+	err := h.validate.Struct(form)
 	if err != nil {
-		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	status, err := h.service.AddTeam(r.Context(), &form)
+	if isInvalidArgument(err) {
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err != nil {
+		resp.RespondError(w, http.StatusInternalServerError, msgDefaultErr)
 		return
 	}
 
@@ -116,18 +140,23 @@ func (h *Handlers) DeleteTeam(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		resp.RespondError(w, http.StatusBadRequest, invalidTeamIDErrMsg)
+		resp.RespondError(w, http.StatusBadRequest, msgInvalidTeamID)
 		return
 	}
 
 	status, err := h.service.RemoveTeam(r.Context(), id)
+	if isInvalidArgument(err) {
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	if isNotEmptyTeam(err) {
-		resp.RespondError(w, http.StatusBadRequest, notEmptyTeamErrMsg)
+		resp.RespondError(w, http.StatusBadRequest, msgTeamNotEmpty)
 		return
 	}
 
 	if err != nil {
-		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
+		resp.RespondError(w, http.StatusInternalServerError, msgDefaultErr)
 		return
 	}
 
@@ -139,7 +168,7 @@ func (h *Handlers) UpdateTeam(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseInt(params["id"], 10, 64)
 	if err != nil {
-		resp.RespondError(w, http.StatusBadRequest, invalidTeamIDErrMsg)
+		resp.RespondError(w, http.StatusBadRequest, msgInvalidTeamID)
 		return
 	}
 
@@ -149,14 +178,25 @@ func (h *Handlers) UpdateTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = h.validate.Struct(form)
+	if err != nil {
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	status, err := h.service.UpdateTeam(r.Context(), id, &form)
+	if isInvalidArgument(err) {
+		resp.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	if isNotFound(err) {
-		resp.RespondError(w, http.StatusBadRequest, notFoundErrMsg)
+		resp.RespondError(w, http.StatusBadRequest, msgTeamNotFound)
 		return
 	}
 
 	if err != nil {
-		resp.RespondError(w, http.StatusInternalServerError, defaultErrMsg)
+		resp.RespondError(w, http.StatusInternalServerError, msgDefaultErr)
 		return
 	}
 
@@ -164,9 +204,13 @@ func (h *Handlers) UpdateTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func isNotFound(err error) bool {
-	return err != nil && strings.Contains(err.Error(), notFoundErrMsg)
+	return err != nil && strings.Contains(err.Error(), msgTeamNotFound)
 }
 
 func isNotEmptyTeam(err error) bool {
-	return err != nil && strings.Contains(err.Error(), notEmptyTeamErrMsg)
+	return err != nil && strings.Contains(err.Error(), msgTeamNotEmpty)
+}
+
+func isInvalidArgument(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "InvalidArgument")
 }

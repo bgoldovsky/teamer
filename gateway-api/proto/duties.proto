@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/generated/clients/v1";
+
+import "google/protobuf/empty.proto";
+
+service Duties {
+  rpc GetCurrentDuty (GetCurrentDutyRequest) returns (GetCurrentDutyReply) {} // Получить текущего дежурного
+  rpc GetDuties (GetDutiesRequest) returns (GetDutiesReply) {} // Получить список дежурных
+  rpc Assign (AssignRequest) returns (google.protobuf.Empty) {} // Назначить дежурного
+  rpc Swap (SwapRequest) returns (google.protobuf.Empty) {} // Поменять дежурных местами
+}
+
+message GetCurrentDutyRequest {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+}
+
+message GetCurrentDutyReply {
+  Duty duty  = 1; // Дежурный
+}
+
+message GetDutiesRequest {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+  int64 count  = 2; // Количество дней
+}
+
+message GetDutiesReply {
+  repeated Duty duties  = 1; // Дежурные
+}
+
+message AssignRequest {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+  int64 person_id  = 2; // Уникальный идентификатор сотрудника
+}
+
+message SwapRequest {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+  int64 first_person_id  = 2; // Уникальный идентификатор сотрудника
+  int64 second_person_id  = 3; // Уникальный идентификатор сотрудника
+}
+
+message Duty {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+  int64 person_id  = 2; // Уникальный идентификатор сотрудника
+  string first_name = 3; // Имя
+  string last_name = 4; // Фамилия
+  string slack = 5; // Идентификатор в Slack
+  int64 duty_order = 6; // Уникальный порядок дежурства сотрудника
+  int64 month = 7; // Месяц дежурства
+  int64 day = 8; // День дежурства
+}

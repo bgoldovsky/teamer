@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/models"
-	mockPublisher "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/publisher/publisher_mock"
 	mockTeams "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/repository/teams/teams_mock"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	"github.com/golang/mock/gomock"
@@ -33,9 +32,7 @@ func TestService_GetTeam(t *testing.T) {
 		Get(ctx, team.ID).
 		Return(&team, nil)
 
-	pubMock := mockPublisher.NewMockPublisher(ctrl)
-
-	service := New(repoMock, pubMock)
+	service := New(repoMock)
 
 	created, _ := ptypes.TimestampProto(team.Created)
 	updated, _ := ptypes.TimestampProto(team.Updated)
@@ -64,9 +61,7 @@ func TestService_GetTeams(t *testing.T) {
 		GetList(ctx, gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 		Return([]models.Team{team}, nil)
 
-	pubMock := mockPublisher.NewMockPublisher(ctrl)
-
-	service := New(repoMock, pubMock)
+	service := New(repoMock)
 
 	created, _ := ptypes.TimestampProto(team.Created)
 	updated, _ := ptypes.TimestampProto(team.Updated)
@@ -99,9 +94,7 @@ func TestService_AddTeam(t *testing.T) {
 		Save(ctx, gomock.Any()).
 		Return(&team, nil)
 
-	pubMock := mockPublisher.NewMockPublisher(ctrl)
-
-	service := New(repoMock, pubMock)
+	service := New(repoMock)
 
 	request := &v1.AddTeamRequest{
 		Name:        team.Name,
@@ -125,9 +118,7 @@ func TestService_UpdateTeam(t *testing.T) {
 		Update(ctx, gomock.Any()).
 		Return(&team, nil)
 
-	pubMock := mockPublisher.NewMockPublisher(ctrl)
-
-	service := New(repoMock, pubMock)
+	service := New(repoMock)
 
 	request := &v1.UpdateTeamRequest{
 		Id:          team.ID,
@@ -152,9 +143,7 @@ func TestService_RemoveTeam(t *testing.T) {
 		Remove(ctx, team.ID).
 		Return(team.ID, nil)
 
-	pubMock := mockPublisher.NewMockPublisher(ctrl)
-
-	service := New(repoMock, pubMock)
+	service := New(repoMock)
 
 	request := &v1.RemoveTeamRequest{Id: team.ID}
 

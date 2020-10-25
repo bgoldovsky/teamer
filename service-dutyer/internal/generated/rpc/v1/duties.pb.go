@@ -4,8 +4,13 @@
 package v1
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	empty "github.com/golang/protobuf/ptypes/empty"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -20,13 +25,596 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type GetCurrentDutyRequest struct {
+	TeamId               int64    `protobuf:"varint,1,opt,name=team_id,json=teamId,proto3" json:"team_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetCurrentDutyRequest) Reset()         { *m = GetCurrentDutyRequest{} }
+func (m *GetCurrentDutyRequest) String() string { return proto.CompactTextString(m) }
+func (*GetCurrentDutyRequest) ProtoMessage()    {}
+func (*GetCurrentDutyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{0}
+}
+
+func (m *GetCurrentDutyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCurrentDutyRequest.Unmarshal(m, b)
+}
+func (m *GetCurrentDutyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCurrentDutyRequest.Marshal(b, m, deterministic)
+}
+func (m *GetCurrentDutyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCurrentDutyRequest.Merge(m, src)
+}
+func (m *GetCurrentDutyRequest) XXX_Size() int {
+	return xxx_messageInfo_GetCurrentDutyRequest.Size(m)
+}
+func (m *GetCurrentDutyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCurrentDutyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCurrentDutyRequest proto.InternalMessageInfo
+
+func (m *GetCurrentDutyRequest) GetTeamId() int64 {
+	if m != nil {
+		return m.TeamId
+	}
+	return 0
+}
+
+type GetCurrentDutyReply struct {
+	Duty                 *Duty    `protobuf:"bytes,1,opt,name=duty,proto3" json:"duty,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetCurrentDutyReply) Reset()         { *m = GetCurrentDutyReply{} }
+func (m *GetCurrentDutyReply) String() string { return proto.CompactTextString(m) }
+func (*GetCurrentDutyReply) ProtoMessage()    {}
+func (*GetCurrentDutyReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{1}
+}
+
+func (m *GetCurrentDutyReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCurrentDutyReply.Unmarshal(m, b)
+}
+func (m *GetCurrentDutyReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCurrentDutyReply.Marshal(b, m, deterministic)
+}
+func (m *GetCurrentDutyReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCurrentDutyReply.Merge(m, src)
+}
+func (m *GetCurrentDutyReply) XXX_Size() int {
+	return xxx_messageInfo_GetCurrentDutyReply.Size(m)
+}
+func (m *GetCurrentDutyReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCurrentDutyReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCurrentDutyReply proto.InternalMessageInfo
+
+func (m *GetCurrentDutyReply) GetDuty() *Duty {
+	if m != nil {
+		return m.Duty
+	}
+	return nil
+}
+
+type GetDutiesRequest struct {
+	TeamId               int64    `protobuf:"varint,1,opt,name=team_id,json=teamId,proto3" json:"team_id,omitempty"`
+	Count                int64    `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDutiesRequest) Reset()         { *m = GetDutiesRequest{} }
+func (m *GetDutiesRequest) String() string { return proto.CompactTextString(m) }
+func (*GetDutiesRequest) ProtoMessage()    {}
+func (*GetDutiesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{2}
+}
+
+func (m *GetDutiesRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDutiesRequest.Unmarshal(m, b)
+}
+func (m *GetDutiesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDutiesRequest.Marshal(b, m, deterministic)
+}
+func (m *GetDutiesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDutiesRequest.Merge(m, src)
+}
+func (m *GetDutiesRequest) XXX_Size() int {
+	return xxx_messageInfo_GetDutiesRequest.Size(m)
+}
+func (m *GetDutiesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDutiesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDutiesRequest proto.InternalMessageInfo
+
+func (m *GetDutiesRequest) GetTeamId() int64 {
+	if m != nil {
+		return m.TeamId
+	}
+	return 0
+}
+
+func (m *GetDutiesRequest) GetCount() int64 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
+type GetDutiesReply struct {
+	Duties               []*Duty  `protobuf:"bytes,1,rep,name=duties,proto3" json:"duties,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDutiesReply) Reset()         { *m = GetDutiesReply{} }
+func (m *GetDutiesReply) String() string { return proto.CompactTextString(m) }
+func (*GetDutiesReply) ProtoMessage()    {}
+func (*GetDutiesReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{3}
+}
+
+func (m *GetDutiesReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDutiesReply.Unmarshal(m, b)
+}
+func (m *GetDutiesReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDutiesReply.Marshal(b, m, deterministic)
+}
+func (m *GetDutiesReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDutiesReply.Merge(m, src)
+}
+func (m *GetDutiesReply) XXX_Size() int {
+	return xxx_messageInfo_GetDutiesReply.Size(m)
+}
+func (m *GetDutiesReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDutiesReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDutiesReply proto.InternalMessageInfo
+
+func (m *GetDutiesReply) GetDuties() []*Duty {
+	if m != nil {
+		return m.Duties
+	}
+	return nil
+}
+
+type AssignRequest struct {
+	TeamId               int64    `protobuf:"varint,1,opt,name=team_id,json=teamId,proto3" json:"team_id,omitempty"`
+	PersonId             int64    `protobuf:"varint,2,opt,name=person_id,json=personId,proto3" json:"person_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AssignRequest) Reset()         { *m = AssignRequest{} }
+func (m *AssignRequest) String() string { return proto.CompactTextString(m) }
+func (*AssignRequest) ProtoMessage()    {}
+func (*AssignRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{4}
+}
+
+func (m *AssignRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AssignRequest.Unmarshal(m, b)
+}
+func (m *AssignRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AssignRequest.Marshal(b, m, deterministic)
+}
+func (m *AssignRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AssignRequest.Merge(m, src)
+}
+func (m *AssignRequest) XXX_Size() int {
+	return xxx_messageInfo_AssignRequest.Size(m)
+}
+func (m *AssignRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AssignRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AssignRequest proto.InternalMessageInfo
+
+func (m *AssignRequest) GetTeamId() int64 {
+	if m != nil {
+		return m.TeamId
+	}
+	return 0
+}
+
+func (m *AssignRequest) GetPersonId() int64 {
+	if m != nil {
+		return m.PersonId
+	}
+	return 0
+}
+
+type SwapRequest struct {
+	TeamId               int64    `protobuf:"varint,1,opt,name=team_id,json=teamId,proto3" json:"team_id,omitempty"`
+	FirstPersonId        int64    `protobuf:"varint,2,opt,name=first_person_id,json=firstPersonId,proto3" json:"first_person_id,omitempty"`
+	SecondPersonId       int64    `protobuf:"varint,3,opt,name=second_person_id,json=secondPersonId,proto3" json:"second_person_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SwapRequest) Reset()         { *m = SwapRequest{} }
+func (m *SwapRequest) String() string { return proto.CompactTextString(m) }
+func (*SwapRequest) ProtoMessage()    {}
+func (*SwapRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{5}
+}
+
+func (m *SwapRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SwapRequest.Unmarshal(m, b)
+}
+func (m *SwapRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SwapRequest.Marshal(b, m, deterministic)
+}
+func (m *SwapRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SwapRequest.Merge(m, src)
+}
+func (m *SwapRequest) XXX_Size() int {
+	return xxx_messageInfo_SwapRequest.Size(m)
+}
+func (m *SwapRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SwapRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SwapRequest proto.InternalMessageInfo
+
+func (m *SwapRequest) GetTeamId() int64 {
+	if m != nil {
+		return m.TeamId
+	}
+	return 0
+}
+
+func (m *SwapRequest) GetFirstPersonId() int64 {
+	if m != nil {
+		return m.FirstPersonId
+	}
+	return 0
+}
+
+func (m *SwapRequest) GetSecondPersonId() int64 {
+	if m != nil {
+		return m.SecondPersonId
+	}
+	return 0
+}
+
+type Duty struct {
+	TeamId               int64    `protobuf:"varint,1,opt,name=team_id,json=teamId,proto3" json:"team_id,omitempty"`
+	PersonId             int64    `protobuf:"varint,2,opt,name=person_id,json=personId,proto3" json:"person_id,omitempty"`
+	FirstName            string   `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	LastName             string   `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	Slack                string   `protobuf:"bytes,5,opt,name=slack,proto3" json:"slack,omitempty"`
+	DutyOrder            int64    `protobuf:"varint,6,opt,name=duty_order,json=dutyOrder,proto3" json:"duty_order,omitempty"`
+	Month                int64    `protobuf:"varint,7,opt,name=month,proto3" json:"month,omitempty"`
+	Day                  int64    `protobuf:"varint,8,opt,name=day,proto3" json:"day,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Duty) Reset()         { *m = Duty{} }
+func (m *Duty) String() string { return proto.CompactTextString(m) }
+func (*Duty) ProtoMessage()    {}
+func (*Duty) Descriptor() ([]byte, []int) {
+	return fileDescriptor_971c6befef230320, []int{6}
+}
+
+func (m *Duty) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Duty.Unmarshal(m, b)
+}
+func (m *Duty) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Duty.Marshal(b, m, deterministic)
+}
+func (m *Duty) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Duty.Merge(m, src)
+}
+func (m *Duty) XXX_Size() int {
+	return xxx_messageInfo_Duty.Size(m)
+}
+func (m *Duty) XXX_DiscardUnknown() {
+	xxx_messageInfo_Duty.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Duty proto.InternalMessageInfo
+
+func (m *Duty) GetTeamId() int64 {
+	if m != nil {
+		return m.TeamId
+	}
+	return 0
+}
+
+func (m *Duty) GetPersonId() int64 {
+	if m != nil {
+		return m.PersonId
+	}
+	return 0
+}
+
+func (m *Duty) GetFirstName() string {
+	if m != nil {
+		return m.FirstName
+	}
+	return ""
+}
+
+func (m *Duty) GetLastName() string {
+	if m != nil {
+		return m.LastName
+	}
+	return ""
+}
+
+func (m *Duty) GetSlack() string {
+	if m != nil {
+		return m.Slack
+	}
+	return ""
+}
+
+func (m *Duty) GetDutyOrder() int64 {
+	if m != nil {
+		return m.DutyOrder
+	}
+	return 0
+}
+
+func (m *Duty) GetMonth() int64 {
+	if m != nil {
+		return m.Month
+	}
+	return 0
+}
+
+func (m *Duty) GetDay() int64 {
+	if m != nil {
+		return m.Day
+	}
+	return 0
+}
+
+func init() {
+	proto.RegisterType((*GetCurrentDutyRequest)(nil), "api.GetCurrentDutyRequest")
+	proto.RegisterType((*GetCurrentDutyReply)(nil), "api.GetCurrentDutyReply")
+	proto.RegisterType((*GetDutiesRequest)(nil), "api.GetDutiesRequest")
+	proto.RegisterType((*GetDutiesReply)(nil), "api.GetDutiesReply")
+	proto.RegisterType((*AssignRequest)(nil), "api.AssignRequest")
+	proto.RegisterType((*SwapRequest)(nil), "api.SwapRequest")
+	proto.RegisterType((*Duty)(nil), "api.Duty")
+}
+
 func init() { proto.RegisterFile("duties.proto", fileDescriptor_971c6befef230320) }
 
 var fileDescriptor_971c6befef230320 = []byte{
-	// 77 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x49, 0x29, 0x2d, 0xc9,
-	0x4c, 0x2d, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c, 0xc8, 0x74, 0x92, 0x8e,
-	0x92, 0xcc, 0xcc, 0x2b, 0x49, 0x2d, 0xca, 0x4b, 0xcc, 0xd1, 0x4f, 0x4f, 0xcd, 0x4b, 0x2d, 0x4a,
-	0x2c, 0x49, 0x4d, 0xd1, 0x2f, 0x2a, 0x48, 0xd6, 0x2f, 0x33, 0x4c, 0x62, 0x03, 0x2b, 0x34, 0x06,
-	0x04, 0x00, 0x00, 0xff, 0xff, 0x2a, 0xd7, 0xcb, 0x55, 0x38, 0x00, 0x00, 0x00,
+	// 462 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x53, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0xad, 0x71, 0xe2, 0xc6, 0x53, 0x5a, 0xa2, 0x6d, 0x0b, 0xc6, 0x51, 0xa5, 0xe2, 0x03, 0xea,
+	0xc9, 0x86, 0x14, 0x21, 0x71, 0x2c, 0x50, 0x95, 0x5e, 0x00, 0x85, 0x1b, 0x97, 0x68, 0x1b, 0x4f,
+	0x83, 0x85, 0xbd, 0xbb, 0xec, 0xae, 0x01, 0x7f, 0x28, 0x1f, 0xc3, 0x0d, 0xed, 0x6c, 0x83, 0x92,
+	0x28, 0x28, 0x12, 0x37, 0xcf, 0x7b, 0x6f, 0xe6, 0x79, 0x35, 0x6f, 0xe0, 0x7e, 0xd9, 0xda, 0x0a,
+	0x4d, 0xae, 0xb4, 0xb4, 0x92, 0x85, 0x5c, 0x55, 0xe9, 0x68, 0x2e, 0xe5, 0xbc, 0xc6, 0x82, 0xa0,
+	0x9b, 0xf6, 0xb6, 0xc0, 0x46, 0xd9, 0xce, 0x2b, 0xb2, 0x67, 0x70, 0x7c, 0x85, 0xf6, 0x4d, 0xab,
+	0x35, 0x0a, 0xfb, 0xb6, 0xb5, 0xdd, 0x04, 0xbf, 0xb5, 0x68, 0x2c, 0x7b, 0x04, 0xbb, 0x16, 0x79,
+	0x33, 0xad, 0xca, 0x24, 0x38, 0x0d, 0xce, 0xc2, 0x49, 0xe4, 0xca, 0xeb, 0x32, 0x7b, 0x01, 0x87,
+	0xeb, 0x1d, 0xaa, 0xee, 0xd8, 0x09, 0xf4, 0xca, 0xd6, 0x76, 0x24, 0xde, 0x1b, 0xc7, 0x39, 0x57,
+	0x55, 0x4e, 0x2c, 0xc1, 0xd9, 0x05, 0x0c, 0xaf, 0xd0, 0xc9, 0x2b, 0x34, 0xdb, 0x2c, 0xd8, 0x11,
+	0xf4, 0x67, 0xb2, 0x15, 0x36, 0xb9, 0x47, 0xb0, 0x2f, 0xb2, 0x73, 0x38, 0x58, 0x1a, 0xe1, 0x3c,
+	0x9f, 0x40, 0xe4, 0x9f, 0x9b, 0x04, 0xa7, 0xe1, 0xaa, 0xeb, 0x1d, 0x91, 0x5d, 0xc2, 0xfe, 0x85,
+	0x31, 0xd5, 0x5c, 0x6c, 0x35, 0x1d, 0x41, 0xac, 0x50, 0x1b, 0x29, 0x1c, 0xe5, 0x8d, 0x07, 0x1e,
+	0xb8, 0x2e, 0xb3, 0x9f, 0xb0, 0xf7, 0xe9, 0x07, 0x57, 0x5b, 0x87, 0x3c, 0x85, 0x07, 0xb7, 0x95,
+	0x36, 0x76, 0xba, 0x3e, 0x6a, 0x9f, 0xe0, 0x8f, 0x77, 0xf3, 0xd8, 0x19, 0x0c, 0x0d, 0xce, 0xa4,
+	0x28, 0x97, 0x84, 0x21, 0x09, 0x0f, 0x3c, 0xbe, 0x50, 0x66, 0xbf, 0x02, 0xe8, 0xb9, 0x17, 0xfd,
+	0xdf, 0x8f, 0xb3, 0x13, 0x00, 0xff, 0x43, 0x82, 0x37, 0x48, 0x16, 0xf1, 0x24, 0x26, 0xe4, 0x3d,
+	0x6f, 0xd0, 0xf5, 0xd6, 0x7c, 0xc1, 0xf6, 0x88, 0x1d, 0x38, 0x80, 0xc8, 0x23, 0xe8, 0x9b, 0x9a,
+	0xcf, 0xbe, 0x26, 0x7d, 0x22, 0x7c, 0xe1, 0x26, 0xba, 0x8d, 0x4e, 0xa5, 0x2e, 0x51, 0x27, 0x11,
+	0xf9, 0xc5, 0x0e, 0xf9, 0xe0, 0x00, 0xd7, 0xd4, 0x48, 0x61, 0xbf, 0x24, 0xbb, 0x7e, 0x77, 0x54,
+	0xb0, 0x21, 0x84, 0x25, 0xef, 0x92, 0x01, 0x61, 0xee, 0x73, 0xfc, 0x3b, 0x80, 0xc8, 0xef, 0x92,
+	0xbd, 0xa3, 0xc5, 0x2e, 0x25, 0x8a, 0xa5, 0xb4, 0xc8, 0x8d, 0xc1, 0x4c, 0x93, 0x8d, 0x9c, 0xaa,
+	0xbb, 0x6c, 0x87, 0xbd, 0x82, 0xf8, 0x6f, 0x44, 0xd8, 0xf1, 0x42, 0xb8, 0x92, 0xba, 0xf4, 0x70,
+	0x1d, 0xf6, 0xad, 0x2f, 0x21, 0xf2, 0x41, 0x61, 0x8c, 0x04, 0x2b, 0xa9, 0x49, 0x1f, 0xe6, 0xfe,
+	0x88, 0xf2, 0xc5, 0x11, 0xe5, 0x97, 0xee, 0x88, 0xb2, 0x1d, 0x36, 0x86, 0x9e, 0x4b, 0x06, 0x1b,
+	0x52, 0xd7, 0x52, 0x48, 0xfe, 0xdd, 0xf3, 0x7a, 0xf4, 0xf9, 0x71, 0x25, 0x2c, 0x6a, 0xc1, 0xeb,
+	0x62, 0x8e, 0x02, 0x35, 0xb7, 0x58, 0x16, 0x5a, 0xcd, 0x8a, 0xef, 0xcf, 0x6f, 0x22, 0x92, 0x9f,
+	0xff, 0x09, 0x00, 0x00, 0xff, 0xff, 0x3f, 0xb7, 0x61, 0xd5, 0xca, 0x03, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// DutiesClient is the client API for Duties service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type DutiesClient interface {
+	GetCurrentDuty(ctx context.Context, in *GetCurrentDutyRequest, opts ...grpc.CallOption) (*GetCurrentDutyReply, error)
+	GetDuties(ctx context.Context, in *GetDutiesRequest, opts ...grpc.CallOption) (*GetDutiesReply, error)
+	Assign(ctx context.Context, in *AssignRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+}
+
+type dutiesClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewDutiesClient(cc grpc.ClientConnInterface) DutiesClient {
+	return &dutiesClient{cc}
+}
+
+func (c *dutiesClient) GetCurrentDuty(ctx context.Context, in *GetCurrentDutyRequest, opts ...grpc.CallOption) (*GetCurrentDutyReply, error) {
+	out := new(GetCurrentDutyReply)
+	err := c.cc.Invoke(ctx, "/api.Duties/GetCurrentDuty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dutiesClient) GetDuties(ctx context.Context, in *GetDutiesRequest, opts ...grpc.CallOption) (*GetDutiesReply, error) {
+	out := new(GetDutiesReply)
+	err := c.cc.Invoke(ctx, "/api.Duties/GetDuties", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dutiesClient) Assign(ctx context.Context, in *AssignRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.Duties/Assign", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dutiesClient) Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.Duties/Swap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DutiesServer is the server API for Duties service.
+type DutiesServer interface {
+	GetCurrentDuty(context.Context, *GetCurrentDutyRequest) (*GetCurrentDutyReply, error)
+	GetDuties(context.Context, *GetDutiesRequest) (*GetDutiesReply, error)
+	Assign(context.Context, *AssignRequest) (*empty.Empty, error)
+	Swap(context.Context, *SwapRequest) (*empty.Empty, error)
+}
+
+// UnimplementedDutiesServer can be embedded to have forward compatible implementations.
+type UnimplementedDutiesServer struct {
+}
+
+func (*UnimplementedDutiesServer) GetCurrentDuty(ctx context.Context, req *GetCurrentDutyRequest) (*GetCurrentDutyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentDuty not implemented")
+}
+func (*UnimplementedDutiesServer) GetDuties(ctx context.Context, req *GetDutiesRequest) (*GetDutiesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDuties not implemented")
+}
+func (*UnimplementedDutiesServer) Assign(ctx context.Context, req *AssignRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Assign not implemented")
+}
+func (*UnimplementedDutiesServer) Swap(ctx context.Context, req *SwapRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Swap not implemented")
+}
+
+func RegisterDutiesServer(s *grpc.Server, srv DutiesServer) {
+	s.RegisterService(&_Duties_serviceDesc, srv)
+}
+
+func _Duties_GetCurrentDuty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCurrentDutyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DutiesServer).GetCurrentDuty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Duties/GetCurrentDuty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DutiesServer).GetCurrentDuty(ctx, req.(*GetCurrentDutyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Duties_GetDuties_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDutiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DutiesServer).GetDuties(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Duties/GetDuties",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DutiesServer).GetDuties(ctx, req.(*GetDutiesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Duties_Assign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DutiesServer).Assign(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Duties/Assign",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DutiesServer).Assign(ctx, req.(*AssignRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Duties_Swap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SwapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DutiesServer).Swap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Duties/Swap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DutiesServer).Swap(ctx, req.(*SwapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Duties_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "api.Duties",
+	HandlerType: (*DutiesServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCurrentDuty",
+			Handler:    _Duties_GetCurrentDuty_Handler,
+		},
+		{
+			MethodName: "GetDuties",
+			Handler:    _Duties_GetDuties_Handler,
+		},
+		{
+			MethodName: "Assign",
+			Handler:    _Duties_Assign_Handler,
+		},
+		{
+			MethodName: "Swap",
+			Handler:    _Duties_Swap_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "duties.proto",
 }

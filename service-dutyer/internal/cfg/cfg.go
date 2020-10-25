@@ -28,3 +28,12 @@ func GetKafkaAddress() string {
 
 	return cs
 }
+
+func GetCron() string {
+	cs := os.Getenv("CRON")
+	if cs == "" {
+		panic("cron string not specified")
+	}
+
+	return cs
+}
