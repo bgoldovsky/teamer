@@ -34,6 +34,15 @@ var person = &v1.Person{
 	Updated:    ToTimestamp(time.Now()),
 }
 
+var duty = &v1.Duty{
+	TeamId:    111,
+	PersonId:  222,
+	FirstName: "Boris",
+	LastName:  "Goldovsky",
+	Slack:     "QWERTY",
+	DutyOrder: 5,
+}
+
 func TestNewStatusView(t *testing.T) {
 	var id int64 = 777
 	msg := "success"
@@ -234,5 +243,62 @@ func TestFromPersonsReply(t *testing.T) {
 	expUpdated := ToTime(person.Updated)
 	if act[0].Updated != expUpdated {
 		t.Errorf("expected %v, act %v", act[0].Updated, expUpdated)
+	}
+}
+
+func TestFromDutyReply(t *testing.T) {
+	act := FromDutyReply(duty)
+
+	if act.TeamId != duty.TeamId {
+		t.Errorf("expected %v, act %v", act.TeamId, duty.TeamId)
+	}
+
+	if act.PersonId != duty.PersonId {
+		t.Errorf("expected %v, act %v", act.PersonId, duty.PersonId)
+	}
+
+	if act.FirstName != duty.FirstName {
+		t.Errorf("expected %v, act %v", act.FirstName, duty.FirstName)
+	}
+
+	if act.LastName != duty.LastName {
+		t.Errorf("expected %v, act %v", act.LastName, duty.LastName)
+	}
+
+	if act.Slack != duty.Slack {
+		t.Errorf("expected %v, act %v", act.Slack, duty.Slack)
+	}
+
+	if act.Order != duty.DutyOrder {
+		t.Errorf("expected %v, act %v", act.Slack, duty.Slack)
+	}
+}
+
+func TestFromDutiesReply(t *testing.T) {
+	reply := &v1.GetDutiesReply{Duties: []*v1.Duty{duty}}
+	act := FromDutiesReply(reply)
+
+	if act[0].TeamId != duty.TeamId {
+		t.Errorf("expected %v, act %v", act[0].TeamId, duty.TeamId)
+	}
+
+	if act[0].PersonId != duty.PersonId {
+		t.Errorf("expected %v, act %v", act[0].PersonId, duty.PersonId)
+	}
+
+	if act[0].FirstName != duty.FirstName {
+		t.Errorf("expected %v, act %v", act[0].FirstName, duty.FirstName)
+	}
+
+	if act[0].LastName != duty.LastName {
+		t.Errorf("expected %v, act %v", act[0].LastName, duty.LastName)
+	}
+
+	if act[0].Slack != duty.Slack {
+		t.Errorf("expected %v, act %v", act[0].Slack, duty.Slack)
+	}
+
+	if act[0].Order != duty.DutyOrder {
+		t.Errorf("expected %v, act %v", act[0].Slack, duty.Slack)
 	}
 }

@@ -9,6 +9,10 @@ import (
 	_ "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka/librdkafka"
 )
 
+const (
+	topicDuties = "duties"
+)
+
 func main() {
 	kafkaAddress := cfg.GetKafkaAddress()
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
@@ -22,17 +26,16 @@ func main() {
 		return
 	}
 
-	err = c.SubscribeTopics([]string{"teams"}, nil)
-	if err != nil {
-		logger.Log.WithError(err).Infoln("error subscribe topic")
-		return
-	}
+	err = c.SubscribeTopics([]string{topicDuties}, nil)
+	fatalOnError("error subscribe topic", err)
 
 	for {
 		msg, err := c.ReadMessage(-1)
-		//_, _ = c.Commit()
-		//c.Commit()
-		//c.CommitMessage(msg)
+		if err != nil {
+			logger.Log.WithError(err).Error("read message error")
+		}
+
+		_, _ = c.CommitMessage(msg)
 
 		if err == nil {
 			var event dataBus.EventMessage
@@ -53,5 +56,11 @@ func main() {
 				WithError(err).
 				Infoln("consumer error")
 		}
+	}
+}
+
+func fatalOnError(msg string, err error) {
+	if err != nil {
+		logger.Log.WithError(err).Fatal(msg)
 	}
 }

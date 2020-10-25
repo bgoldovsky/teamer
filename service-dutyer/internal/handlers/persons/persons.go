@@ -22,6 +22,10 @@ func New(service *persons.Service) *Handler {
 }
 
 func (h *Handler) GetPerson(ctx context.Context, req *v1.GetPersonRequest) (*v1.GetPersonReply, error) {
+	if req.Id == 0 {
+		return nil, status.Error(codes.InvalidArgument, "person id not specified")
+	}
+
 	reply, err := h.service.GetPerson(ctx, req)
 	if err != nil {
 		logger.Log.WithField("req", req).WithError(err).Errorln("get person error")
@@ -32,6 +36,14 @@ func (h *Handler) GetPerson(ctx context.Context, req *v1.GetPersonRequest) (*v1.
 }
 
 func (h *Handler) GetPersons(ctx context.Context, req *v1.GetPersonsRequest) (*v1.GetPersonsReply, error) {
+	if req.Order != "id" && req.Order != "name" {
+		return nil, status.Error(codes.InvalidArgument, "order must be id|name")
+	}
+
+	if req.Sort != "asc" && req.Sort != "desc" {
+		return nil, status.Error(codes.InvalidArgument, "sort must be asc|desc")
+	}
+
 	reply, err := h.service.GetPersons(ctx, req)
 	if err != nil {
 		logger.Log.WithField("req", req).WithError(err).Errorln("get persons error")
@@ -68,6 +80,10 @@ func (h *Handler) AddPerson(ctx context.Context, req *v1.AddPersonRequest) (*v1.
 }
 
 func (h *Handler) UpdatePerson(ctx context.Context, req *v1.UpdatePersonRequest) (*empty.Empty, error) {
+	if req.Id == 0 {
+		return nil, status.Error(codes.InvalidArgument, "person id not specified")
+	}
+
 	if len(req.FirstName) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "person first name not specified")
 	}
@@ -94,6 +110,10 @@ func (h *Handler) UpdatePerson(ctx context.Context, req *v1.UpdatePersonRequest)
 }
 
 func (h *Handler) RemovePerson(ctx context.Context, req *v1.RemovePersonRequest) (*empty.Empty, error) {
+	if req.Id == 0 {
+		return nil, status.Error(codes.InvalidArgument, "person id not specified")
+	}
+
 	reply, err := h.service.RemoverPerson(ctx, req)
 	if err != nil {
 		logger.Log.WithField("req", req).WithError(err).Errorln("remove person error")

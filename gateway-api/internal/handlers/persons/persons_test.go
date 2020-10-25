@@ -45,7 +45,7 @@ func TestHandlers_CreatePerson(t *testing.T) {
 	reqByte, _ := json.Marshal(reqBody)
 	body := bytes.NewReader(reqByte)
 
-	req, _ := http.NewRequest("POST", "/teams", body)
+	req, _ := http.NewRequest("POST", "/person", body)
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(h.CreatePerson)
@@ -68,7 +68,7 @@ func TestHandlers_DeleteTeam(t *testing.T) {
 	s := personsSrv.New(client, repo)
 	h := New(router, "", s)
 
-	req, _ := http.NewRequest("DELETE", "/teams", nil)
+	req, _ := http.NewRequest("DELETE", "/persons", nil)
 	req = mux.SetURLVars(req, map[string]string{"id": strconv.FormatInt(person.ID, 10)})
 
 	rr := httptest.NewRecorder()
@@ -103,7 +103,7 @@ func TestHandlers_UpdateTeam(t *testing.T) {
 	reqByte, _ := json.Marshal(reqBody)
 	body := bytes.NewReader(reqByte)
 
-	req, _ := http.NewRequest("PUT", "/teams", body)
+	req, _ := http.NewRequest("PUT", "/persons", body)
 	req = mux.SetURLVars(req, map[string]string{"id": strconv.FormatInt(person.ID, 10)})
 
 	rr := httptest.NewRecorder()
@@ -127,7 +127,7 @@ func TestHandlers_GetTeams(t *testing.T) {
 	s := personsSrv.New(client, repo)
 	h := New(router, "", s)
 
-	req, _ := http.NewRequest("GET", "/teams", nil)
+	req, _ := http.NewRequest("GET", "/persons", nil)
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(h.GetPersons)

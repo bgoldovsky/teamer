@@ -6,12 +6,11 @@ package mock_persons
 
 import (
 	context "context"
-	reflect "reflect"
-
 	models "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/models"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	gomock "github.com/golang/mock/gomock"
 	v4 "github.com/jackc/pgx/v4"
+	reflect "reflect"
 )
 
 // MockRepository is a mock of Repository interface

@@ -120,3 +120,44 @@ func FromPersonReply(reply *v1.Person) *PersonView {
 
 	return &view
 }
+
+type DutyView struct {
+	TeamId    int64      `json:"teamId"`
+	PersonId  int64      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Slack     string     `json:"slack"`
+	Order     int64      `json:"order"`
+	Month     time.Month `json:"month"`
+	Day       int64      `json:"day"`
+}
+
+func FromDutyReply(reply *v1.Duty) *DutyView {
+	if reply == nil {
+		return nil
+	}
+
+	return &DutyView{
+		TeamId:    reply.TeamId,
+		PersonId:  reply.PersonId,
+		FirstName: reply.FirstName,
+		LastName:  reply.LastName,
+		Slack:     reply.Slack,
+		Order:     reply.DutyOrder,
+		Month:     time.Month(reply.Month),
+		Day:       reply.Day,
+	}
+}
+
+func FromDutiesReply(reply *v1.GetDutiesReply) []DutyView {
+	if reply == nil || len(reply.Duties) == 0 {
+		return []DutyView{}
+	}
+
+	view := make([]DutyView, len(reply.Duties))
+	for idx, d := range reply.Duties {
+		duty := FromDutyReply(d)
+		view[idx] = *duty
+	}
+	return view
+}

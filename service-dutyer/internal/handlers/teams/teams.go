@@ -22,6 +22,10 @@ func New(service *teams.Service) *Handler {
 }
 
 func (h *Handler) GetTeam(ctx context.Context, req *v1.GetTeamRequest) (*v1.GetTeamReply, error) {
+	if req.Id == 0 {
+		return nil, status.Error(codes.InvalidArgument, "team id not specified")
+	}
+
 	reply, err := h.service.GetTeam(ctx, req)
 	if err != nil {
 		logger.Log.WithField("req", req).WithError(err).Errorln("get team error")
@@ -68,6 +72,10 @@ func (h *Handler) AddTeam(ctx context.Context, req *v1.AddTeamRequest) (*v1.AddT
 }
 
 func (h *Handler) UpdateTeam(ctx context.Context, req *v1.UpdateTeamRequest) (*empty.Empty, error) {
+	if req.Id == 0 {
+		return nil, status.Error(codes.InvalidArgument, "team id not specified")
+	}
+
 	if len(req.Name) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "team name not specified")
 	}
@@ -86,6 +94,10 @@ func (h *Handler) UpdateTeam(ctx context.Context, req *v1.UpdateTeamRequest) (*e
 }
 
 func (h *Handler) RemoveTeam(ctx context.Context, req *v1.RemoveTeamRequest) (*empty.Empty, error) {
+	if req.Id == 0 {
+		return nil, status.Error(codes.InvalidArgument, "team id not specified")
+	}
+
 	reply, err := h.service.RemoveTeam(ctx, req)
 	if err != nil {
 		logger.Log.WithField("req", req).WithError(err).Errorln("remove team error")
