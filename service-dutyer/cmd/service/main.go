@@ -5,8 +5,6 @@ import (
 	"log"
 	"net"
 
-	"github.com/bgoldovsky/dutyer/service-dutyer/internal/cron"
-
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/app/publisher"
 	dutiesRepo "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/repository/duties"
 	personsRepo "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/repository/persons"
@@ -15,6 +13,7 @@ import (
 	personsSrv "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/persons"
 	teamsSrv "github.com/bgoldovsky/dutyer/service-dutyer/internal/app/services/teams"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/cfg"
+	"github.com/bgoldovsky/dutyer/service-dutyer/internal/cron"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/database"
 	v1 "github.com/bgoldovsky/dutyer/service-dutyer/internal/generated/rpc/v1"
 	"github.com/bgoldovsky/dutyer/service-dutyer/internal/handlers/duties"

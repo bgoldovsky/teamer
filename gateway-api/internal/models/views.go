@@ -127,6 +127,7 @@ type DutyView struct {
 	FirstName string     `json:"firstName"`
 	LastName  string     `json:"lastName"`
 	Slack     string     `json:"slack"`
+	Channel   string     `json:"channel"`
 	Order     int64      `json:"order"`
 	Month     time.Month `json:"month"`
 	Day       int64      `json:"day"`
@@ -143,6 +144,7 @@ func FromDutyReply(reply *v1.Duty) *DutyView {
 		FirstName: reply.FirstName,
 		LastName:  reply.LastName,
 		Slack:     reply.Slack,
+		Channel:   reply.Channel,
 		Order:     reply.DutyOrder,
 		Month:     time.Month(reply.Month),
 		Day:       reply.Day,

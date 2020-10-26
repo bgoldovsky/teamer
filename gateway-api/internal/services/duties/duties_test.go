@@ -16,6 +16,7 @@ var (
 		FirstName: "Boris",
 		LastName:  "B",
 		Slack:     "QWERTY",
+		Channel:   "YTREWQ",
 		Order:     5,
 	}
 
@@ -84,5 +85,6 @@ func newClientMock() *duties.Client {
 		duty.FirstName,
 		duty.LastName,
 		duty.Slack,
+		duty.Channel,
 		duty.Order)
 }

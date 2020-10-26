@@ -12,10 +12,10 @@ run:
 test:
 	echo "testing.."
 	go clean -testcache
-	go test -v -cover -tags=entities ./...
+	go test -v -cover ./...
 
 .PHONY:proto
 proto:
-	protoc --go_out=. data-bus/proto/*.proto
+	protoc -I proto --go_out=plugins=grpc,paths=import:. proto/*.proto
 
 .DEFAULT_GOAL := run

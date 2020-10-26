@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Duty struct {
 	TeamID    int64      `json:"teamId"`
@@ -8,6 +10,7 @@ type Duty struct {
 	FirstName string     `json:"firstName"`
 	LastName  string     `json:"lastName"`
 	Slack     string     `json:"slack"`
+	Channel   string     `json:"channel"`
 	Order     int64      `json:"order"`
 	Month     time.Month `json:"month"`
 	Day       int64      `json:"day"`

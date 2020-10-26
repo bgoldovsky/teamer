@@ -66,6 +66,7 @@ func (r *repository) Get(ctx context.Context, teamID int64) (*models.Duty, error
 		`"p"."first_name"`,
 		`"p"."last_name"`,
 		`"p"."slack"`,
+		`"t"."slack"`,
 		`"p"."duty_order"`,
 		`"d"."month"`,
 		`"d"."day"`,
@@ -74,7 +75,7 @@ func (r *repository) Get(ctx context.Context, teamID int64) (*models.Duty, error
 	}
 
 	// Формирование запроса
-	query := fmt.Sprintf(`select %s from "duties" as "d" left join persons as "p" on "d"."person_id" = "p"."id" where "d"."team_id" = $1;`,
+	query := fmt.Sprintf(`select %s from "duties" as "d" left join persons as "p" on "d"."person_id" = "p"."id" left join "teams" as "t" on "p".team_id = "t"."id" where "d"."team_id" = $1;`,
 		strings.Join(columns, ","))
 
 	// Выполнение запроса
@@ -86,6 +87,7 @@ func (r *repository) Get(ctx context.Context, teamID int64) (*models.Duty, error
 		&d.FirstName,
 		&d.LastName,
 		&d.Slack,
+		&d.Channel,
 		&d.DutyOrder,
 		&d.Month,
 		&d.Day,
@@ -141,6 +143,7 @@ type duty struct {
 	FirstName sql.NullString
 	LastName  sql.NullString
 	Slack     sql.NullString
+	Channel   sql.NullString
 	DutyOrder sql.NullInt64
 	Month     sql.NullInt64
 	Day       sql.NullInt64
@@ -155,6 +158,7 @@ func (d *duty) convert() models.Duty {
 		FirstName: d.FirstName.String,
 		LastName:  d.LastName.String,
 		Slack:     d.Slack.String,
+		Channel:   d.Channel.String,
 		Order:     d.DutyOrder.Int64,
 		Month:     time.Month(d.Month.Int64),
 		Day:       d.Day.Int64,

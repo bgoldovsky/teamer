@@ -21,6 +21,7 @@ var (
 		FirstName: "Boris",
 		LastName:  "B",
 		Slack:     "QWERTY",
+		Channel:   "YTREWQ",
 		Order:     5,
 	}
 	secondPersonID int64 = 999
@@ -103,7 +104,7 @@ func TestHandlers_GetCurrentDuty(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := `{"teamId":888,"id":777,"firstName":"Boris","lastName":"B","slack":"QWERTY","order":5,"month":0,"day":0}`
+	expected := `{"teamId":888,"id":777,"firstName":"Boris","lastName":"B","slack":"QWERTY","channel":"YTREWQ","order":5,"month":0,"day":0}`
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
 	}
@@ -136,6 +137,7 @@ func TestHandlers_GetDuties(t *testing.T) {
 			FirstName: duty.FirstName,
 			LastName:  duty.LastName,
 			Slack:     duty.Slack,
+			Channel:   duty.Channel,
 			Order:     duty.Order,
 		},
 	}
@@ -157,5 +159,6 @@ func newClientMock() *duties.Client {
 		duty.FirstName,
 		duty.LastName,
 		duty.Slack,
+		duty.Channel,
 		duty.Order)
 }

@@ -21,13 +21,14 @@ func NewMock(
 	firstName string,
 	lastName string,
 	slack string,
+	channel string,
 	order int64,
 ) *Client {
 	m := &ClientMock{}
 	m.ConfigureSwap(teamID, firstPersonID, secondPersonID)
 	m.ConfigureAssign(teamID, firstPersonID)
-	m.ConfigureGetCurrentDuty(teamID, firstPersonID, firstName, lastName, slack, order)
-	m.ConfigureGetDuties(teamID, count, firstPersonID, firstName, lastName, slack, order)
+	m.ConfigureGetCurrentDuty(teamID, firstPersonID, firstName, lastName, slack, channel, order)
+	m.ConfigureGetDuties(teamID, count, firstPersonID, firstName, lastName, slack, channel, order)
 
 	return newClient(m)
 }
@@ -44,6 +45,7 @@ func (m *ClientMock) ConfigureGetCurrentDuty(
 	firstName string,
 	lastName string,
 	slack string,
+	channel string,
 	order int64) {
 	arg := &v1.GetCurrentDutyRequest{TeamId: teamID}
 
@@ -54,6 +56,7 @@ func (m *ClientMock) ConfigureGetCurrentDuty(
 			FirstName: firstName,
 			LastName:  lastName,
 			Slack:     slack,
+			Channel:   channel,
 			DutyOrder: order,
 		},
 	}
@@ -74,6 +77,7 @@ func (m *ClientMock) ConfigureGetDuties(
 	firstName string,
 	lastName string,
 	slack string,
+	channel string,
 	order int64,
 ) {
 	arg := &v1.GetDutiesRequest{
@@ -89,6 +93,7 @@ func (m *ClientMock) ConfigureGetDuties(
 				FirstName: firstName,
 				LastName:  lastName,
 				Slack:     slack,
+				Channel:   channel,
 				DutyOrder: order,
 			},
 		},
