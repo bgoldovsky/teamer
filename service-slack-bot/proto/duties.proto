@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/generated/clients/v1";
+
+service Duties {
+  rpc GetCurrentDuty (GetCurrentDutyRequest) returns (GetCurrentDutyReply) {} // Получить текущего дежурного
+}
+
+message GetCurrentDutyRequest {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+}
+
+message GetCurrentDutyReply {
+  Duty duty  = 1; // Дежурный
+}
+
+message Duty {
+  int64 team_id  = 1; // Уникальный идентификатор команды
+  int64 person_id  = 2; // Уникальный идентификатор сотрудника
+  string first_name = 3; // Имя
+  string last_name = 4; // Фамилия
+  string slack = 5; // Идентификатор в Slack
+  string channel = 6; // Канал команды в Slack
+  int64 duty_order = 7; // Уникальный порядок дежурства сотрудника
+  int64 month = 8; // Месяц дежурства
+  int64 day = 9; // День дежурства
+}

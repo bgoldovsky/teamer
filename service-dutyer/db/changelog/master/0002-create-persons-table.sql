@@ -17,5 +17,5 @@ create table if not exists persons (
     --
     created_at timestamp with time zone default now() not null,
     updated_at timestamp with time zone default now() not null,
-    constraint unique (team_id,duty_order) deferrable initially deferred
+    unique (team_id,duty_order) deferrable initially deferred
 );

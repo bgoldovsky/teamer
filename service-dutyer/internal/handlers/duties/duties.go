@@ -106,6 +106,7 @@ func toReply(duty *models.Duty) *v1.Duty {
 		FirstName: duty.FirstName,
 		LastName:  duty.LastName,
 		Slack:     duty.Slack,
+		Channel:   duty.Channel,
 		DutyOrder: duty.Order,
 		Month:     int64(duty.Month),
 		Day:       duty.Day,

@@ -47,7 +47,8 @@ message Duty {
   string first_name = 3; // Имя
   string last_name = 4; // Фамилия
   string slack = 5; // Идентификатор в Slack
-  int64 duty_order = 6; // Уникальный порядок дежурства сотрудника
-  int64 month = 7; // Месяц дежурства
-  int64 day = 8; // День дежурства
+  string channel = 6; // Канал команды в Slack
+  int64 duty_order = 7; // Уникальный порядок дежурства сотрудника
+  int64 month = 8; // Месяц дежурства
+  int64 day = 9; // День дежурства
 }
