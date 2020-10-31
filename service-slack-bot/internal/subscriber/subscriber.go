@@ -4,9 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/clients/duties"
-
-	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/app/bot"
+	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/app/services"
 	dataBus "github.com/bgoldovsky/dutyer/service-slack-bot/internal/generated/data-bus/v1"
 	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/logger"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -20,11 +18,10 @@ const (
 
 type Subscriber struct {
 	consumer *kafka.Consumer
-	bot      *bot.SlackBot
-	client   *duties.Client
+	service  *services.SlackService
 }
 
-func NewSubscriber(consumer *kafka.Consumer, bot *bot.SlackBot, client *duties.Client) (*Subscriber, error) {
+func NewSubscriber(consumer *kafka.Consumer, service *services.SlackService) (*Subscriber, error) {
 	err := consumer.SubscribeTopics([]string{topicDuties}, nil)
 	if err != nil {
 		return nil, fmt.Errorf("subscribe topic error: %w", err)
@@ -32,8 +29,7 @@ func NewSubscriber(consumer *kafka.Consumer, bot *bot.SlackBot, client *duties.C
 
 	return &Subscriber{
 		consumer: consumer,
-		bot:      bot,
-		client:   client,
+		service:  service,
 	}, nil
 }
 
@@ -54,16 +50,9 @@ func (s *Subscriber) Consume() {
 			continue
 		}
 
-		duty, err := s.client.GetCurrentDuty(ctx, event.Data.EntityID)
+		err = s.service.ChangeChannelTopic(ctx, event.Data.EntityID)
 		if err != nil {
-			logger.Log.WithError(err).Error("get duty error")
-			continue
-		}
-
-		err = s.bot.ChangeTopic(ctx, duty.Slack, duty.Channel)
-		err = proto.Unmarshal(msg.Value, &event)
-		if err != nil {
-			logger.Log.WithError(err).Error("slack notification error")
+			logger.Log.WithError(err).Error("change channel topic error")
 			continue
 		}
 

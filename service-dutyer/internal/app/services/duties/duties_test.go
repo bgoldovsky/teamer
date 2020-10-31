@@ -271,8 +271,6 @@ func TestService_GetDuties_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, duty.PersonID, act[0].PersonID)
 	assert.Equal(t, duty.TeamID, act[0].TeamID)
-	assert.Equal(t, int64(time.Now().Day()), act[0].Day)
-	assert.Equal(t, time.Now().Month(), act[0].Month)
 	assert.Equal(t, duty.Order, act[0].Order)
 	assert.Equal(t, duty.Channel, act[0].Channel)
 	assert.Equal(t, duty.Slack, act[0].Slack)

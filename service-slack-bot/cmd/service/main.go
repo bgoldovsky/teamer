@@ -2,6 +2,7 @@ package main
 
 import (
 	slackBot "github.com/bgoldovsky/dutyer/service-slack-bot/internal/app/bot"
+	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/app/services"
 	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/cfg"
 	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/clients/duties"
 	"github.com/bgoldovsky/dutyer/service-slack-bot/internal/logger"
@@ -11,10 +12,13 @@ import (
 
 func main() {
 	// Clients
-	dutiesClient, err := duties.NewClient(cfg.GetDutyerHost())
+	client, err := duties.NewClient(cfg.GetDutyerHost())
 
 	// Slack bot
 	bot := slackBot.NewSlackBot(cfg.GetSlackToken())
+
+	// Services
+	service := services.New(bot, client)
 
 	// Kafka
 	address := cfg.GetKafkaAddress()
@@ -24,7 +28,7 @@ func main() {
 	defer consumer.Close()
 	fatalOnError("create consumer error", err)
 
-	subscriber, err := sub.NewSubscriber(consumer, bot, dutiesClient)
+	subscriber, err := sub.NewSubscriber(consumer, service)
 	fatalOnError("error connect broker", err)
 
 	// Start consume events

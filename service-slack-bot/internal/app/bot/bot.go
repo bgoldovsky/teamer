@@ -1,3 +1,5 @@
+//go:generate mockgen -destination bot_mock/bot_mock.go -source bot.go
+
 package bot
 
 import (
@@ -8,18 +10,22 @@ import (
 	"github.com/slack-go/slack"
 )
 
-type SlackBot struct {
+type SlackBot interface {
+	ChangeTopic(ctx context.Context, slack string, channel string) error
+}
+
+type slackBot struct {
 	slackClient *slack.Client
 }
 
-func NewSlackBot(slackToken string) *SlackBot {
-	bot := &SlackBot{
+func NewSlackBot(slackToken string) *slackBot {
+	bot := &slackBot{
 		slackClient: slack.New(slackToken),
 	}
 	return bot
 }
 
-func (s *SlackBot) ChangeTopic(ctx context.Context, slack string, channel string) error {
+func (s *slackBot) ChangeTopic(ctx context.Context, slack string, channel string) error {
 	msg := fmt.Sprintf(template, slack)
 	_, err := s.slackClient.SetTopicOfConversationContext(ctx, channel, msg)
 	if err != nil {

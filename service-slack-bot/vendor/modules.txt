@@ -2,6 +2,9 @@
 ## explicit
 github.com/confluentinc/confluent-kafka-go/kafka
 github.com/confluentinc/confluent-kafka-go/kafka/librdkafka
+# github.com/golang/mock v1.2.0
+## explicit
+github.com/golang/mock/gomock
 # github.com/golang/protobuf v1.4.3
 ## explicit
 github.com/golang/protobuf/proto
@@ -114,5 +117,4 @@ google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2
 ## explicit
-gopkg.in/confluentinc/confluent-kafka-go.v1/kafka
 gopkg.in/confluentinc/confluent-kafka-go.v1/kafka/librdkafka

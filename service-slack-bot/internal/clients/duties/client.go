@@ -1,4 +1,4 @@
-//go:generate mockgen -destination duties_mock/duties_mock.go -source client.go
+//go:generate mockgen -destination client_mock.go -source client.go
 
 package duties
 
@@ -17,38 +17,32 @@ const (
 	timeout = time.Second * 3
 )
 
-type client interface {
-	GetCurrentDuty(ctx context.Context, in *v1.GetCurrentDutyRequest, opts ...grpc.CallOption) (*v1.GetCurrentDutyReply, error)
+type Client interface {
+	GetCurrentDuty(ctx context.Context, teamID int64) (*models.Duty, error)
 }
 
-type Client struct {
-	client client
+type client struct {
+	grpcClient v1.DutiesClient
 }
 
-func newClient(client client) *Client {
-	return &Client{
-		client: client,
-	}
-}
-
-func NewClient(host string) (*Client, error) {
+func NewClient(host string) (*client, error) {
 	conn, err := grpc.Dial(host, grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptors.LoggingInterceptor))
 	if err != nil {
 		logger.Log.WithError(err).Fatal("can't connect service-dutyer")
 	}
 
-	client := v1.NewDutiesClient(conn)
+	grpcClient := v1.NewDutiesClient(conn)
 	if err != nil {
 		return nil, err
 	}
-	return newClient(client), nil
+	return &client{grpcClient: grpcClient}, nil
 }
 
-func (c *Client) GetCurrentDuty(ctx context.Context, teamID int64) (*models.Duty, error) {
+func (c *client) GetCurrentDuty(ctx context.Context, teamID int64) (*models.Duty, error) {
 	ctx = getTimeoutContext(ctx)
 	request := &v1.GetCurrentDutyRequest{TeamId: teamID}
 
-	reply, err := c.client.GetCurrentDuty(ctx, request)
+	reply, err := c.grpcClient.GetCurrentDuty(ctx, request)
 	if err != nil {
 		return nil, err
 	}

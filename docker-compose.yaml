@@ -72,7 +72,7 @@ services:
     build: ./service-slack-bot
     environment:
       - KAFKA=kafka:9092
-      - SLACK=xoxb-1448497650661-1475538835376-nELM7nbuOR9Gm7oaoEua3l9u
+      - SLACK=xoxb-1448497650661-1475538835376-r7oPbpQhTC6rsUUf8OEMt6Ci
       - SERVICE_DUTYER=service-dutyer:50051
     depends_on:
       - kafka
